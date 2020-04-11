@@ -1,9 +1,10 @@
-'use strict'
+'use strict';
 
-const sitePageHeaderElement = document.querySelector('.page-header');
-const tripMainElement = sitePageHeaderElement.querySelector('.trip-main');
-const tripControlsElement = tripMainElement.querySelector('.trip-controls');
-const tripEventsElement = document.querySelector('main .trip-events');
+const MAX_POINTS_TO_RENDER = 3;
+const sitePageHeaderElement = document.querySelector(`.page-header`);
+const tripMainElement = sitePageHeaderElement.querySelector(`.trip-main`);
+const tripControlsElement = tripMainElement.querySelector(`.trip-controls`);
+const tripEventsElement = document.querySelector(`main .trip-events`);
 
 const createTripInfoTemplate = () => {
   return (
@@ -37,7 +38,8 @@ const createTripDetailsTemplate = () => {
 
 const createTripTabsTemplate = () => {
   return (
-    `<nav class="trip-controls__trip-tabs  trip-tabs">
+    `<h2 class="visually-hidden">Switch trip view</h2>
+    <nav class="trip-controls__trip-tabs  trip-tabs">
       <a class="trip-tabs__btn" href="#">Table</a>
       <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Stats</a>
     </nav>`
@@ -46,7 +48,8 @@ const createTripTabsTemplate = () => {
 
 const createTripFiltersTemplate = () => {
   return (
-    `<form class="trip-filters" action="#" method="get">
+    `<h2 class="visually-hidden">Filter events</h2>
+    <form class="trip-filters" action="#" method="get">
       <div class="trip-filters__filter">
         <input id="filter-everything" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="everything" checked>
         <label class="trip-filters__filter-label" for="filter-everything">Everything</label>
@@ -274,7 +277,7 @@ const createTripRoutesContainerTemplate = (child) => {
   );
 };
 
-const createTripRouteDayGroupTemplate = (childElements) => {
+const createTripRouteDayGroupTemplate = (child) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
@@ -283,7 +286,7 @@ const createTripRouteDayGroupTemplate = (childElements) => {
       </div>
 
       <ul class="trip-events__list">
-        ${childElements.join(' ')}
+        ${child}
       </ul>
     </li>`
   );
@@ -328,23 +331,32 @@ const createTripRoutePointTemplate = () => {
   );
 };
 
+const createTripRoutePointsTemplate = () => {
+  let points = [];
+  for (let index = 0; index < MAX_POINTS_TO_RENDER; index++) {
+    points.push(createTripRoutePointTemplate());
+  }
+
+  return points.join(` `);
+};
+
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
 
-render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
+const renderAll = () => {
+  render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
 
-render(tripControlsElement.querySelector('h2'), createTripTabsTemplate(), 'afterend');
-render(tripControlsElement, createTripFiltersTemplate(), 'beforeend');
+  render(tripControlsElement, createTripTabsTemplate(), `beforeend`);
+  render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 
-render(tripEventsElement, createTripSortTemplate(), 'beforeend');
-render(tripEventsElement, createTripEditFormTemplate(), 'beforeend');
+  render(tripEventsElement, createTripSortTemplate(), `beforeend`);
+  render(tripEventsElement, createTripEditFormTemplate(), `beforeend`);
 
-let tripRoutesContainer = createTripRoutesContainerTemplate(
-  createTripRouteDayGroupTemplate([
-    createTripRoutePointTemplate(),
-    createTripRoutePointTemplate(),
-    createTripRoutePointTemplate()
-  ])
-);
-render(tripEventsElement, tripRoutesContainer, 'beforeend');
+  let pointsTemplate = createTripRoutePointsTemplate();
+  let dayTemplate = createTripRouteDayGroupTemplate(pointsTemplate);
+  let tripRoutesContainer = createTripRoutesContainerTemplate(dayTemplate);
+  render(tripEventsElement, tripRoutesContainer, `beforeend`);
+};
+
+renderAll();

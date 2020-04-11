@@ -1,11 +1,16 @@
 'use strict'
 
+const sitePageHeaderElement = document.querySelector('.page-header');
+const tripMainElement = sitePageHeaderElement.querySelector('.trip-main');
+const tripControlsElement = tripMainElement.querySelector('.trip-controls');
+const tripEventsElement = document.querySelector('main .trip-events');
+
 const createTripInfoTemplate = () => {
   return (
     `<div class="trip-info__main">
       <h1 class="trip-info__title">Amsterdam &mdash; Chamonix &mdash; Geneva</h1>
 
-      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;20</p>
+      <p class="trip-info__dates">Mar 18&nbsp;&mdash;&nbsp;22</p>
     </div>`
   );
 };
@@ -65,17 +70,20 @@ const createTripFiltersTemplate = () => {
 const createTripSortTemplate = () => {
   return (
     `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      <span class="trip-sort__item  trip-sort__item--day"></span>
+      <span class="trip-sort__item  trip-sort__item--day">Day</span>
 
       <div class="trip-sort__item  trip-sort__item--event">
-        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event">
+        <input id="sort-event" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-event" checked>
         <label class="trip-sort__btn" for="sort-event">Event</label>
       </div>
 
       <div class="trip-sort__item  trip-sort__item--time">
-        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time" checked>
-        <label class="trip-sort__btn  trip-sort__btn--active  trip-sort__btn--by-increase" for="sort-time">
+        <input id="sort-time" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-time">
+        <label class="trip-sort__btn" for="sort-time">
           Time
+          <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
+            <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
+          </svg>
         </label>
       </div>
 
@@ -83,6 +91,9 @@ const createTripSortTemplate = () => {
         <input id="sort-price" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-price">
         <label class="trip-sort__btn" for="sort-price">
           Price
+          <svg class="trip-sort__direction-icon" width="8" height="10" viewBox="0 0 8 10">
+            <path d="M2.888 4.852V9.694H5.588V4.852L7.91 5.068L4.238 0.00999987L0.548 5.068L2.888 4.852Z"/>
+          </svg>
         </label>
       </div>
 
@@ -93,7 +104,7 @@ const createTripSortTemplate = () => {
 
 const createTripEditFormTemplate = () => {
   return (
-    `<form class="event  event--edit" action="#" method="post">
+    `<form class="trip-events__item  event  event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -167,11 +178,12 @@ const createTripEditFormTemplate = () => {
           <label class="event__label  event__type-output" for="event-destination-1">
             Flight to
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="Chamonix" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="" list="destination-list-1">
           <datalist id="destination-list-1">
             <option value="Amsterdam"></option>
             <option value="Geneva"></option>
             <option value="Chamonix"></option>
+            <option value="Saint Petersburg"></option>
           </datalist>
         </div>
 
@@ -179,12 +191,12 @@ const createTripEditFormTemplate = () => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 12:25">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 13:35">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -192,25 +204,12 @@ const createTripEditFormTemplate = () => {
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="160">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">Delete</button>
-
-        <input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" checked>
-        <label class="event__favorite-btn" for="event-favorite-1">
-          <span class="visually-hidden">Add to favorite</span>
-          <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
-            <path d="M14 21l-8.22899 4.3262 1.57159-9.1631L.685209 9.67376 9.8855 8.33688 14 0l4.1145 8.33688 9.2003 1.33688-6.6574 6.48934 1.5716 9.1631L14 21z"/>
-          </svg>
-        </label>
-
-        <button class="event__rollup-btn" type="button">
-          <span class="visually-hidden">Open event</span>
-        </button>
+        <button class="event__reset-btn" type="reset">Cancel</button>
       </header>
-
       <section class="event__details">
         <section class="event__section  event__section--offers">
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
@@ -267,14 +266,15 @@ const createTripEditFormTemplate = () => {
   );
 };
 
-const createTripRoutesContainerTemplate = () => {
+const createTripRoutesContainerTemplate = (child) => {
   return (
     `<ul class="trip-days">
+      ${child}
     </ul>`
   );
 };
 
-const createTripRouteDayGroupTemplate = () => {
+const createTripRouteDayGroupTemplate = (childElements) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
@@ -283,6 +283,7 @@ const createTripRouteDayGroupTemplate = () => {
       </div>
 
       <ul class="trip-events__list">
+        ${childElements.join(' ')}
       </ul>
     </li>`
   );
@@ -330,3 +331,20 @@ const createTripRoutePointTemplate = () => {
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
 };
+
+render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
+
+render(tripControlsElement.querySelector('h2'), createTripTabsTemplate(), 'afterend');
+render(tripControlsElement, createTripFiltersTemplate(), 'beforeend');
+
+render(tripEventsElement, createTripSortTemplate(), 'beforeend');
+render(tripEventsElement, createTripEditFormTemplate(), 'beforeend');
+
+let tripRoutesContainer = createTripRoutesContainerTemplate(
+  createTripRouteDayGroupTemplate([
+    createTripRoutePointTemplate(),
+    createTripRoutePointTemplate(),
+    createTripRoutePointTemplate()
+  ])
+);
+render(tripEventsElement, tripRoutesContainer, 'beforeend');

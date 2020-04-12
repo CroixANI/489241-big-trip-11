@@ -12,3 +12,5 @@ export const createTripRouteDayGroupTemplate = (child) => {
     </li>`
   );
 };
+
+export default createTripRouteDayGroupTemplate;

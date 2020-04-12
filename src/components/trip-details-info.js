@@ -7,3 +7,6 @@ export const createTripInfoTemplate = () => {
     </div>`
   );
 };
+
+export default createTripInfoTemplate;
+

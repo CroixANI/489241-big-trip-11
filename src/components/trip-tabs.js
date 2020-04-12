@@ -7,3 +7,6 @@ export const createTripTabsTemplate = () => {
     </nav>`
   );
 };
+
+export default createTripTabsTemplate;
+

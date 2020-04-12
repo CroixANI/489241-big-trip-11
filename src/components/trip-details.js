@@ -12,3 +12,5 @@ export const createTripDetailsTemplate = () => {
     </section>`
   );
 };
+
+export default createTripDetailsTemplate;

@@ -32,3 +32,6 @@ export const createTripSortTemplate = () => {
     </form>`
   );
 };
+
+export default createTripSortTemplate;
+

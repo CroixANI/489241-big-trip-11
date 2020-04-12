@@ -21,3 +21,6 @@ export const createTripFiltersTemplate = () => {
     </form>`
   );
 };
+
+export default createTripFiltersTemplate;
+

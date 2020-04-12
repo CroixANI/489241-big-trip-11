@@ -5,3 +5,5 @@ export const createTripRoutesContainerTemplate = (child) => {
     </ul>`
   );
 };
+
+export default createTripRoutesContainerTemplate;

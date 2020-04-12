@@ -5,3 +5,5 @@ export const createTripCostTemplate = () => {
     </p>`
   );
 };
+
+export default createTripCostTemplate;

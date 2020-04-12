@@ -36,3 +36,5 @@ export const createTripRoutePointTemplate = () => {
     </li>`
   );
 };
+
+export default createTripRoutePointTemplate;

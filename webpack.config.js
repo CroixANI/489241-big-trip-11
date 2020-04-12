@@ -11,4 +11,9 @@ module.exports = {
     // eslint-disable-next-line no-undef
     path: path.resolve(__dirname, `public`),
   },
+  devServer: {
+    // eslint-disable-next-line no-undef
+    contentBase: path.join(__dirname, `public`),
+    watchContentBase: true
+  },
 };

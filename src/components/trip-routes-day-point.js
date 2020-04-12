@@ -1,4 +1,4 @@
-export const createTripRoutePointTemplate = () => {
+const createTripRoutePointTemplate = () => {
   return (
     `<li class="trip-events__item">
       <div class="event">

@@ -1,4 +1,4 @@
-export const createTripRoutesContainerTemplate = (child) => {
+const createTripRoutesContainerTemplate = (child) => {
   return (
     `<ul class="trip-days">
       ${child}

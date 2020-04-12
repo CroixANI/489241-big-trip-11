@@ -1,7 +1,7 @@
-import {createTripCostTemplate} from "./trip-details-cost.js";
-import {createTripInfoTemplate} from "./trip-details-info.js";
+import createTripCostTemplate from "./trip-details-cost.js";
+import createTripInfoTemplate from "./trip-details-info.js";
 
-export const createTripDetailsTemplate = () => {
+const createTripDetailsTemplate = () => {
   let tripInfoTemplate = createTripInfoTemplate();
   let tripCostTemplate = createTripCostTemplate();
   return (

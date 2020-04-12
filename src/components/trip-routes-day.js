@@ -1,4 +1,4 @@
-export const createTripRouteDayGroupTemplate = (child) => {
+const createTripRouteDayGroupTemplate = (child) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">

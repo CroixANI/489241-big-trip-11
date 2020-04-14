@@ -7,9 +7,9 @@ const LOREM_TEXT = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cra
 export default () => {
   const numberOfSentences = random.random(MIN_SENTENCES, MAX_SENTENCES);
   const sentences = LOREM_TEXT.split(`.`);
-  let randomSentences = new Set();
+  let randomSentences = [];
 
-  for (const i = 0; i < numberOfSentences; i++) {
+  for (let i = 0; i < numberOfSentences; i++) {
     randomSentences.push(random.getRandomArrayItem(sentences));
   }
 

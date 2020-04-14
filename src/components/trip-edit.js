@@ -36,8 +36,8 @@ const createTripEditFormTemplate = () => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const allFeaturesTemplate = constants.features.map((feature) => {
-    return createFeatureTemplate(feature.type, feature.name, feature.price);
+  const allOffersTemplate = constants.offers.map((offer) => {
+    return createFeatureTemplate(offer.type, offer.name, offer.price);
   }).join(`\n`);
 
   return (
@@ -103,7 +103,7 @@ const createTripEditFormTemplate = () => {
           <h3 class="event__section-title  event__section-title--offers">Offers</h3>
 
           <div class="event__available-offers">
-            ${allFeaturesTemplate}
+            ${allOffersTemplate}
           </div>
         </section>
       </section>

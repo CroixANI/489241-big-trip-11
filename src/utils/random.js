@@ -9,7 +9,7 @@ const getRandomArrayItem = (array) => {
 
 // took from here https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array
 const shuffleArray = (array) => {
-  for (const i = array.length - 1; i > 0; i--) {
+  for (let i = array.length - 1; i > 0; i--) {
     let swapIndex = random(0, i);
     let currentItem = array[i];
     array[i] = array[swapIndex];
@@ -22,7 +22,7 @@ const shuffleArray = (array) => {
 const getRandomUniqueNumbers = (total) => {
   let numbers = [];
 
-  for (const i = 0; i < total; i++) {
+  for (let i = 0; i < total; i++) {
     numbers.push(i + 1);
   }
 
@@ -31,10 +31,10 @@ const getRandomUniqueNumbers = (total) => {
 
 const getRandomArray = (initialArray, min, max) => {
   let result = [];
-  const maxItems = max || random(min, initialArray.length);
+  let maxItems = max !== undefined ? random(min, max) : random(min, initialArray.length);
   const numbers = getRandomUniqueNumbers(maxItems);
 
-  for (const i = 0; i < numbers.length; i++) {
+  for (let i = 0; i < numbers.length; i++) {
     result.push(initialArray[numbers[i] - 1]);
   }
 

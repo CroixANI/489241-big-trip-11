@@ -32,22 +32,24 @@ const generateTripRoutePointsMocks = () => {
   return result;
 };
 
-const createTripRoutePointsTemplate = () => {
-  return generateTripRoutePointsMocks().map((point) => {
+const createTripRoutePointsTemplate = (points) => {
+  return points.map((point) => {
     return createTripRoutePointTemplate(point);
   }).join(` `);
 };
 
 const renderAll = () => {
+  let points = generateTripRoutePointsMocks();
+
   render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
 
   render(tripControlsElement, createTripTabsTemplate(), `beforeend`);
   render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 
   render(tripEventsElement, createTripSortTemplate(), `beforeend`);
-  render(tripEventsElement, createTripEditFormTemplate(), `beforeend`);
+  render(tripEventsElement, createTripEditFormTemplate(random.getRandomArrayItem(points)), `beforeend`);
 
-  let pointsTemplate = createTripRoutePointsTemplate();
+  let pointsTemplate = createTripRoutePointsTemplate(points);
   let dayTemplate = createTripRouteDayGroupTemplate(pointsTemplate);
   let tripRoutesContainer = createTripRoutesContainerTemplate(dayTemplate);
   render(tripEventsElement, tripRoutesContainer, `beforeend`);

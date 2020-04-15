@@ -12,7 +12,7 @@ const activityToLabel = {
   "Flight": `Flight to`,
   "Check-in": `Check-in in`,
   "Sightseeing": `Sightseeing in`,
-  "Restaurant": `Restaurant at`,
+  "Restaurant": `Restaurant in`,
 };
 
 const createOffer = (type, name, price) => {

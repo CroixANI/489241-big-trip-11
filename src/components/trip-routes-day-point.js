@@ -32,6 +32,8 @@ const createTripRoutePointOffersTemplate = (point) => {
 const createTripRoutePointTemplate = (point) => {
   const lowerCasePointType = point.type.toLowerCase();
   const offersTemplate = createTripRoutePointOffersTemplate(point);
+  const duration = dateFormat.getFormattedDuration(point.start, point.end);
+
   return (
     `<li class="trip-events__item">
       <div class="event">
@@ -46,7 +48,7 @@ const createTripRoutePointTemplate = (point) => {
             &mdash;
             <time class="event__end-time" datetime="${dateFormat.toIsoString(point.end)}">${dateFormat.formatTime(point.end)}</time>
           </p>
-          <p class="event__duration">30M</p>
+          <p class="event__duration">${duration}</p>
         </div>
 
         <p class="event__price">

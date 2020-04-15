@@ -39,26 +39,26 @@ const createEditButtonsTemplate = (isFavorite = false) => {
 
 const createTripEditFormTemplate = (point = null) => {
   const isEditMode = point !== null;
-  const currentPointType = isEditMode ? point.type : constants.transferPointTypes[0];
+  const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = isEditMode ? point.city : ``;
   const currentPrice = isEditMode ? point.price : 0;
 
   const editButtonsTemplate = createEditButtonsTemplate(false);
 
-  const allTransferPointTypesTemplate = constants.transferPointTypes.map((pointType) => {
+  const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
-  const allActivityPointTypesTemplate = constants.activityPointTypes.map((pointType) => {
+  const allActivityPointTypesTemplate = constants.ACTIVITY_POINT_TYPES.map((pointType) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
-  const allCitiesOptionsTemplate = constants.cities.map((city) => {
+  const allCitiesOptionsTemplate = constants.CITIES.map((city) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const allOffersTemplate = constants.offers.map((offer) => {
+  const allOffersTemplate = constants.OFFERS.map((offer) => {
     let isChecked = isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);

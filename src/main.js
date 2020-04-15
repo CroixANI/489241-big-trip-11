@@ -6,7 +6,9 @@ import createTripEditFormTemplate from "./components/trip-edit.js";
 import createTripRouteDayGroupTemplate from "./components/trip-routes-day.js";
 import createTripRoutesContainerTemplate from "./components/trip-routes.js";
 import createTripRoutePointTemplate from "./components/trip-routes-day-point.js";
-import pointMock from "./data/point-mock.js";
+import pointMock from "./mocks/point.js";
+import filterMock from "./mocks/filter.js";
+import tabsMock from "./mocks/tabs.js";
 import random from "./utils/random.js";
 
 const sitePageHeaderElement = document.querySelector(`.page-header`);
@@ -43,8 +45,11 @@ const renderAll = () => {
 
   render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
 
-  render(tripControlsElement, createTripTabsTemplate(), `beforeend`);
-  render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
+  const randomTab = random.getRandomArrayItem(tabsMock.AVAILABLE_TABS);
+  render(tripControlsElement, createTripTabsTemplate(randomTab), `beforeend`);
+
+  const randomSelectedFilter = random.getRandomArrayItem(filterMock.AVAILABLE_FILTERS);
+  render(tripControlsElement, createTripFiltersTemplate(randomSelectedFilter.type), `beforeend`);
 
   render(tripEventsElement, createTripSortTemplate(), `beforeend`);
   render(tripEventsElement, createTripEditFormTemplate(random.getRandomArrayItem(points)), `beforeend`);

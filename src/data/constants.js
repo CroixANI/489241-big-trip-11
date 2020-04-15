@@ -1,7 +1,7 @@
-const transferPointTypes = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
-const activityPointTypes = [`Check-in`, `Sightseeing`, `Restaurant`];
-const allPointTypes = transferPointTypes.concat(activityPointTypes);
-const cities = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `Minsk`];
+const TRANSFER_POINT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
+const ACTIVITY_POINT_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
+const ALL_POINT_TYPES = TRANSFER_POINT_TYPES.concat(ACTIVITY_POINT_TYPES);
+const CITIES = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `Minsk`];
 const activityToLabel = {
   "Taxi": `Taxi to`,
   "Bus": `Bus to`,
@@ -19,7 +19,7 @@ const createOffer = (type, name, price) => {
   return {type, name, price};
 };
 
-const offers = [
+const OFFERS = [
   createOffer(`luggage`, `Add luggage`, 30),
   createOffer(`comfort`, `Switch to comfort class`, 100),
   createOffer(`meal`, `Add meal`, 15),
@@ -28,7 +28,7 @@ const offers = [
   createOffer(`uber`, `Order Uber`, 20)
 ];
 
-const monthShortNames = [
+const MONTH_SHORT_NAMES = [
   `JAN`,
   `FEB`,
   `MAR`,
@@ -46,11 +46,11 @@ const monthShortNames = [
 const getActivityLabel = (activity) => activityToLabel[activity];
 
 export default {
-  allPointTypes,
-  transferPointTypes,
-  activityPointTypes,
-  cities,
-  offers,
-  monthShortNames,
+  ALL_POINT_TYPES,
+  TRANSFER_POINT_TYPES,
+  ACTIVITY_POINT_TYPES,
+  CITIES,
+  OFFERS,
+  MONTH_SHORT_NAMES,
   getActivityLabel
 };

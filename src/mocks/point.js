@@ -12,9 +12,9 @@ export default () => {
   let secondDate = random.randomDate();
 
   return {
-    type: random.getRandomArrayItem(constants.allPointTypes),
-    city: random.getRandomArrayItem(constants.cities),
-    offers: random.getRandomArray(constants.offers, MIN_OFFERS, MAX_OFFERS),
+    type: random.getRandomArrayItem(constants.ALL_POINT_TYPES),
+    city: random.getRandomArrayItem(constants.CITIES),
+    offers: random.getRandomArray(constants.OFFERS, MIN_OFFERS, MAX_OFFERS),
     description: lorem(),
     photoUrl: `http://picsum.photos/248/152?r=${Math.random()}`,
     start: new Date(Math.min(firstDate, secondDate)),

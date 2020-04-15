@@ -1,7 +1,6 @@
 import constants from "../data/constants.js";
 
-
-const MILLISECONDS_IN_SECOND = 1000; 
+const MILLISECONDS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = 1440;
@@ -18,7 +17,7 @@ const formatTime = (date) => {
 };
 
 const formatDate = (date) => {
-  return `${date.getDate()} ${constants.monthShortNames[date.getMonth()]}`;
+  return `${date.getDate()} ${constants.MONTH_SHORT_NAMES[date.getMonth()]}`;
 };
 
 const toIsoString = (date) => date.toISOString();

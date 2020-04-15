@@ -28,6 +28,21 @@ const offers = [
   createOffer(`uber`, `Order Uber`, 20)
 ];
 
+const monthShortNames = [
+  `JAN`,
+  `FEB`,
+  `MAR`,
+  `APR`,
+  `MAY`,
+  `JUN`,
+  `JUL`,
+  `AUG`,
+  `SEP`,
+  `OCT`,
+  `NOV`,
+  `DEC`,
+];
+
 const getActivityLabel = (activity) => activityToLabel[activity];
 
 export default {
@@ -36,5 +51,6 @@ export default {
   activityPointTypes,
   cities,
   offers,
+  monthShortNames,
   getActivityLabel
 };

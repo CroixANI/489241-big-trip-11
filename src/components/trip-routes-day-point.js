@@ -1,4 +1,7 @@
 import constants from "../data/constants.js";
+import dateFormat from "../utils/date-format.js";
+
+const MAX_OFFERS_TO_RENDER = 3;
 
 const createTripRoutePointOfferTemplate = (offer) => {
   return (
@@ -15,7 +18,7 @@ const createTripRoutePointOffersTemplate = (point) => {
     return ``;
   }
 
-  const allOffersTemplate = point.offers.map((offer) => {
+  const allOffersTemplate = point.offers.slice(0, MAX_OFFERS_TO_RENDER).map((offer) => {
     return createTripRoutePointOfferTemplate(offer);
   });
   return (
@@ -39,9 +42,9 @@ const createTripRoutePointTemplate = (point) => {
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="2019-03-18T10:30">10:30</time>
+            <time class="event__start-time" datetime="${dateFormat.toIsoString(point.start)}">${dateFormat.formatTime(point.start)}</time>
             &mdash;
-            <time class="event__end-time" datetime="2019-03-18T11:00">11:00</time>
+            <time class="event__end-time" datetime="${dateFormat.toIsoString(point.end)}">${dateFormat.formatTime(point.end)}</time>
           </p>
           <p class="event__duration">30M</p>
         </div>

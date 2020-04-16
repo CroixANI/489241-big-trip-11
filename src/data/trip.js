@@ -6,7 +6,7 @@ const compareStartDate = (firstPoint, secondPoint) => {
 };
 
 const createTrip = (points) => {
-  let groupedByDay = points.sort(compareStartDate).reverse().reduce((total, point) => {
+  let groupedByDay = points.sort(compareStartDate).reduce((total, point) => {
     const groupingNumber = dateFormat.getDateNumberForGrouping(point.start);
 
     if (!total) {
@@ -27,8 +27,10 @@ const createTrip = (points) => {
     days: []
   };
 
+  let dayIndex = 1;
   for (let pointsArray of groupedByDay.values()) {
-    result.days.push(createTripDay(pointsArray));
+    result.days.push(createTripDay(dayIndex, pointsArray));
+    dayIndex++;
   }
 
   return result;

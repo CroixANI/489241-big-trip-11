@@ -15,7 +15,7 @@ const createTripRouteDayGroupTemplate = (tripDay) => {
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${tripDay.points.length}</span>
+        <span class="day__counter">${tripDay.index}</span>
         <time class="day__date" datetime="${dateForMarkup}">${dateToDisplay}</time>
       </div>
 

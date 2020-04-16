@@ -18,8 +18,9 @@ const createTripPointMock = () => {
   let start = new Date(Math.min(firstDate, secondDate));
   let end = new Date(Math.max(firstDate, secondDate));
   let price = random.random(MIN_PRICE, MAX_PRICE);
+  let isFavorite = random.random(0, 1) === 1;
 
-  return createTripPoint(type, destination, offers, start, end, price);
+  return createTripPoint(type, destination, offers, start, end, price, isFavorite);
 };
 
 export default createTripPointMock;

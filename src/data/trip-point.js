@@ -1,4 +1,4 @@
-const createTripPoint = (type, destination, offers, start, end, price) => {
+const createTripPoint = (type, destination, offers, start, end, price, isFavorite) => {
   return {
     type,
     destination,
@@ -6,6 +6,7 @@ const createTripPoint = (type, destination, offers, start, end, price) => {
     start,
     end,
     price,
+    isFavorite,
     isEditMode: false
   };
 };

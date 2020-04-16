@@ -59,13 +59,12 @@ const createDestinationDetailsTemplate = (destination) => {
 };
 
 const createTripEditFormTemplate = (point = null) => {
-  const isEditMode = point !== null;
-  const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
+  const currentPointType = point.isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
-  const currentCity = isEditMode ? point.destination.city : ``;
-  const currentPrice = isEditMode ? point.price : 0;
-  const destinationDetailsTemplate = isEditMode ? createDestinationDetailsTemplate(point.destination) : ``;
-  const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(false) : ``;
+  const currentCity = point.isEditMode ? point.destination.city : ``;
+  const currentPrice = point.isEditMode ? point.price : 0;
+  const destinationDetailsTemplate = point.isEditMode ? `` : createDestinationDetailsTemplate(point.destination);
+  const editButtonsTemplate = point.isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
@@ -81,15 +80,15 @@ const createTripEditFormTemplate = (point = null) => {
 
   const offers = backend.getOffers();
   const allOffersTemplate = offers.map((offer) => {
-    let isChecked = isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
+    let isChecked = point.isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);
 
-  const resetButtonTemplate = isEditMode ? `Delete` : `Cancel`;
+  const resetButtonTemplate = point.isEditMode ? `Delete` : `Cancel`;
 
   return (
-    `${isEditMode ? `<li class="trip-events__item">` : ``}
-    <form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
+    `${point.isEditMode ? `<li class="trip-events__item">` : ``}
+    <form class="${point.isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
       <header class="event__header">
         <div class="event__type-wrapper">
           <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -160,7 +159,7 @@ const createTripEditFormTemplate = (point = null) => {
         ${destinationDetailsTemplate}
       </section>
     </form>
-    ${isEditMode ? `</li>` : ``}`
+    ${point.isEditMode ? `</li>` : ``}`
   );
 };
 

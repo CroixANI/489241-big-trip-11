@@ -39,13 +39,32 @@ const createEditButtonsTemplate = (isFavorite = false) => {
     </button>`);
 };
 
+const createDestinationDetailsTemplate = (destination) => {
+  const allPhotosTemplate = destination.photos.map((photoUrl) => {
+    return (`<img class="event__photo" src="${photoUrl}" alt="Event photo">`);
+  }).join(`\n`);
+
+  return (
+    `<section class="event__section  event__section--destination">
+      <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+      <p class="event__destination-description">${destination.description}</p>
+
+      <div class="event__photos-container">
+        <div class="event__photos-tape">
+          ${allPhotosTemplate}
+        </div>
+      </div>
+    </section>`
+  );
+};
+
 const createTripEditFormTemplate = (point = null) => {
   const isEditMode = point !== null;
   const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = isEditMode ? point.destination.city : ``;
   const currentPrice = isEditMode ? point.price : 0;
-
+  const destinationDetailsTemplate = isEditMode ? createDestinationDetailsTemplate(point.destination) : ``;
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(false) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
@@ -137,6 +156,8 @@ const createTripEditFormTemplate = (point = null) => {
             ${allOffersTemplate}
           </div>
         </section>
+
+        ${destinationDetailsTemplate}
       </section>
     </form>
     ${isEditMode ? `</li>` : ``}`

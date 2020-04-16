@@ -1,8 +1,8 @@
-const createDestination = (city, description, photoUrl) => {
+const createDestination = (city, description, photos) => {
   return {
     city,
     description,
-    photoUrl
+    photos
   };
 };
 

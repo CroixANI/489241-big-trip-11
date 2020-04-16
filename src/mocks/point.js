@@ -19,6 +19,7 @@ export default () => {
     photoUrl: `http://picsum.photos/248/152?r=${Math.random()}`,
     start: new Date(Math.min(firstDate, secondDate)),
     end: new Date(Math.max(firstDate, secondDate)),
-    price: random.random(MIN_PRICE, MAX_PRICE)
+    price: random.random(MIN_PRICE, MAX_PRICE),
+    isEditMode: false
   };
 };

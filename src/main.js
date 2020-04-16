@@ -2,7 +2,7 @@ import createTripDetailsTemplate from "./components/trip-details.js";
 import createTripTabsTemplate from "./components/trip-tabs.js";
 import createTripFiltersTemplate from "./components/trip-list-filter.js";
 import createTripSortTemplate from "./components/trip-list-sort.js";
-import createTripEditFormTemplate from "./components/trip-edit.js";
+
 import createTripRoutesContainerTemplate from "./components/trip-routes.js";
 import pointMock from "./mocks/point.js";
 import filterMock from "./mocks/filter.js";
@@ -44,8 +44,8 @@ const renderAll = () => {
   render(tripControlsElement, createTripFiltersTemplate(randomSelectedFilter.type), `beforeend`);
 
   render(tripEventsElement, createTripSortTemplate(), `beforeend`);
-  render(tripEventsElement, createTripEditFormTemplate(random.getRandomArrayItem(points)), `beforeend`);
 
+  points[0].isEditMode = true;
   render(tripEventsElement, createTripRoutesContainerTemplate(points), `beforeend`);
 };
 

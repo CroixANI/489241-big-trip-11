@@ -1,9 +1,13 @@
 import createTripRoutePointTemplate from "./trip-routes-day-point.js";
+import createTripEditFormTemplate from "./trip-edit.js";
 import dateFormat from "../utils/date-format.js";
 
 const createTripRouteDayGroupTemplate = (points) => {
   const day = points[0].start;
   const pointsTemplate = points.map((point) => {
+    if (point.isEditMode) {
+      return createTripEditFormTemplate(point);
+    }
     return createTripRoutePointTemplate(point);
   });
 

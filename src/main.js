@@ -3,9 +3,7 @@ import createTripTabsTemplate from "./components/trip-tabs.js";
 import createTripFiltersTemplate from "./components/trip-list-filter.js";
 import createTripSortTemplate from "./components/trip-list-sort.js";
 import createTripEditFormTemplate from "./components/trip-edit.js";
-import createTripRouteDayGroupTemplate from "./components/trip-routes-day.js";
 import createTripRoutesContainerTemplate from "./components/trip-routes.js";
-import createTripRoutePointTemplate from "./components/trip-routes-day-point.js";
 import pointMock from "./mocks/point.js";
 import filterMock from "./mocks/filter.js";
 import tabsMock from "./mocks/tabs.js";
@@ -34,12 +32,6 @@ const generateTripRoutePointsMocks = () => {
   return result;
 };
 
-const createTripRoutePointsTemplate = (points) => {
-  return points.map((point) => {
-    return createTripRoutePointTemplate(point);
-  }).join(` `);
-};
-
 const renderAll = () => {
   let points = generateTripRoutePointsMocks();
 
@@ -54,10 +46,7 @@ const renderAll = () => {
   render(tripEventsElement, createTripSortTemplate(), `beforeend`);
   render(tripEventsElement, createTripEditFormTemplate(random.getRandomArrayItem(points)), `beforeend`);
 
-  let pointsTemplate = createTripRoutePointsTemplate(points);
-  let dayTemplate = createTripRouteDayGroupTemplate(pointsTemplate);
-  let tripRoutesContainer = createTripRoutesContainerTemplate(dayTemplate);
-  render(tripEventsElement, tripRoutesContainer, `beforeend`);
+  render(tripEventsElement, createTripRoutesContainerTemplate(points), `beforeend`);
 };
 
 renderAll();

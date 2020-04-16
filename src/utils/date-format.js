@@ -17,7 +17,15 @@ const formatTime = (date) => {
 };
 
 const formatDate = (date) => {
-  return `${date.getDate()} ${constants.MONTH_SHORT_NAMES[date.getMonth()]}`;
+  return `${constants.MONTH_SHORT_NAMES[date.getMonth() - 1]} ${date.getDate()}`;
+};
+
+const formatDateToIso = (date) => {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+};
+
+const formatDateToGroupingString = (date) => {
+  return `${date.getMonth()}-${date.getDate()}`;
 };
 
 const toIsoString = (date) => date.toISOString();
@@ -51,9 +59,14 @@ const getFormattedDuration = (start, end) => {
   return `${duration.minutes}M`;
 };
 
+const getDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
 export default {
   formatTime,
   formatDate,
+  formatDateToIso,
   toIsoString,
-  getFormattedDuration
+  getFormattedDuration,
+  formatDateToGroupingString,
+  getDateOnly
 };

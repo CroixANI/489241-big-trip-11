@@ -4,6 +4,7 @@ import createTripFiltersTemplate from "./components/trip-list-filter.js";
 import createTripSortTemplate from "./components/trip-list-sort.js";
 import createTripRoutesContainerTemplate from "./components/trip-routes.js";
 import backend from "./data/backend.js";
+import createTrip from "./data/trip.js";
 import filterMock from "./mocks/filter.js";
 import tabsMock from "./mocks/tabs.js";
 import random from "./utils/random.js";
@@ -18,9 +19,9 @@ const render = (container, template, place) => {
 };
 
 const renderAll = () => {
-  let points = backend.getPoints();
+  const trip = createTrip(backend.getPoints());
 
-  render(tripMainElement, createTripDetailsTemplate(), `afterbegin`);
+  render(tripMainElement, createTripDetailsTemplate(trip), `afterbegin`);
 
   const randomTab = random.getRandomArrayItem(tabsMock.AVAILABLE_TABS);
   render(tripControlsElement, createTripTabsTemplate(randomTab), `beforeend`);
@@ -30,8 +31,8 @@ const renderAll = () => {
 
   render(tripEventsElement, createTripSortTemplate(), `beforeend`);
 
-  points[0].isEditMode = true;
-  render(tripEventsElement, createTripRoutesContainerTemplate(points), `beforeend`);
+  trip.days[0].points[0].isEditMode = true;
+  render(tripEventsElement, createTripRoutesContainerTemplate(trip), `beforeend`);
 };
 
 renderAll();

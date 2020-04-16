@@ -21,6 +21,7 @@ const createTripRoutePointOffersTemplate = (point) => {
   const allOffersTemplate = point.offers.slice(0, MAX_OFFERS_TO_RENDER).map((offer) => {
     return createTripRoutePointOfferTemplate(offer);
   });
+
   return (
     `<h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
@@ -33,6 +34,11 @@ const createTripRoutePointTemplate = (point) => {
   const lowerCasePointType = point.type.toLowerCase();
   const offersTemplate = createTripRoutePointOffersTemplate(point);
   const duration = dateFormat.getFormattedDuration(point.start, point.end);
+  const activityLabel = constants.getActivityLabel(point.type);
+  const startDateToDisplay = dateFormat.formatTime(point.start);
+  const startDateForMarkup = dateFormat.toIsoString(point.start);
+  const endDateToDisplay = dateFormat.formatTime(point.end);
+  const endDateForMarkup = dateFormat.toIsoString(point.end);
 
   return (
     `<li class="trip-events__item">
@@ -40,13 +46,13 @@ const createTripRoutePointTemplate = (point) => {
         <div class="event__type">
           <img class="event__type-icon" width="42" height="42" src="img/icons/${lowerCasePointType}.png" alt="Event type icon">
         </div>
-        <h3 class="event__title">${constants.getActivityLabel(point.type)} ${point.city}</h3>
+        <h3 class="event__title">${activityLabel} ${point.destination.city}</h3>
 
         <div class="event__schedule">
           <p class="event__time">
-            <time class="event__start-time" datetime="${dateFormat.toIsoString(point.start)}">${dateFormat.formatTime(point.start)}</time>
+            <time class="event__start-time" datetime="${startDateForMarkup}">${startDateToDisplay}</time>
             &mdash;
-            <time class="event__end-time" datetime="${dateFormat.toIsoString(point.end)}">${dateFormat.formatTime(point.end)}</time>
+            <time class="event__end-time" datetime="${endDateForMarkup}">${endDateToDisplay}</time>
           </p>
           <p class="event__duration">${duration}</p>
         </div>

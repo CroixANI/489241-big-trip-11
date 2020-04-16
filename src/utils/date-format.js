@@ -24,6 +24,10 @@ const formatDateToIso = (date) => {
   return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 };
 
+const formatDateToInputValue = (date) => {
+  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} 00:00`;
+};
+
 const getDateNumberForGrouping = (date) => {
   return date.getMonth() * 100 + date.getDate();
 };
@@ -68,5 +72,6 @@ export default {
   toIsoString,
   getFormattedDuration,
   getDateNumberForGrouping,
+  formatDateToInputValue,
   getDateOnly
 };

@@ -1,4 +1,4 @@
-import offer from "../mocks/offer.js";
+import offer from "./offer.js";
 import pointMock from "../mocks/point.js";
 import destinationMock from "../mocks/destination.js";
 import random from "../utils/random.js";

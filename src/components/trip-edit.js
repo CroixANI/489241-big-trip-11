@@ -1,5 +1,6 @@
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
+import dateFormat from "../utils/date-format.js";
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -42,10 +43,10 @@ const createTripEditFormTemplate = (point = null) => {
   const isEditMode = point !== null;
   const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
-  const currentCity = isEditMode ? point.city : ``;
+  const currentCity = isEditMode ? point.destination.city : ``;
   const currentPrice = isEditMode ? point.price : 0;
 
-  const editButtonsTemplate = createEditButtonsTemplate(false);
+  const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(false) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
@@ -64,6 +65,8 @@ const createTripEditFormTemplate = (point = null) => {
     let isChecked = isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);
+
+  const resetButtonTemplate = isEditMode ? `Delete` : `Cancel`;
 
   return (
     `${isEditMode ? `<li class="trip-events__item">` : ``}
@@ -105,12 +108,12 @@ const createTripEditFormTemplate = (point = null) => {
           <label class="visually-hidden" for="event-start-time-1">
             From
           </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFormat.formatDateToInputValue(point.start)}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">
             To
           </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="18/03/19 00:00">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateFormat.formatDateToInputValue(point.end)}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -122,9 +125,9 @@ const createTripEditFormTemplate = (point = null) => {
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${isEditMode ? `Delete` : `Cancel`}</button>
+        <button class="event__reset-btn" type="reset">${resetButtonTemplate}</button>
 
-        ${isEditMode ? editButtonsTemplate : ``}
+        ${editButtonsTemplate}
       </header>
       <section class="event__details">
         <section class="event__section  event__section--offers">

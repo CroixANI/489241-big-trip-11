@@ -4,12 +4,12 @@ import dateFormat from "../utils/date-format";
 const createTripRoutesContainerTemplate = (points) => {
   let groups = new Map();
   points.forEach((point) => {
-    const startDateString = dateFormat.formatDateToGroupingString(point.start);
-    if (groups.has(startDateString) === false) {
-      groups.set(startDateString, []);
+    const groupingNumber = dateFormat.getDateNumberForGrouping(point.start);
+    if (groups.has(groupingNumber) === false) {
+      groups.set(groupingNumber, []);
     }
 
-    let pointsInDay = groups.get(startDateString);
+    let pointsInDay = groups.get(groupingNumber);
     pointsInDay.push(point);
   });
 

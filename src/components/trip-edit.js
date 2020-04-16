@@ -1,4 +1,5 @@
 import constants from "../data/constants.js";
+import backend from "../data/backend.js";
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -54,11 +55,12 @@ const createTripEditFormTemplate = (point = null) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
-  const allCitiesOptionsTemplate = constants.CITIES.map((city) => {
+  const allCitiesOptionsTemplate = backend.getDestinations().map((city) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const allOffersTemplate = constants.OFFERS.map((offer) => {
+  const offers = backend.getOffers();
+  const allOffersTemplate = offers.map((offer) => {
     let isChecked = isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);

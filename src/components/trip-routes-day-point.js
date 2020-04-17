@@ -20,7 +20,7 @@ const createTripRoutePointOffersTemplate = (point) => {
 
   const allOffersTemplate = point.offers.slice(0, MAX_OFFERS_TO_RENDER).map((offer) => {
     return createTripRoutePointOfferTemplate(offer);
-  });
+  }).join(`\n`);
 
   return (
     `<h4 class="visually-hidden">Offers:</h4>

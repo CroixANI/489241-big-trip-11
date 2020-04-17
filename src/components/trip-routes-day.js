@@ -10,7 +10,7 @@ const createTripRouteDayGroupTemplate = (tripDay) => {
       return createTripEditFormTemplate(point);
     }
     return createTripRoutePointTemplate(point);
-  });
+  }).join(`\n`);
 
   return (
     `<li class="trip-days__item  day">

@@ -1,13 +1,26 @@
-const createTripRouteDayGroupTemplate = (child) => {
+import createTripRoutePointTemplate from "./trip-routes-day-point.js";
+import createTripEditFormTemplate from "./trip-edit.js";
+import dateFormat from "../utils/date-format.js";
+
+const createTripRouteDayGroupTemplate = (tripDay) => {
+  const dateToDisplay = dateFormat.formatDate(tripDay.date);
+  const dateForMarkup = dateFormat.formatDateToIso(tripDay.date);
+  const pointsTemplate = tripDay.points.map((point) => {
+    if (point.isEditMode) {
+      return createTripEditFormTemplate(point);
+    }
+    return createTripRoutePointTemplate(point);
+  }).join(`\n`);
+
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">1</span>
-        <time class="day__date" datetime="2019-03-18">MAR 18</time>
+        <span class="day__counter">${tripDay.index}</span>
+        <time class="day__date" datetime="${dateForMarkup}">${dateToDisplay}</time>
       </div>
 
       <ul class="trip-events__list">
-        ${child}
+        ${pointsTemplate}
       </ul>
     </li>`
   );

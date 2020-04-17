@@ -80,7 +80,7 @@ const createTripEditFormTemplate = (point = null) => {
 
   const offers = backend.getOffers();
   const allOffersTemplate = offers.map((offer) => {
-    let isChecked = point.isEditMode ? point.offers.find((item) => item.type === offer.type) !== undefined : false;
+    const isChecked = point.isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);
 

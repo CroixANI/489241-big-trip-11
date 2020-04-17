@@ -12,7 +12,7 @@ const createTripSortItemTemplate = (name, isChecked) => {
   );
 };
 
-const createTripSortTemplate = (currentSort = null) => {
+const createTripSortTemplate = (currentSort) => {
   const allSortItemsTemplate = sort.AVAILABLE_SORT.map((sortItem) => {
     return createTripSortItemTemplate(sortItem, sortItem === currentSort);
   }).join(`\n`);

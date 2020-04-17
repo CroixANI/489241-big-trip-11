@@ -11,7 +11,7 @@ const castTimeFormat = (value) => {
 };
 
 const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours() % 12);
+  const hours = castTimeFormat(date.getHours());
   const minutes = castTimeFormat(date.getMinutes());
   return `${hours}:${minutes}`;
 };
@@ -25,14 +25,12 @@ const formatDateToIso = (date) => {
 };
 
 const formatDateToInputValue = (date) => {
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} 00:00`;
+  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${formatTime(date)}`;
 };
 
 const getDateNumberForGrouping = (date) => {
   return date.getMonth() * 100 + date.getDate();
 };
-
-const toIsoString = (date) => date.toISOString();
 
 // more details here https://medium.com/javascript-in-plain-english/find-difference-between-dates-in-javascript-80d9280d8598
 const getDuration = (start, end) => {
@@ -69,7 +67,6 @@ export default {
   formatTime,
   formatDate,
   formatDateToIso,
-  toIsoString,
   getFormattedDuration,
   getDateNumberForGrouping,
   formatDateToInputValue,

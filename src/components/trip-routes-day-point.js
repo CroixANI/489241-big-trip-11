@@ -36,9 +36,9 @@ const createTripRoutePointTemplate = (point) => {
   const duration = dateFormat.getFormattedDuration(point.start, point.end);
   const activityLabel = constants.getActivityLabel(point.type);
   const startDateToDisplay = dateFormat.formatTime(point.start);
-  const startDateForMarkup = dateFormat.toIsoString(point.start);
+  const startDateForMarkup = point.start.toISOString();
   const endDateToDisplay = dateFormat.formatTime(point.end);
-  const endDateForMarkup = dateFormat.toIsoString(point.end);
+  const endDateForMarkup = point.end.toISOString();
 
   return (
     `<li class="trip-events__item">

@@ -44,7 +44,7 @@ const createTripRoutePointTemplate = (point) => {
     `<li class="trip-events__item">
       <div class="event">
         <div class="event__type">
-          <img class="event__type-icon" width="42" height="42" src="img/icons/${lowerCasePointType}.png" alt="${lowerCasePointType}">
+          <img class="event__type-icon" width="42" height="42" src="img/icons/${lowerCasePointType}.png" alt="${point.type}">
         </div>
         <h3 class="event__title">${activityLabel} ${point.destination.city}</h3>
 

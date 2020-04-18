@@ -34,8 +34,6 @@ const renderAll = () => {
   render(tripViewHeaderElement, new MenuComponent().getElement(), constants.RENDER_POSITIONS.AFTEREND);
   render(tripFilterHeaderElement, new TripFilterComponent().getElement(), constants.RENDER_POSITIONS.AFTEREND);
   render(tripEventsElement, new TripSortComponent().getElement(), constants.RENDER_POSITIONS.BEFOREEND);
-
-  trip.days[0].points[0].isEditMode = true;
   render(tripEventsElement, new TripComponent(trip).getElement(), constants.RENDER_POSITIONS.BEFOREEND);
 };
 

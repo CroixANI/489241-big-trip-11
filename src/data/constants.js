@@ -32,10 +32,17 @@ const MONTH_SHORT_NAMES = [
 
 const getActivityLabel = (activity) => activityToLabel[activity];
 
+const RENDER_POSITIONS = {
+  AFTERBEGIN: `afterbegin`,
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`
+};
+
 export default {
   ALL_POINT_TYPES,
   TRANSFER_POINT_TYPES,
   ACTIVITY_POINT_TYPES,
   MONTH_SHORT_NAMES,
+  RENDER_POSITIONS,
   getActivityLabel
 };

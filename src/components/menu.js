@@ -7,8 +7,7 @@ const createTripTabsTemplate = (currentTab) => {
     return (`<a class="trip-tabs__btn ${currentTab === tab ? `trip-tabs__btn--active` : ``}" href="#">${tab}</a>`);
   }).join(`\n`);
   return (
-    `<h2 class="visually-hidden">Switch trip view</h2>
-    <nav class="trip-controls__trip-tabs  trip-tabs">
+    `<nav class="trip-controls__trip-tabs  trip-tabs">
       ${allTabsTemplate}
     </nav>`
   );

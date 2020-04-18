@@ -1,5 +1,5 @@
 import TripDayComponent from "./trip-day.js";
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const createTripContainerTemplate = (trip) => {
   let daysTemplates = [];

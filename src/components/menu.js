@@ -1,4 +1,4 @@
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const AVAILABLE_TABS = [`Table`, `Stats`];
 

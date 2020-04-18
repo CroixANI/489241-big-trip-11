@@ -1,5 +1,4 @@
 import backend from "../data/backend.js";
-import lorem from "../utils/lorem.js";
 import random from "../utils/random.js";
 import createDestination from "../data/destination.js";
 
@@ -12,7 +11,7 @@ const createDestinationMock = () => {
   for (let index = 0; index < count; index++) {
     photos.push(`http://picsum.photos/248/152?r=${Math.random()}`);
   }
-  return createDestination(random.getRandomArrayItem(backend.getDestinations()), lorem(), photos);
+  return createDestination(random.getRandomArrayItem(backend.getDestinations()), random.lorem(), photos);
 };
 
 export default createDestinationMock;

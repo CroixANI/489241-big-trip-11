@@ -1,4 +1,4 @@
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const createTripCostTemplate = (trip) => {
   const totalCost = trip.days.reduce((total, tripDay) => {

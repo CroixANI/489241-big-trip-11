@@ -1,7 +1,7 @@
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();

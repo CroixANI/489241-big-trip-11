@@ -1,7 +1,7 @@
 import TripPointComponent from "./trip-point.js";
 import TripPointEditComponent from "./trip-point-edit.js";
 import dateFormat from "../utils/date-format.js";
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const createTripRouteDayGroupTemplate = (tripDay) => {
   const dateToDisplay = dateFormat.formatDate(tripDay.date);

@@ -1,6 +1,6 @@
 import TripCostComponent from "./trip-details-cost.js";
 import TripInfoComponent from "./trip-details-info.js";
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const createTripDetailsTemplate = (trip) => {
   let tripInfoTemplate = new TripInfoComponent(trip).getTemplate();

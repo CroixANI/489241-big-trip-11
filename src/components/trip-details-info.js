@@ -1,5 +1,5 @@
-import createElement from "../utils/create-element.js";
 import dateFormat from "../utils/date-format.js";
+import {createElement} from "../utils/render.js";
 
 const buildTripTitle = (trip) => {
   return trip.days.reduce((tripTitle, tripDay) => {

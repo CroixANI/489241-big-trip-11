@@ -1,6 +1,6 @@
 import constants from "../data/constants.js";
 import dateFormat from "../utils/date-format.js";
-import createElement from "../utils/create-element.js";
+import {createElement} from "../utils/render.js";
 
 const MAX_OFFERS_TO_RENDER = 3;
 

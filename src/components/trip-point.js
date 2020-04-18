@@ -1,5 +1,6 @@
 import constants from "../data/constants.js";
 import dateFormat from "../utils/date-format.js";
+import createElement from "../utils/create-element.js";
 
 const MAX_OFFERS_TO_RENDER = 3;
 
@@ -71,4 +72,25 @@ const createTripRoutePointTemplate = (point) => {
   );
 };
 
-export default createTripRoutePointTemplate;
+export default class TripPointComponent {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripRoutePointTemplate(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

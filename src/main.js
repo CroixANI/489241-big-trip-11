@@ -1,13 +1,10 @@
-import createTripDetailsTemplate from "./components/trip-details.js";
-import createTripTabsTemplate from "./components/trip-tabs.js";
-import createTripFiltersTemplate from "./components/trip-list-filter.js";
-import createTripSortTemplate from "./components/trip-list-sort.js";
-import createTripRoutesContainerTemplate from "./components/trip-routes.js";
+import TripDetailsComponent from "./components/trip-details.js";
+import MenuComponent from "./components/menu.js";
+import TripFilterComponent from "./components/trip-filter.js";
+import TripSortComponent from "./components/trip-sort.js";
+import TripComponent from "./components/trip.js";
 import backend from "./data/backend.js";
 import createTrip from "./data/trip.js";
-import filterMock from "./mocks/filter.js";
-import tabsMock from "./mocks/tabs.js";
-import random from "./utils/random.js";
 
 const sitePageHeaderElement = document.querySelector(`.page-header`);
 const tripMainElement = sitePageHeaderElement.querySelector(`.trip-main`);
@@ -21,18 +18,13 @@ const render = (container, template, place) => {
 const renderAll = () => {
   const trip = createTrip(backend.getPoints());
 
-  render(tripMainElement, createTripDetailsTemplate(trip), `afterbegin`);
-
-  const randomTab = random.getRandomArrayItem(tabsMock.AVAILABLE_TABS);
-  render(tripControlsElement, createTripTabsTemplate(randomTab), `beforeend`);
-
-  const randomSelectedFilter = random.getRandomArrayItem(filterMock.AVAILABLE_FILTERS);
-  render(tripControlsElement, createTripFiltersTemplate(randomSelectedFilter.type), `beforeend`);
-
-  render(tripEventsElement, createTripSortTemplate(), `beforeend`);
+  render(tripMainElement, new TripDetailsComponent(trip).getTemplate(), `afterbegin`);
+  render(tripControlsElement, new MenuComponent().getTemplate(), `beforeend`);
+  render(tripControlsElement, new TripFilterComponent().getTemplate(), `beforeend`);
+  render(tripEventsElement, new TripSortComponent().getTemplate(), `beforeend`);
 
   trip.days[0].points[0].isEditMode = true;
-  render(tripEventsElement, createTripRoutesContainerTemplate(trip), `beforeend`);
+  render(tripEventsElement, new TripComponent(trip).getTemplate(), `beforeend`);
 };
 
 renderAll();

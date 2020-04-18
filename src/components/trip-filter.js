@@ -1,4 +1,10 @@
-import filter from "../mocks/filter.js";
+import createElement from "../utils/create-element.js";
+
+const createFilter = (name) => {
+  return {type: name.toLowerCase(), name};
+};
+
+const AVAILABLE_FILTERS = [createFilter(`Everything`), createFilter(`Future`), createFilter(`Past`)];
 
 const createTripFilterTemplate = (type, name, isChecked = false) => {
   return (
@@ -10,7 +16,7 @@ const createTripFilterTemplate = (type, name, isChecked = false) => {
 };
 
 const createTripFiltersTemplate = (currentFilterType = ``) => {
-  const allFiltersTemplates = filter.AVAILABLE_FILTERS.map((filterItem) => {
+  const allFiltersTemplates = AVAILABLE_FILTERS.map((filterItem) => {
     return createTripFilterTemplate(filterItem.type, filterItem.name, filterItem.type === currentFilterType);
   }).join(`\n`);
 
@@ -24,5 +30,26 @@ const createTripFiltersTemplate = (currentFilterType = ``) => {
   );
 };
 
-export default createTripFiltersTemplate;
+export default class TripFilterComponent {
+  constructor() {
+    this._currentFilter = AVAILABLE_FILTERS[0].type;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripFiltersTemplate(this._currentFilter);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
 

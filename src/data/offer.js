@@ -1,5 +1,7 @@
-const createOffer = (type, name, price) => {
-  return {type, name, price};
-};
-
-export default createOffer;
+export default class Offer {
+  constructor(type, name, price) {
+    this.type = type;
+    this.name = name;
+    this.price = price;
+  }
+}

@@ -7,7 +7,7 @@ import TripComponent from "./components/trip.js";
 import TripDayComponent from "./components/trip-day.js";
 import TripPointComponent from "./components/trip-point.js";
 import TripPointEditComponent from "./components/trip-point-edit.js";
-import createTripDetails from "./data/trip-details.js";
+import TripDetails from "./data/trip-details.js";
 import constants from "./data/constants.js";
 import dateFormat from "./utils/date-format.js";
 import {render} from "./utils/render.js";
@@ -108,7 +108,7 @@ const renderAll = () => {
   const points = backend.getPoints();
   const orderedPoints = points.sort(compareStartDate);
   const groupedByDay = groupPointsByStartDate(orderedPoints);
-  const tripDetails = createTripDetails(orderedPoints);
+  const tripDetails = new TripDetails(orderedPoints);
 
   render(tripMainElement, new TripDetailsComponent(tripDetails).getElement(), constants.RENDER_POSITIONS.AFTER_BEGIN);
   render(tripViewHeaderElement, new MenuComponent().getElement(), constants.RENDER_POSITIONS.AFTER_END);

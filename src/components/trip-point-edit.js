@@ -185,12 +185,16 @@ export default class TripPointEditComponent {
     return this._element;
   }
 
-  getCancelButtonElement() {
-    return this.getElement().querySelector(EDIT_BUTTON_SELECTOR);
+  addOnCancelButtonClickEvent(onCancelButtonClick) {
+    this.getElement()
+      .querySelector(EDIT_BUTTON_SELECTOR)
+      .addEventListener(`click`, onCancelButtonClick);
   }
 
-  getFormElement() {
-    return this.getElement().querySelector(FORM_SELECTOR);
+  addOnFormSubmitEvent(onEditFormSubmit) {
+    this.getElement()
+      .querySelector(FORM_SELECTOR)
+      .addEventListener(`submit`, onEditFormSubmit);
   }
 
   removeElement() {

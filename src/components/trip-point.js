@@ -91,8 +91,10 @@ export default class TripPointComponent {
     return this._element;
   }
 
-  getEditButtonElement() {
-    return this.getElement().querySelector(EDIT_BUTTON_SELECTOR);
+  addOnEditButtonClickEvent(onEditButtonClick) {
+    this.getElement()
+      .querySelector(EDIT_BUTTON_SELECTOR)
+      .addEventListener(`click`, onEditButtonClick);
   }
 
   removeElement() {

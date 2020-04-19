@@ -17,6 +17,7 @@ const MAIN_CONTAINER_SELECTOR = `.trip-main`;
 const MENU_HEADER_SELECTOR = `.trip-controls .trip-view-header`;
 const FILTER_HEADER_SELECTOR = `.trip-controls .trip-filter-header`;
 const TRIP_CONTAINER_SELECTOR = `main .trip-events`;
+const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
 
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
@@ -68,21 +69,17 @@ const renderTripPoint = (container, point) => {
     hideEditForm();
   };
 
-  const editButton = viewComponent.getEditButtonElement();
-  editButton.addEventListener(`click`, onEditButtonClick);
+  viewComponent.addOnEditButtonClickEvent(onEditButtonClick);
 
-  const cancelButton = editComponent.getCancelButtonElement();
-  cancelButton.addEventListener(`click`, onCancelButtonClick);
-
-  const form = editComponent.getFormElement();
-  form.addEventListener(`submit`, onEditFormSubmit);
+  editComponent.addOnCancelButtonClickEvent(onCancelButtonClick);
+  editComponent.addOnFormSubmitEvent(onEditFormSubmit);
 
   render(container, viewComponent.getElement(), constants.RENDER_POSITIONS.BEFORE_END);
 };
 
 const renderTripDay = (container, dayIndex, orderedPoints) => {
   const tripDayComponent = new TripDayComponent(dayIndex, orderedPoints[0].start);
-  const pointsContainer = tripDayComponent.getTripPointsContainerElement();
+  const pointsContainer = tripDayComponent.getElement().querySelector(POINTS_CONTAINER_SELECTOR);
 
   for (let point of orderedPoints) {
     renderTripPoint(pointsContainer, point);

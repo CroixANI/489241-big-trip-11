@@ -2,8 +2,6 @@
 import dateFormat from "../utils/date-format.js";
 import {createElement} from "../utils/render.js";
 
-const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
-
 const createTripRouteDayGroupTemplate = (index, date) => {
   const dateToDisplay = dateFormat.formatDate(date);
   const dateForMarkup = dateFormat.formatDateToIso(date);
@@ -38,10 +36,6 @@ export default class TripDayComponent {
     }
 
     return this._element;
-  }
-
-  getTripPointsContainerElement() {
-    return this.getElement().querySelector(POINTS_CONTAINER_SELECTOR);
   }
 
   removeElement() {

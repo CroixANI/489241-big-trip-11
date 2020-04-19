@@ -12,6 +12,7 @@ import NoPointsComponent from "./components/no-points.js";
 import constants from "./data/constants.js";
 import dateFormat from "./utils/date-format.js";
 import {render} from "./utils/render.js";
+import {isEscapeEvent} from "./utils/events.js";
 
 const PAGE_HEADER_SELECTOR = `.page-header`;
 const MAIN_CONTAINER_SELECTOR = `.trip-main`;
@@ -70,10 +71,15 @@ const renderTripPoint = (container, point) => {
     hideEditForm();
   };
 
+  const onEscapeKeydown = (evt) => {
+    isEscapeEvent(evt, hideEditForm);
+  };
+
   viewComponent.addOnEditButtonClickEvent(onEditButtonClick);
 
   editComponent.addOnCancelButtonClickEvent(onCancelButtonClick);
   editComponent.addOnFormSubmitEvent(onEditFormSubmit);
+  document.addEventListener(`keydown`, onEscapeKeydown);
 
   render(container, viewComponent.getElement(), constants.RENDER_POSITIONS.BEFORE_END);
 };

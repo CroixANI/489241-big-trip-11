@@ -2,9 +2,9 @@ import TripCostComponent from "./trip-details-cost.js";
 import TripInfoComponent from "./trip-details-info.js";
 import {createElement} from "../utils/render.js";
 
-const createTripDetailsTemplate = (trip) => {
-  let tripInfoTemplate = new TripInfoComponent(trip).getTemplate();
-  let tripCostTemplate = new TripCostComponent(trip).getTemplate();
+const createTripDetailsTemplate = (tripDetails) => {
+  let tripInfoTemplate = new TripInfoComponent(tripDetails).getTemplate();
+  let tripCostTemplate = new TripCostComponent(tripDetails).getTemplate();
   return (
     `<section class="trip-main__trip-info  trip-info">
       ${tripInfoTemplate}
@@ -15,13 +15,13 @@ const createTripDetailsTemplate = (trip) => {
 };
 
 export default class TripDetailsComponent {
-  constructor(trip) {
-    this._trip = trip;
+  constructor(tripDetails) {
+    this._tripDetails = tripDetails;
     this._element = null;
   }
 
   getTemplate() {
-    return createTripDetailsTemplate(this._trip);
+    return createTripDetailsTemplate(this._tripDetails);
   }
 
   getElement() {

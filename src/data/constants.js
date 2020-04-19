@@ -33,9 +33,9 @@ const MONTH_SHORT_NAMES = [
 const getActivityLabel = (activity) => activityToLabel[activity];
 
 const RENDER_POSITIONS = {
-  AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`,
-  AFTEREND: `afterend`
+  AFTER_BEGIN: `afterbegin`,
+  BEFORE_END: `beforeend`,
+  AFTER_END: `afterend`
 };
 
 export default {

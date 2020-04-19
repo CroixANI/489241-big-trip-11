@@ -1,40 +1,35 @@
-import TripPointComponent from "./trip-point.js";
-import TripPointEditComponent from "./trip-point-edit.js";
+
 import dateFormat from "../utils/date-format.js";
 import {createElement} from "../utils/render.js";
 
-const createTripRouteDayGroupTemplate = (tripDay) => {
-  const dateToDisplay = dateFormat.formatDate(tripDay.date);
-  const dateForMarkup = dateFormat.formatDateToIso(tripDay.date);
-  const pointsTemplate = tripDay.points.map((point) => {
-    if (point.isEditMode) {
-      return new TripPointEditComponent(point).getTemplate();
-    }
-    return new TripPointComponent(point).getTemplate();
-  }).join(`\n`);
+const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
+
+const createTripRouteDayGroupTemplate = (index, date) => {
+  const dateToDisplay = dateFormat.formatDate(date);
+  const dateForMarkup = dateFormat.formatDateToIso(date);
 
   return (
     `<li class="trip-days__item  day">
       <div class="day__info">
-        <span class="day__counter">${tripDay.index}</span>
+        <span class="day__counter">${index}</span>
         <time class="day__date" datetime="${dateForMarkup}">${dateToDisplay}</time>
       </div>
 
       <ul class="trip-events__list">
-        ${pointsTemplate}
       </ul>
     </li>`
   );
 };
 
 export default class TripDayComponent {
-  constructor(tripDay) {
-    this._tripDay = tripDay;
+  constructor(index, date) {
+    this._index = index;
+    this._date = date;
     this._element = null;
   }
 
   getTemplate() {
-    return createTripRouteDayGroupTemplate(this._tripDay);
+    return createTripRouteDayGroupTemplate(this._index, this._date);
   }
 
   getElement() {
@@ -43,6 +38,10 @@ export default class TripDayComponent {
     }
 
     return this._element;
+  }
+
+  getTripPointsContainerElement() {
+    return this.getElement().querySelector(POINTS_CONTAINER_SELECTOR);
   }
 
   removeElement() {

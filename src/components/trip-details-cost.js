@@ -1,27 +1,21 @@
 import {createElement} from "../utils/render.js";
 
-const createTripCostTemplate = (trip) => {
-  const totalCost = trip.days.reduce((total, tripDay) => {
-    return total + tripDay.points.reduce((totalInDay, tripPoint) => {
-      return totalInDay + tripPoint.price;
-    }, 0);
-  }, 0);
-
+const createTripCostTemplate = (tripDetails) => {
   return (
     `<p class="trip-info__cost">
-      Total: &euro;&nbsp;<span class="trip-info__cost-value">${totalCost}</span>
+      Total: &euro;&nbsp;<span class="trip-info__cost-value">${tripDetails.totalCost}</span>
     </p>`
   );
 };
 
 export default class TripCostComponent {
-  constructor(trip) {
-    this._trip = trip;
+  constructor(tripDetails) {
+    this._tripDetails = tripDetails;
     this._element = null;
   }
 
   getTemplate() {
-    return createTripCostTemplate(this._trip);
+    return createTripCostTemplate(this._tripDetails);
   }
 
   getElement() {

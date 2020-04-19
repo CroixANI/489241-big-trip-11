@@ -3,6 +3,7 @@ import dateFormat from "../utils/date-format.js";
 import {createElement} from "../utils/render.js";
 
 const MAX_OFFERS_TO_RENDER = 3;
+const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
 
 const createTripRoutePointOfferTemplate = (offer) => {
   return (
@@ -88,6 +89,10 @@ export default class TripPointComponent {
     }
 
     return this._element;
+  }
+
+  getEditButtonElement() {
+    return this.getElement().querySelector(EDIT_BUTTON_SELECTOR);
   }
 
   removeElement() {

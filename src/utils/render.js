@@ -9,13 +9,13 @@ export const createElement = (template) => {
 
 export const render = (container, element, place) => {
   switch (place) {
-    case constants.RENDER_POSITIONS.AFTERBEGIN:
+    case constants.RENDER_POSITIONS.AFTER_BEGIN:
       container.prepend(element);
       break;
-    case constants.RENDER_POSITIONS.BEFOREEND:
+    case constants.RENDER_POSITIONS.BEFORE_END:
       container.append(element);
       break;
-    case constants.RENDER_POSITIONS.AFTEREND:
+    case constants.RENDER_POSITIONS.AFTER_END:
       container.after(element);
       break;
   }

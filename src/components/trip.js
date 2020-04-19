@@ -1,22 +1,14 @@
-import TripDayComponent from "./trip-day.js";
 import {createElement} from "../utils/render.js";
 
-const createTripContainerTemplate = (trip) => {
-  let daysTemplates = [];
-  for (let tripDay of trip.days) {
-    daysTemplates.push(new TripDayComponent(tripDay).getTemplate());
-  }
-
+const createTripContainerTemplate = () => {
   return (
     `<ul class="trip-days">
-      ${daysTemplates.join(`\n`)}
     </ul>`
   );
 };
 
 export default class TripComponent {
-  constructor(trip) {
-    this._trip = trip;
+  constructor() {
     this._element = null;
   }
 
@@ -30,6 +22,10 @@ export default class TripComponent {
     }
 
     return this._element;
+  }
+
+  getDaysContainerElement() {
+    return this.getElement();
   }
 
   removeElement() {

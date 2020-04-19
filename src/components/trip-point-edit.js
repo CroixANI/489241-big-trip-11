@@ -3,6 +3,9 @@ import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 import {createElement} from "../utils/render.js";
 
+const FORM_SELECTOR = `form`;
+const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
+
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
   return (
@@ -60,12 +63,13 @@ const createDestinationDetailsTemplate = (destination) => {
 };
 
 const createTripEditFormTemplate = (point = null) => {
-  const currentPointType = point.isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
+  const isEditMode = true;
+  const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
-  const currentCity = point.isEditMode ? point.destination.city : ``;
-  const currentPrice = point.isEditMode ? point.price : 0;
-  const destinationDetailsTemplate = point.isEditMode ? `` : createDestinationDetailsTemplate(point.destination);
-  const editButtonsTemplate = point.isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
+  const currentCity = isEditMode ? point.destination.city : ``;
+  const currentPrice = isEditMode ? point.price : 0;
+  const destinationDetailsTemplate = isEditMode ? `` : createDestinationDetailsTemplate(point.destination);
+  const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
@@ -81,87 +85,86 @@ const createTripEditFormTemplate = (point = null) => {
 
   const offers = backend.getOffers();
   const allOffersTemplate = offers.map((offer) => {
-    const isChecked = point.isEditMode && point.offers.some((item) => item.type === offer.type);
+    const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);
 
-  const resetButtonTemplate = point.isEditMode ? `Delete` : `Cancel`;
+  const resetButtonTemplate = isEditMode ? `Delete` : `Cancel`;
 
-  return (
-    `${point.isEditMode ? `<li class="trip-events__item">` : ``}
-    <form class="${point.isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
-      <header class="event__header">
-        <div class="event__type-wrapper">
-          <label class="event__type  event__type-btn" for="event-type-toggle-1">
-            <span class="visually-hidden">Choose event type</span>
-            <img class="event__type-icon" width="17" height="17" src="img/icons/${currentPointType.toLowerCase()}.png" alt="${currentPointType}">
-          </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+  const formTemplate =
+  `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
+    <header class="event__header">
+      <div class="event__type-wrapper">
+        <label class="event__type  event__type-btn" for="event-type-toggle-1">
+          <span class="visually-hidden">Choose event type</span>
+          <img class="event__type-icon" width="17" height="17" src="img/icons/${currentPointType.toLowerCase()}.png" alt="${currentPointType}">
+        </label>
+        <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 
-          <div class="event__type-list">
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Transfer</legend>
+        <div class="event__type-list">
+          <fieldset class="event__type-group">
+            <legend class="visually-hidden">Transfer</legend>
 
-              ${allTransferPointTypesTemplate}
-            </fieldset>
+            ${allTransferPointTypesTemplate}
+          </fieldset>
 
-            <fieldset class="event__type-group">
-              <legend class="visually-hidden">Activity</legend>
+          <fieldset class="event__type-group">
+            <legend class="visually-hidden">Activity</legend>
 
-              ${allActivityPointTypesTemplate}
-            </fieldset>
-          </div>
+            ${allActivityPointTypesTemplate}
+          </fieldset>
         </div>
+      </div>
 
-        <div class="event__field-group  event__field-group--destination">
-          <label class="event__label  event__type-output" for="event-destination-1">
-            ${currentDestinationLabel}
-          </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentCity}" list="destination-list-1">
-          <datalist id="destination-list-1">
-            ${allCitiesOptionsTemplate}
-          </datalist>
+      <div class="event__field-group  event__field-group--destination">
+        <label class="event__label  event__type-output" for="event-destination-1">
+          ${currentDestinationLabel}
+        </label>
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${currentCity}" list="destination-list-1">
+        <datalist id="destination-list-1">
+          ${allCitiesOptionsTemplate}
+        </datalist>
+      </div>
+
+      <div class="event__field-group  event__field-group--time">
+        <label class="visually-hidden" for="event-start-time-1">
+          From
+        </label>
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFormat.formatDateToInputValue(point.start)}">
+        &mdash;
+        <label class="visually-hidden" for="event-end-time-1">
+          To
+        </label>
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateFormat.formatDateToInputValue(point.end)}">
+      </div>
+
+      <div class="event__field-group  event__field-group--price">
+        <label class="event__label" for="event-price-1">
+          <span class="visually-hidden">Price</span>
+          &euro;
+        </label>
+        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${currentPrice === 0 ? `` : currentPrice}">
+      </div>
+
+      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+      <button class="event__reset-btn" type="reset">${resetButtonTemplate}</button>
+
+      ${editButtonsTemplate}
+    </header>
+    <section class="event__details">
+      <section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+        <div class="event__available-offers">
+          ${allOffersTemplate}
         </div>
-
-        <div class="event__field-group  event__field-group--time">
-          <label class="visually-hidden" for="event-start-time-1">
-            From
-          </label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFormat.formatDateToInputValue(point.start)}">
-          &mdash;
-          <label class="visually-hidden" for="event-end-time-1">
-            To
-          </label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateFormat.formatDateToInputValue(point.end)}">
-        </div>
-
-        <div class="event__field-group  event__field-group--price">
-          <label class="event__label" for="event-price-1">
-            <span class="visually-hidden">Price</span>
-            &euro;
-          </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${currentPrice === 0 ? `` : currentPrice}">
-        </div>
-
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        <button class="event__reset-btn" type="reset">${resetButtonTemplate}</button>
-
-        ${editButtonsTemplate}
-      </header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers">
-            ${allOffersTemplate}
-          </div>
-        </section>
-
-        ${destinationDetailsTemplate}
       </section>
-    </form>
-    ${point.isEditMode ? `</li>` : ``}`
-  );
+
+      ${destinationDetailsTemplate}
+    </section>
+  </form>`;
+
+  return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
 export default class TripPointEditComponent {
@@ -180,6 +183,14 @@ export default class TripPointEditComponent {
     }
 
     return this._element;
+  }
+
+  getCancelButtonElement() {
+    return this.getElement().querySelector(EDIT_BUTTON_SELECTOR);
+  }
+
+  getFormElement() {
+    return this.getElement().querySelector(FORM_SELECTOR);
   }
 
   removeElement() {

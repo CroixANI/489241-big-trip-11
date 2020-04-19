@@ -6,8 +6,7 @@ const createTripPoint = (type, destination, offers, start, end, price, isFavorit
     start,
     end,
     price,
-    isFavorite,
-    isEditMode: false
+    isFavorite
   };
 };
 

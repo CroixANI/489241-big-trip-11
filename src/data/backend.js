@@ -3,7 +3,7 @@ import pointMock from "../mocks/point.js";
 import destinationMock from "../mocks/destination.js";
 import random from "../utils/random.js";
 
-const MIN_POINTS_MOCKS = 15;
+const MIN_POINTS_MOCKS = 0;
 const MAX_POINTS_MOCKS = 20;
 const CITIES = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `Minsk`];
 const OFFERS = [

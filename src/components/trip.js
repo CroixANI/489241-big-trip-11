@@ -24,10 +24,6 @@ export default class TripComponent {
     return this._element;
   }
 
-  getDaysContainerElement() {
-    return this.getElement();
-  }
-
   removeElement() {
     this._element = null;
   }

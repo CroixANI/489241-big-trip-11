@@ -93,7 +93,7 @@ const renderTripDay = (container, dayIndex, orderedPoints) => {
 
 const renderTrip = (groupedByDay) => {
   const tripComponent = new TripComponent();
-  const daysContainer = tripComponent.getDaysContainerElement();
+  const daysContainer = tripComponent.getElement();
 
   let dayIndex = 1;
   for (let pointsArray of groupedByDay.values()) {

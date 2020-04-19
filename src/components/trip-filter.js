@@ -1,10 +1,10 @@
 import {createElement} from "../utils/render.js";
 
-const createFilter = (name) => {
-  return {type: name.toLowerCase(), name};
+const AVAILABLE_FILTERS = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
 };
-
-const AVAILABLE_FILTERS = [createFilter(`Everything`), createFilter(`Future`), createFilter(`Past`)];
 
 const createTripFilterTemplate = (type, name, isChecked = false) => {
   return (
@@ -16,8 +16,8 @@ const createTripFilterTemplate = (type, name, isChecked = false) => {
 };
 
 const createTripFiltersTemplate = (currentFilterType = ``) => {
-  const allFiltersTemplates = AVAILABLE_FILTERS.map((filterItem) => {
-    return createTripFilterTemplate(filterItem.type, filterItem.name, filterItem.type === currentFilterType);
+  const allFiltersTemplates = Object.keys(AVAILABLE_FILTERS).map((filter) => {
+    return createTripFilterTemplate(filter.toLocaleLowerCase(), filter, filter === currentFilterType);
   }).join(`\n`);
 
   return (
@@ -31,7 +31,7 @@ const createTripFiltersTemplate = (currentFilterType = ``) => {
 
 export default class TripFilterComponent {
   constructor() {
-    this._currentFilter = AVAILABLE_FILTERS[0].type;
+    this._currentFilter = AVAILABLE_FILTERS[0];
     this._element = null;
   }
 

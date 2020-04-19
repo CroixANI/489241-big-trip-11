@@ -29,7 +29,7 @@ const createOfferTemplate = (type, name, price, isChecked) => {
   );
 };
 
-const createEditButtonsTemplate = (isFavorite = false) => {
+const createEditButtonsTemplate = (isFavorite) => {
   return (`<input id="event-favorite-1" class="event__favorite-checkbox  visually-hidden" type="checkbox" name="event-favorite" ${isFavorite ? `checked` : ``}>
     <label class="event__favorite-btn" for="event-favorite-1">
       <span class="visually-hidden">Add to favorite</span>
@@ -62,7 +62,7 @@ const createDestinationDetailsTemplate = (destination) => {
   );
 };
 
-const createTripEditFormTemplate = (point = null) => {
+const createTripEditFormTemplate = (point) => {
   const isEditMode = true;
   const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);

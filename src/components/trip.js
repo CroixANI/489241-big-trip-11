@@ -13,7 +13,7 @@ export default class TripComponent {
   }
 
   getTemplate() {
-    return createTripContainerTemplate(this._trip);
+    return createTripContainerTemplate();
   }
 
   getElement() {

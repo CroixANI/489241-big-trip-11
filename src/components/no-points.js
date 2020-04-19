@@ -6,7 +6,7 @@ const createNoPointsTemplate = () => {
   );
 };
 
-export default class MenuComponent {
+export default class NoPointsComponent {
   constructor() {
     this._element = null;
   }

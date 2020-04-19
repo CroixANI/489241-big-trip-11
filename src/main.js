@@ -8,6 +8,7 @@ import TripDayComponent from "./components/trip-day.js";
 import TripPointComponent from "./components/trip-point.js";
 import TripPointEditComponent from "./components/trip-point-edit.js";
 import TripDetails from "./data/trip-details.js";
+import NoPointsComponent from "./components/no-points.js";
 import constants from "./data/constants.js";
 import dateFormat from "./utils/date-format.js";
 import {render} from "./utils/render.js";
@@ -110,8 +111,12 @@ const renderAll = () => {
   render(tripMainElement, new TripDetailsComponent(tripDetails).getElement(), constants.RENDER_POSITIONS.AFTER_BEGIN);
   render(tripViewHeaderElement, new MenuComponent().getElement(), constants.RENDER_POSITIONS.AFTER_END);
   render(tripFilterHeaderElement, new TripFilterComponent().getElement(), constants.RENDER_POSITIONS.AFTER_END);
-  render(tripEventsElement, new TripSortComponent().getElement(), constants.RENDER_POSITIONS.BEFORE_END);
-  renderTrip(groupedByDay);
+  if (points.length === 0) {
+    render(tripEventsElement, new NoPointsComponent().getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+  } else {
+    render(tripEventsElement, new TripSortComponent().getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+    renderTrip(groupedByDay);
+  }
 };
 
 renderAll();

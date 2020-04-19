@@ -1,9 +1,7 @@
-const createDestination = (city, description, photos) => {
-  return {
-    city,
-    description,
-    photos
-  };
-};
-
-export default createDestination;
+export default class Destination {
+  constructor(city, description, photos) {
+    this.city = city;
+    this.description = description;
+    this.photos = photos;
+  }
+}

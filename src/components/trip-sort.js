@@ -1,4 +1,6 @@
-import sort from "../mocks/sort.js";
+import {createElement} from "../utils/render.js";
+
+const AVAILABLE_SORT = [`Event`, `Time`, `Price`];
 
 const createTripSortItemTemplate = (name, isChecked) => {
   const nameLowerCase = name.toLowerCase();
@@ -13,7 +15,7 @@ const createTripSortItemTemplate = (name, isChecked) => {
 };
 
 const createTripSortTemplate = (currentSort) => {
-  const allSortItemsTemplate = sort.AVAILABLE_SORT.map((sortItem) => {
+  const allSortItemsTemplate = AVAILABLE_SORT.map((sortItem) => {
     return createTripSortItemTemplate(sortItem, sortItem === currentSort);
   }).join(`\n`);
 
@@ -28,4 +30,26 @@ const createTripSortTemplate = (currentSort) => {
   );
 };
 
-export default createTripSortTemplate;
+export default class TripSortComponent {
+  constructor() {
+    this._currentSort = AVAILABLE_SORT[0];
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripSortTemplate(this._currentSort);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
+

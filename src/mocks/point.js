@@ -1,6 +1,6 @@
 import backend from "../data/backend.js";
 import constants from "../data/constants.js";
-import createTripPoint from "../data/trip-point.js";
+import TripPoint from "../data/trip-point.js";
 import createDestinationMock from "../mocks/destination.js";
 import random from "../utils/random.js";
 
@@ -20,7 +20,7 @@ const createTripPointMock = () => {
   let price = random.random(MIN_PRICE, MAX_PRICE);
   let isFavorite = random.random(0, 1) === 1;
 
-  return createTripPoint(type, destination, offers, start, end, price, isFavorite);
+  return new TripPoint(type, destination, offers, start, end, price, isFavorite);
 };
 
 export default createTripPointMock;

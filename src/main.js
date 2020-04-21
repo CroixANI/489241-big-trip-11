@@ -11,7 +11,7 @@ import TripDetails from "./data/trip-details.js";
 import NoPointsComponent from "./components/no-points.js";
 import constants from "./data/constants.js";
 import dateFormat from "./utils/date-format.js";
-import {render} from "./utils/render.js";
+import {render, replace} from "./utils/render.js";
 import {isEscapeEvent} from "./utils/events.js";
 
 const PAGE_HEADER_SELECTOR = `.page-header`;
@@ -55,11 +55,11 @@ const renderTripPoint = (container, point) => {
   const viewComponent = new TripPointComponent(point);
 
   const onEditButtonClick = () => {
-    container.replaceChild(editComponent.getElement(), viewComponent.getElement());
+    replace(container, editComponent, viewComponent);
   };
 
   const hideEditForm = () => {
-    container.replaceChild(viewComponent.getElement(), editComponent.getElement());
+    replace(container, viewComponent, editComponent);
   };
 
   const onCancelButtonClick = () => {
@@ -81,7 +81,7 @@ const renderTripPoint = (container, point) => {
   editComponent.addOnFormSubmitEvent(onEditFormSubmit);
   document.addEventListener(`keydown`, onEscapeKeydown);
 
-  render(container, viewComponent.getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+  render(container, viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
 };
 
 const renderTripDay = (container, dayIndex, orderedPoints) => {
@@ -92,7 +92,7 @@ const renderTripDay = (container, dayIndex, orderedPoints) => {
     renderTripPoint(pointsContainer, point);
   }
 
-  render(container, tripDayComponent.getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+  render(container, tripDayComponent, constants.RENDER_POSITIONS.BEFORE_END);
 };
 
 const renderTrip = (groupedByDay) => {
@@ -105,7 +105,7 @@ const renderTrip = (groupedByDay) => {
     dayIndex++;
   }
 
-  render(tripEventsElement, tripComponent.getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+  render(tripEventsElement, tripComponent, constants.RENDER_POSITIONS.BEFORE_END);
 };
 
 const renderAll = () => {
@@ -114,13 +114,13 @@ const renderAll = () => {
   const groupedByDay = groupPointsByStartDate(orderedPoints);
   const tripDetails = new TripDetails(orderedPoints);
 
-  render(tripMainElement, new TripDetailsComponent(tripDetails).getElement(), constants.RENDER_POSITIONS.AFTER_BEGIN);
-  render(tripViewHeaderElement, new MenuComponent().getElement(), constants.RENDER_POSITIONS.AFTER_END);
-  render(tripFilterHeaderElement, new TripFilterComponent().getElement(), constants.RENDER_POSITIONS.AFTER_END);
+  render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
+  render(tripViewHeaderElement, new MenuComponent(), constants.RENDER_POSITIONS.AFTER_END);
+  render(tripFilterHeaderElement, new TripFilterComponent(), constants.RENDER_POSITIONS.AFTER_END);
   if (points.length === 0) {
-    render(tripEventsElement, new NoPointsComponent().getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+    render(tripEventsElement, new NoPointsComponent(), constants.RENDER_POSITIONS.BEFORE_END);
   } else {
-    render(tripEventsElement, new TripSortComponent().getElement(), constants.RENDER_POSITIONS.BEFORE_END);
+    render(tripEventsElement, new TripSortComponent(), constants.RENDER_POSITIONS.BEFORE_END);
     renderTrip(groupedByDay);
   }
 };

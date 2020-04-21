@@ -1,27 +1,38 @@
 import constants from "../data/constants.js";
 
-export const createElement = (template) => {
+export const createElement = (component) => {
   const newElement = document.createElement(`div`);
-  newElement.innerHTML = template;
+  newElement.innerHTML = component.getTemplate();
 
   return newElement.firstChild;
 };
 
-export const render = (container, element, place) => {
+export const render = (container, component, place) => {
   switch (place) {
     case constants.RENDER_POSITIONS.AFTER_BEGIN:
-      container.prepend(element);
+      container.prepend(component.getElement());
       break;
     case constants.RENDER_POSITIONS.BEFORE_END:
-      container.append(element);
+      container.append(component.getElement());
       break;
     case constants.RENDER_POSITIONS.AFTER_END:
-      container.after(element);
+      container.after(component.getElement());
       break;
   }
 };
 
+export const replace = (parent, newComponent, oldComponent) => {
+  parent.replaceChild(newComponent.getElement(), oldComponent.getElement());
+};
+
+export const remove = (component) => {
+  component.getElement().remove();
+  component.removeElement();
+};
+
 export default {
   createElement,
-  render
+  replace,
+  render,
+  remove,
 };

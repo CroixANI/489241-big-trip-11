@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createTripCostTemplate = (tripDetails) => {
   return (
@@ -8,26 +8,15 @@ const createTripCostTemplate = (tripDetails) => {
   );
 };
 
-export default class TripCostComponent {
+export default class TripCostComponent extends AbstractComponent {
   constructor(tripDetails) {
+    super();
+
     this._tripDetails = tripDetails;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripCostTemplate(this._tripDetails);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,7 +1,7 @@
+import AbstractComponent from "./abstract-component.js";
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
-import {createElement} from "../utils/render.js";
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
@@ -167,22 +167,15 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
-export default class TripPointEditComponent {
+export default class TripPointEditComponent extends AbstractComponent {
   constructor(point) {
+    super();
+
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripEditFormTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
   }
 
   addOnCancelButtonClickEvent(onCancelButtonClick) {
@@ -195,9 +188,5 @@ export default class TripPointEditComponent {
     this.getElement()
       .querySelector(FORM_SELECTOR)
       .addEventListener(`submit`, onEditFormSubmit);
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,6 +1,6 @@
 import TripCostComponent from "./trip-details-cost.js";
 import TripInfoComponent from "./trip-details-info.js";
-import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const createTripDetailsTemplate = (tripDetails) => {
   let tripInfoTemplate = new TripInfoComponent(tripDetails).getTemplate();
@@ -14,25 +14,14 @@ const createTripDetailsTemplate = (tripDetails) => {
   );
 };
 
-export default class TripDetailsComponent {
+export default class TripDetailsComponent extends AbstractComponent {
   constructor(tripDetails) {
+    super();
+
     this._tripDetails = tripDetails;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripDetailsTemplate(this._tripDetails);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

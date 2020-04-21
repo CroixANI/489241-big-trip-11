@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const AVAILABLE_TABS = [`Table`, `Stats`];
 
@@ -13,25 +13,14 @@ const createTripTabsTemplate = (currentTab) => {
   );
 };
 
-export default class MenuComponent {
+export default class MenuComponent extends AbstractComponent {
   constructor() {
+    super();
+
     this._currentTab = AVAILABLE_TABS[0];
-    this._element = null;
   }
 
   getTemplate() {
     return createTripTabsTemplate(this._currentTab);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

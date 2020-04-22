@@ -3,27 +3,27 @@ import AbstractComponent from "./abstract-component.js";
 const SORT_INPUT_SELECTOR = `.trip-sort__input`;
 const SORT_INPUT_CHECKED_SELECTOR = `input:checked`;
 
-const AVAILABLE_SORT = {
+export const SortType = {
   EVENT: `Event`,
   TIME: `Time`,
   PRICE: `Price`
 };
 
 const createTripSortItemTemplate = (key, isChecked) => {
-  const nameLowerCase = AVAILABLE_SORT[key].toLowerCase();
+  const nameLowerCase = SortType[key].toLowerCase();
   return (
     `<div class="trip-sort__item  trip-sort__item--${nameLowerCase}">
-      <input id="sort-${nameLowerCase}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${nameLowerCase}" ${isChecked ? `checked` : ``} data-sort-type="${key}">
+      <input id="sort-${nameLowerCase}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${nameLowerCase}" ${isChecked ? `checked` : ``} data-sort-type="${SortType[key]}">
       <label class="trip-sort__btn" for="sort-${nameLowerCase}">
-        ${AVAILABLE_SORT[key]}
+        ${SortType[key]}
       </label>
     </div>`
   );
 };
 
 const createTripSortTemplate = (currentSort) => {
-  const allSortItemsTemplate = Object.keys(AVAILABLE_SORT).map((key) => {
-    return createTripSortItemTemplate(key, AVAILABLE_SORT[key] === currentSort);
+  const allSortItemsTemplate = Object.keys(SortType).map((key) => {
+    return createTripSortItemTemplate(key, SortType[key] === currentSort);
   }).join(`\n`);
 
   return (
@@ -41,7 +41,7 @@ export default class TripSortComponent extends AbstractComponent {
   constructor() {
     super();
 
-    this._currentSort = AVAILABLE_SORT.EVENT;
+    this._currentSort = SortType.EVENT;
   }
 
   getTemplate() {
@@ -49,8 +49,7 @@ export default class TripSortComponent extends AbstractComponent {
   }
 
   getSortType() {
-    const sortTypeKey = this.getElement().querySelector(SORT_INPUT_CHECKED_SELECTOR).dataset.sortType;
-    return AVAILABLE_SORT[sortTypeKey];
+    return this.getElement().querySelector(SORT_INPUT_CHECKED_SELECTOR).dataset.sortType;
   }
 
   setOnSortTypeChangedHandler(handler) {

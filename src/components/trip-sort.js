@@ -70,8 +70,7 @@ export default class TripSortComponent extends AbstractComponent {
 
           this._currentSort = sortType;
 
-
-          handler(evt, this._currentSort);
+          handler(this._currentSort);
         });
       });
   }

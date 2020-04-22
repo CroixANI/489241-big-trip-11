@@ -1,5 +1,6 @@
 import TripComponent from "../components/trip.js";
 import TripDayComponent from "../components/trip-day.js";
+import TripPointsContainer from "../components/trip-points-container.js";
 import TripPointComponent from "../components/trip-point.js";
 import TripPointEditComponent from "../components/trip-point-edit.js";
 import NoPointsComponent from "../components/no-points.js";
@@ -8,8 +9,6 @@ import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
 import {render, replace} from "../utils/render.js";
 import {isEscapeEvent} from "../utils/events.js";
-
-const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
 
 const groupPointsByStartDate = (orderedPoints) => {
   return orderedPoints.reduce((total, point) => {
@@ -62,12 +61,14 @@ const renderTripPoint = (container, point) => {
 
 const renderTripDay = (container, dayIndex, orderedPoints) => {
   const tripDayComponent = new TripDayComponent(dayIndex, orderedPoints[0].start);
-  const pointsContainer = tripDayComponent.getElement().querySelector(POINTS_CONTAINER_SELECTOR);
+  const tripPointsComponent = new TripPointsContainer();
+  const pointsContainer = tripPointsComponent.getElement();
 
   for (let point of orderedPoints) {
     renderTripPoint(pointsContainer, point);
   }
 
+  render(tripDayComponent.getElement(), tripPointsComponent, constants.RENDER_POSITIONS.BEFORE_END);
   render(container, tripDayComponent, constants.RENDER_POSITIONS.BEFORE_END);
 };
 
@@ -95,7 +96,10 @@ export default class TripController {
     if (orderedPoints.length === 0) {
       render(this._containerElement, new NoPointsComponent(), constants.RENDER_POSITIONS.BEFORE_END);
     } else {
-      this._sortComponent.setOnSortTypeChangedHandler((evt, sortType) => {
+      this._sortComponent.setOnSortTypeChangedHandler((sortType) => {
+        this._containerElement.innerHTML = ``;
+        render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
+        renderTrip(this._containerElement, orderedPoints);
       });
       render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
       renderTrip(this._containerElement, orderedPoints);

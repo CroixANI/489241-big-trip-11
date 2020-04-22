@@ -88,13 +88,16 @@ const renderTrip = (container, orderedPoints) => {
 export default class TripController {
   constructor(containerElement) {
     this._containerElement = containerElement;
+    this._sortComponent = new TripSortComponent();
   }
 
   render(orderedPoints) {
     if (orderedPoints.length === 0) {
       render(this._containerElement, new NoPointsComponent(), constants.RENDER_POSITIONS.BEFORE_END);
     } else {
-      render(this._containerElement, new TripSortComponent(), constants.RENDER_POSITIONS.BEFORE_END);
+      this._sortComponent.setOnSortTypeChangedHandler((evt, sortType) => {
+      });
+      render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
       renderTrip(this._containerElement, orderedPoints);
     }
   }

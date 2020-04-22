@@ -33,7 +33,7 @@ export default class TripFilterComponent extends AbstractComponent {
   constructor() {
     super();
 
-    this._currentFilter = AVAILABLE_FILTERS[0];
+    this._currentFilter = AVAILABLE_FILTERS.EVERYTHING;
   }
 
   getTemplate() {

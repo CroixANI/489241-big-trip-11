@@ -15,11 +15,7 @@ const groupPointsByStartDate = (orderedPoints) => {
   return orderedPoints.reduce((total, point) => {
     const groupingNumber = dateFormat.getDateNumberForGrouping(point.start);
 
-    if (!total) {
-      total = new Map();
-    }
-
-    if (total.has(groupingNumber) === false) {
+    if (!total.has(groupingNumber)) {
       total.set(groupingNumber, []);
     }
 

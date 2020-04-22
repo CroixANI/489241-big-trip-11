@@ -1,6 +1,6 @@
 
+import AbstractComponent from "./abstract-component.js";
 import dateFormat from "../utils/date-format.js";
-import {createElement} from "../utils/render.js";
 
 const createTripRouteDayGroupTemplate = (index, date) => {
   const dateToDisplay = dateFormat.formatDate(date);
@@ -19,27 +19,16 @@ const createTripRouteDayGroupTemplate = (index, date) => {
   );
 };
 
-export default class TripDayComponent {
+export default class TripDayComponent extends AbstractComponent {
   constructor(index, date) {
+    super();
+
     this._index = index;
     this._date = date;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripRouteDayGroupTemplate(this._index, this._date);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

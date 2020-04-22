@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const AVAILABLE_SORT = [`Event`, `Time`, `Price`];
 
@@ -30,26 +30,15 @@ const createTripSortTemplate = (currentSort) => {
   );
 };
 
-export default class TripSortComponent {
+export default class TripSortComponent extends AbstractComponent {
   constructor() {
+    super();
+
     this._currentSort = AVAILABLE_SORT[0];
-    this._element = null;
   }
 
   getTemplate() {
     return createTripSortTemplate(this._currentSort);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

@@ -1,4 +1,4 @@
-import {createElement} from "../utils/render.js";
+import AbstractComponent from "./abstract-component.js";
 
 const AVAILABLE_FILTERS = {
   EVERYTHING: `Everything`,
@@ -29,26 +29,15 @@ const createTripFiltersTemplate = (currentFilterType = ``) => {
   );
 };
 
-export default class TripFilterComponent {
+export default class TripFilterComponent extends AbstractComponent {
   constructor() {
-    this._currentFilter = AVAILABLE_FILTERS[0];
-    this._element = null;
+    super();
+
+    this._currentFilter = AVAILABLE_FILTERS.EVERYTHING;
   }
 
   getTemplate() {
     return createTripFiltersTemplate(this._currentFilter);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
 

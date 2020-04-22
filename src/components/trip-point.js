@@ -1,6 +1,6 @@
+import AbstractComponent from "./abstract-component.js";
 import constants from "../data/constants.js";
 import dateFormat from "../utils/date-format.js";
-import {createElement} from "../utils/render.js";
 
 const MAX_OFFERS_TO_RENDER = 3;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
@@ -73,31 +73,20 @@ const createTripRoutePointTemplate = (point) => {
   );
 };
 
-export default class TripPointComponent {
+export default class TripPointComponent extends AbstractComponent {
   constructor(point) {
+    super();
+
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripRoutePointTemplate(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
   addOnEditButtonClickEvent(onEditButtonClick) {
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, onEditButtonClick);
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

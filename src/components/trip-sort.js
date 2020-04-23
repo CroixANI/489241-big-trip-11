@@ -1,22 +1,29 @@
 import AbstractComponent from "./abstract-component.js";
 
-const AVAILABLE_SORT = [`Event`, `Time`, `Price`];
+const SORT_INPUT_SELECTOR = `.trip-sort__input`;
+const SORT_INPUT_CHECKED_SELECTOR = `input:checked`;
 
-const createTripSortItemTemplate = (name, isChecked) => {
-  const nameLowerCase = name.toLowerCase();
+export const SortType = {
+  EVENT: `Event`,
+  TIME: `Time`,
+  PRICE: `Price`
+};
+
+const createTripSortItemTemplate = (key, isChecked) => {
+  const nameLowerCase = SortType[key].toLowerCase();
   return (
     `<div class="trip-sort__item  trip-sort__item--${nameLowerCase}">
-      <input id="sort-${nameLowerCase}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${nameLowerCase}" ${isChecked ? `checked` : ``}>
+      <input id="sort-${nameLowerCase}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${nameLowerCase}" ${isChecked ? `checked` : ``} data-sort-type="${SortType[key]}">
       <label class="trip-sort__btn" for="sort-${nameLowerCase}">
-        ${name}
+        ${SortType[key]}
       </label>
     </div>`
   );
 };
 
 const createTripSortTemplate = (currentSort) => {
-  const allSortItemsTemplate = AVAILABLE_SORT.map((sortItem) => {
-    return createTripSortItemTemplate(sortItem, sortItem === currentSort);
+  const allSortItemsTemplate = Object.keys(SortType).map((key) => {
+    return createTripSortItemTemplate(key, SortType[key] === currentSort);
   }).join(`\n`);
 
   return (
@@ -34,11 +41,37 @@ export default class TripSortComponent extends AbstractComponent {
   constructor() {
     super();
 
-    this._currentSort = AVAILABLE_SORT[0];
+    this._currentSort = SortType.EVENT;
   }
 
   getTemplate() {
     return createTripSortTemplate(this._currentSort);
+  }
+
+  getSortType() {
+    return this.getElement().querySelector(SORT_INPUT_CHECKED_SELECTOR).dataset.sortType;
+  }
+
+  setOnSortTypeChangedHandler(handler) {
+    this.getElement()
+      .querySelectorAll(SORT_INPUT_SELECTOR)
+      .forEach((input) => {
+        input.addEventListener(`click`, (evt) => {
+          if (evt.target.tagName !== `INPUT`) {
+            return;
+          }
+
+          const sortType = evt.target.dataset.sortType;
+
+          if (this._currentSort === sortType) {
+            return;
+          }
+
+          this._currentSort = sortType;
+
+          handler(this._currentSort);
+        });
+      });
   }
 }
 

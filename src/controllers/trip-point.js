@@ -11,11 +11,14 @@ export default class PointController {
     this._onDataChange = onDataChange;
     this._viewComponent = null;
     this._editComponent = null;
-
+    this._isEditMode = false;
     this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
   }
 
   render(tripPoint) {
+    const oldEditComponent = this._editComponent;
+    const oldViewComponent = this._viewComponent;
+
     this._editComponent = new TripPointEditComponent(tripPoint);
     this._viewComponent = new TripPointComponent(tripPoint);
 
@@ -31,21 +34,32 @@ export default class PointController {
     });
     this._editComponent.addOnFavoriteButtonClickEvent(() => {
       this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
-        isFavorite: !tripPoint.isArchive,
+        isFavorite: !tripPoint.isFavorite,
       }));
     });
 
-    render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
+    // Fix issue with old components after data changed
+    if (oldEditComponent && oldViewComponent) {
+      if (this._isEditMode) {
+        replace(this._containerElement, this._editComponent, oldEditComponent);
+      } else {
+        replace(this._containerElement, this._viewComponent, oldViewComponent);
+      }
+    } else {
+      render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
+    }
   }
 
   _hideEditForm() {
     replace(this._containerElement, this._viewComponent, this._editComponent);
     document.removeEventListener(`keydown`, this._onEscapeKeydown);
+    this._isEditMode = false;
   }
 
   _showEditForm() {
     replace(this._containerElement, this._editComponent, this._viewComponent);
     document.addEventListener(`keydown`, this._onEscapeKeydown);
+    this._isEditMode = true;
   }
 
   _onEscapeKeydown(evt) {

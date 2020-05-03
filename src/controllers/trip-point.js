@@ -6,9 +6,10 @@ import {render, replace} from "../utils/render.js";
 const ESC_KEY = `Escape`;
 
 export default class PointController {
-  constructor(containerElement, onDataChange) {
+  constructor(containerElement, onDataChange, onViewChange) {
     this._containerElement = containerElement;
     this._onDataChange = onDataChange;
+    this._onViewChange = onViewChange;
     this._viewComponent = null;
     this._editComponent = null;
     this._isEditMode = false;
@@ -63,6 +64,7 @@ export default class PointController {
   }
 
   _showEditForm() {
+    this._onViewChange();
     replace(this._containerElement, this._editComponent, this._viewComponent);
     document.addEventListener(`keydown`, this._onEscapeKeydown);
     this._isEditMode = true;

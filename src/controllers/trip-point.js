@@ -2,48 +2,53 @@ import TripPointComponent from "../components/trip-point.js";
 import TripPointEditComponent from "../components/trip-point-edit.js";
 import constants from "../data/constants.js";
 import {render, replace} from "../utils/render.js";
-import {isEscapeEvent} from "../utils/events.js";
 
-const renderTripPoint = (container, point) => {
-  const editComponent = new TripPointEditComponent(point);
-  const viewComponent = new TripPointComponent(point);
-
-  const onEditButtonClick = () => {
-    replace(container, editComponent, viewComponent);
-  };
-
-  const hideEditForm = () => {
-    replace(container, viewComponent, editComponent);
-  };
-
-  const onCancelButtonClick = () => {
-    hideEditForm();
-  };
-
-  const onEditFormSubmit = (evt) => {
-    evt.preventDefault();
-    hideEditForm();
-  };
-
-  const onEscapeKeydown = (evt) => {
-    isEscapeEvent(evt, hideEditForm);
-  };
-
-  viewComponent.addOnEditButtonClickEvent(onEditButtonClick);
-
-  editComponent.addOnCancelButtonClickEvent(onCancelButtonClick);
-  editComponent.addOnFormSubmitEvent(onEditFormSubmit);
-  document.addEventListener(`keydown`, onEscapeKeydown);
-
-  render(container, viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
-};
+const ESC_KEY = `Escape`;
 
 export default class PointController {
-  constructor(containerElement) {
+  constructor(containerElement, onDataChange) {
     this._containerElement = containerElement;
+    this._onDataChange = onDataChange;
+    this._viewComponent = null;
+    this._editComponent = null;
+
+    this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
   }
 
   render(tripPoint) {
-    renderTripPoint(this._containerElement, tripPoint);
+    this._editComponent = new TripPointEditComponent(tripPoint);
+    this._viewComponent = new TripPointComponent(tripPoint);
+
+    this._viewComponent.addOnEditButtonClickEvent(() => {
+      this._showEditForm();
+    });
+    this._editComponent.addOnCancelButtonClickEvent(() => {
+      this._hideEditForm();
+    });
+    this._editComponent.addOnFormSubmitEvent((evt) => {
+      evt.preventDefault();
+      this._hideEditForm();
+    });
+    this._editComponent.addOnFavoriteButtonClickEvent((newPoint) => {
+      this._onDataChange(tripPoint, newPoint);
+    });
+
+    render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
+  }
+
+  _hideEditForm() {
+    replace(this._containerElement, this._viewComponent, this._editComponent);
+    document.removeEventListener(`keydown`, this._onEscapeKeydown);
+  }
+
+  _showEditForm() {
+    replace(this._containerElement, this._editComponent, this._viewComponent);
+    document.addEventListener(`keydown`, this._onEscapeKeydown);
+  }
+
+  _onEscapeKeydown(evt) {
+    if (evt.key === ESC_KEY) {
+      this._hideEditForm();
+    }
   }
 }

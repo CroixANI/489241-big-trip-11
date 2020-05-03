@@ -5,6 +5,7 @@ import dateFormat from "../utils/date-format.js";
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
+const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -188,5 +189,11 @@ export default class TripPointEditComponent extends AbstractComponent {
     this.getElement()
       .querySelector(FORM_SELECTOR)
       .addEventListener(`submit`, onEditFormSubmit);
+  }
+
+  addOnFavoriteButtonClickEvent(onFavoriteButtonClick) {
+    this.getElement()
+      .querySelector(FAVORITE_BUTTON_SELECTOR)
+      .addEventListener(`click`, onFavoriteButtonClick);
   }
 }

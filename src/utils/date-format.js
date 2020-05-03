@@ -1,19 +1,15 @@
 import constants from "../data/constants.js";
 
+import moment from "moment";
+
 const MILLISECONDS_IN_SECOND = 1000;
 const SECONDS_IN_MINUTE = 60;
 const MINUTES_IN_HOUR = 60;
 const MINUTES_IN_DAY = 1440;
 const HOURS_IN_DAY = 24;
 
-const castTimeFormat = (value) => {
-  return value < 10 ? `0${value}` : String(value);
-};
-
 const formatTime = (date) => {
-  const hours = castTimeFormat(date.getHours());
-  const minutes = castTimeFormat(date.getMinutes());
-  return `${hours}:${minutes}`;
+  return moment(date).format(`HH:mm`);
 };
 
 const formatDate = (date) => {
@@ -21,11 +17,11 @@ const formatDate = (date) => {
 };
 
 const formatDateToIso = (date) => {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  return moment(date).format(`YYYY-MM-DD`);
 };
 
 const formatDateToInputValue = (date) => {
-  return `${date.getFullYear()}/${date.getMonth()}/${date.getDate()} ${formatTime(date)}`;
+  return moment(date).format(`DD/MM/YYYY HH:mm`);
 };
 
 const getDateNumberForGrouping = (date) => {

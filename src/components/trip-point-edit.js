@@ -3,11 +3,17 @@ import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 
+import flatpickr from "flatpickr";
+
+import 'flatpickr/dist/flatpickr.min.css';
+
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 const POINT_TYPE_SELECTOR = `.event__type-list`;
 const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
+const START_DATE_SELECTOR = `#event-start-time-1`;
+const END_DATE_SELECTOR = `#event-end-time-1`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -181,6 +187,17 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
 
     this._subscribeEvents();
+
+    this._flatpickrStartDate = null;
+    this._flatpickrEndDate = null;
+
+    this._setupFlatpickr();
+  }
+
+  reRender() {
+    super.reRender();
+
+    this._setupFlatpickr();
   }
 
   getTemplate() {
@@ -236,5 +253,25 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
 
     this.reRender();
+  }
+
+  _setupFlatpickr() {
+    if (this._flatpickrStartDate || this._flatpickrEndDate) {
+      this._flatpickrStartDate.destroy();
+      this._flatpickrEndDate.destroy();
+      this._flatpickrStartDate = null;
+      this._flatpickrEndDate = null;
+    }
+
+    const element = this.getElement();
+    const options = {
+      allowInput: true,
+      dateFormat: `d/m/y H:i`,
+      minDate: this._point.start,
+      enableTime: true
+    };
+
+    this._flatpickrStartDate = flatpickr(element.querySelector(START_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.start}));
+    this._flatpickrEndDate = flatpickr(element.querySelector(END_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.end}));
   }
 }

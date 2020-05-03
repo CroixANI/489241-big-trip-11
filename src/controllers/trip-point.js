@@ -50,6 +50,12 @@ export default class PointController {
     }
   }
 
+  setDefaultView() {
+    if (this._isEditMode) {
+      this._hideEditForm();
+    }
+  }
+
   _hideEditForm() {
     replace(this._containerElement, this._viewComponent, this._editComponent);
     document.removeEventListener(`keydown`, this._onEscapeKeydown);

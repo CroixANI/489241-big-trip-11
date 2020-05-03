@@ -1,10 +1,13 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
+const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
+const POINT_TYPE_SELECTOR = `.event__type-list`;
+const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -83,7 +86,7 @@ const createTripEditFormTemplate = (point) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const offers = backend.getOffers();
+  const offers = backend.getOffersByType(point.type);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -167,26 +170,81 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
-export default class TripPointEditComponent extends AbstractComponent {
+export default class TripPointEditComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
 
     this._point = point;
+    this._tempPoint = Object.assign({}, point);
+
+    this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
+    this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
+
+    this._subscribeEvents();
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._point);
+    return createTripEditFormTemplate(this._tempPoint);
+  }
+
+  cancelChanges() {
+    this._tempPoint = Object.assign({}, this._point);
+    this.reRender();
+  }
+
+  applyChanges() {
+    this._point = Object.assign({}, this._tempPoint);
+    this.reRender();
+  }
+
+  recoveryListeners() {
+    this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
+    this.addOnFormSubmitEvent(this._onEditFormSubmit);
+    this.addOnFavoriteButtonClickEvent(this._onFavoriteButtonClick);
+    this._subscribeEvents();
   }
 
   addOnCancelButtonClickEvent(onCancelButtonClick) {
+    this._onCancelButtonClick = onCancelButtonClick;
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
-      .addEventListener(`click`, onCancelButtonClick);
+      .addEventListener(`click`, this._onCancelButtonClick);
   }
 
   addOnFormSubmitEvent(onEditFormSubmit) {
+    this._onEditFormSubmit = onEditFormSubmit;
     this.getElement()
       .querySelector(FORM_SELECTOR)
-      .addEventListener(`submit`, onEditFormSubmit);
+      .addEventListener(`submit`, this._onEditFormSubmit);
+  }
+
+  addOnFavoriteButtonClickEvent(onFavoriteButtonClick) {
+    this._onFavoriteButtonClick = onFavoriteButtonClick;
+    this.getElement()
+      .querySelector(FAVORITE_BUTTON_SELECTOR)
+      .addEventListener(`click`, this._onFavoriteButtonClick);
+  }
+
+  _subscribeEvents() {
+    const element = this.getElement();
+
+    element.querySelector(POINT_TYPE_SELECTOR)
+      .addEventListener(`change`, this._onPointTypeChanged);
+
+    element.querySelector(POINT_DESTINATION_SELECTOR)
+      .addEventListener(`change`, this._onPointDestinationChanged);
+  }
+
+  _onPointTypeChanged(evt) {
+    this._tempPoint.type = evt.target.value;
+    this._tempPoint.offers = backend.getOffersByType(this._tempPoint.type);
+
+    this.reRender();
+  }
+
+  _onPointDestinationChanged(evt) {
+    this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
+
+    this.reRender();
   }
 }

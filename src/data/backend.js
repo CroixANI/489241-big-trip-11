@@ -5,6 +5,7 @@ import random from "../utils/random.js";
 
 const MIN_POINTS_MOCKS = 0;
 const MAX_POINTS_MOCKS = 20;
+
 const CITIES = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `Minsk`];
 const OFFERS = [
   new Offer(`luggage`, `Add luggage`, 30),
@@ -26,7 +27,7 @@ const getPoints = () => {
   return result;
 };
 
-const getOffers = () => OFFERS;
+const getOffersByType = () => OFFERS;
 
 const getDestinations = () => CITIES;
 
@@ -34,7 +35,7 @@ const getDestinationDetails = (city) => destinationMock(city);
 
 export default {
   getPoints,
-  getOffers,
+  getOffersByType,
   getDestinations,
   getDestinationDetails
 };

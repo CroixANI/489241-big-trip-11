@@ -4,8 +4,7 @@ import TripPoint from "../data/trip-point.js";
 import createDestinationMock from "../mocks/destination.js";
 import random from "../utils/random.js";
 
-const MIN_OFFERS = 0;
-const MAX_OFFERS = 5;
+
 const MIN_PRICE = 3;
 const MAX_PRICE = 1000;
 
@@ -14,7 +13,7 @@ const createTripPointMock = () => {
   let secondDate = random.randomDate();
   let type = random.getRandomArrayItem(constants.ALL_POINT_TYPES);
   let destination = createDestinationMock();
-  let offers = random.getRandomArray(backend.getOffers(), MIN_OFFERS, MAX_OFFERS);
+  let offers = backend.getOffersByType(type);
   let start = new Date(Math.min(firstDate, secondDate));
   let end = new Date(Math.max(firstDate, secondDate));
   let price = random.random(MIN_PRICE, MAX_PRICE);

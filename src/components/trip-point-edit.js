@@ -7,6 +7,7 @@ const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 const POINT_TYPE_SELECTOR = `.event__type-list`;
+const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -85,7 +86,7 @@ const createTripEditFormTemplate = (point) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const offers = backend.getOffers();
+  const offers = backend.getOffersByType(point.type);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -214,14 +215,25 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   _subscribeEvents() {
-    this.getElement()
-      .querySelector(POINT_TYPE_SELECTOR)
+    const element = this.getElement();
+
+    element.querySelector(POINT_TYPE_SELECTOR)
       .addEventListener(`change`, this._onPointTypeChanged);
+
+    element.querySelector(POINT_DESTINATION_SELECTOR)
+      .addEventListener(`change`, this._onPointDestinationChanged);
   }
 
   _onPointTypeChanged(evt) {
     this._tempPoint.type = evt.target.value;
+    this._tempPoint.offers = backend.getOffersByType(this._tempPoint.type);
 
     this.reRender();
+  }
+
+  _onPointDestinationChanged(evt) {
+    this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
+
+    this.rerRender();
   }
 }

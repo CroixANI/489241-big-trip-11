@@ -29,8 +29,10 @@ export default class PointController {
       evt.preventDefault();
       this._hideEditForm();
     });
-    this._editComponent.addOnFavoriteButtonClickEvent((newPoint) => {
-      this._onDataChange(tripPoint, newPoint);
+    this._editComponent.addOnFavoriteButtonClickEvent(() => {
+      this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
+        isFavorite: !tripPoint.isArchive,
+      }));
     });
 
     render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);

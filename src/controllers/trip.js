@@ -121,7 +121,7 @@ export default class TripController {
   }
 
   _onDataChange(tripPointController, oldPoint, newPoint) {
-    const index = this._orderedPoints.findIndex((point) => point === oldPoint);
+    const index = this._orderedPoints.indexOf((point) => point === oldPoint);
 
     if (index === -1) {
       return;

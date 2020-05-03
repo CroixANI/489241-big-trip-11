@@ -3,8 +3,6 @@ import pointMock from "../mocks/point.js";
 import destinationMock from "../mocks/destination.js";
 import random from "../utils/random.js";
 
-const MIN_OFFERS = 0;
-const MAX_OFFERS = 5;
 const MIN_POINTS_MOCKS = 0;
 const MAX_POINTS_MOCKS = 20;
 

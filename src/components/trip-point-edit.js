@@ -1,4 +1,4 @@
-import AbstractComponent from "./abstract-component.js";
+import AbstractSmartComponent from "./abstract-smart-component.js";
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
@@ -168,7 +168,7 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
-export default class TripPointEditComponent extends AbstractComponent {
+export default class TripPointEditComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
 
@@ -177,6 +177,9 @@ export default class TripPointEditComponent extends AbstractComponent {
 
   getTemplate() {
     return createTripEditFormTemplate(this._point);
+  }
+
+  recoveryListeners() {
   }
 
   addOnCancelButtonClickEvent(onCancelButtonClick) {

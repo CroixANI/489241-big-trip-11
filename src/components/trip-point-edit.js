@@ -178,6 +178,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this._tempPoint = Object.assign({}, point);
 
     this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
+    this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
 
     this._subscribeEvents();
   }
@@ -234,6 +235,6 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   _onPointDestinationChanged(evt) {
     this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
 
-    this.rerRender();
+    this.reRender();
   }
 }

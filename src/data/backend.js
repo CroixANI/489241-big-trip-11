@@ -29,7 +29,7 @@ const getPoints = () => {
   return result;
 };
 
-const getOffersByType = () => random.getRandomArray(OFFERS, MIN_OFFERS, MAX_OFFERS);
+const getOffersByType = () => OFFERS;
 
 const getDestinations = () => CITIES;
 

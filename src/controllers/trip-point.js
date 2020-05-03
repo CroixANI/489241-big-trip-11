@@ -5,7 +5,7 @@ import {render, replace} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
 
-export default class PointController {
+export default class TripPointController {
   constructor(containerElement, onDataChange, onViewChange) {
     this._containerElement = containerElement;
     this._onDataChange = onDataChange;
@@ -27,10 +27,12 @@ export default class PointController {
       this._showEditForm();
     });
     this._editComponent.addOnCancelButtonClickEvent(() => {
+      this._editComponent.cancelChanges();
       this._hideEditForm();
     });
     this._editComponent.addOnFormSubmitEvent((evt) => {
       evt.preventDefault();
+      this._editComponent.applyChanges();
       this._hideEditForm();
     });
     this._editComponent.addOnFavoriteButtonClickEvent(() => {
@@ -72,6 +74,7 @@ export default class PointController {
 
   _onEscapeKeydown(evt) {
     if (evt.key === ESC_KEY) {
+      this._editComponent.cancelChanges();
       this._hideEditForm();
     }
   }

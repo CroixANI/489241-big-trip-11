@@ -6,6 +6,7 @@ import dateFormat from "../utils/date-format.js";
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
+const POINT_TYPE_SELECTOR = `.event__type-list`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -173,30 +174,54 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     super();
 
     this._point = point;
+    this._tempPoint = Object.assign({}, point);
+
+    this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
+
+    this._subscribeEvents();
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._point);
+    return createTripEditFormTemplate(this._tempPoint);
   }
 
   recoveryListeners() {
+    this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
+    this.addOnFormSubmitEvent(this._onEditFormSubmit);
+    this.addOnFavoriteButtonClickEvent(this._onFavoriteButtonClick);
+    this._subscribeEvents();
   }
 
   addOnCancelButtonClickEvent(onCancelButtonClick) {
+    this._onCancelButtonClick = onCancelButtonClick;
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
-      .addEventListener(`click`, onCancelButtonClick);
+      .addEventListener(`click`, this._onCancelButtonClick);
   }
 
   addOnFormSubmitEvent(onEditFormSubmit) {
+    this._onEditFormSubmit = onEditFormSubmit;
     this.getElement()
       .querySelector(FORM_SELECTOR)
-      .addEventListener(`submit`, onEditFormSubmit);
+      .addEventListener(`submit`, this._onEditFormSubmit);
   }
 
   addOnFavoriteButtonClickEvent(onFavoriteButtonClick) {
+    this._onFavoriteButtonClick = onFavoriteButtonClick;
     this.getElement()
       .querySelector(FAVORITE_BUTTON_SELECTOR)
-      .addEventListener(`click`, onFavoriteButtonClick);
+      .addEventListener(`click`, this._onFavoriteButtonClick);
+  }
+
+  _subscribeEvents() {
+    this.getElement()
+      .querySelector(POINT_TYPE_SELECTOR)
+      .addEventListener(`change`, this._onPointTypeChanged);
+  }
+
+  _onPointTypeChanged(evt) {
+    this._tempPoint.type = evt.target.value;
+
+    this.reRender();
   }
 }

@@ -3,16 +3,16 @@ const ACTIVITY_POINT_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
 const ALL_POINT_TYPES = TRANSFER_POINT_TYPES.concat(ACTIVITY_POINT_TYPES);
 
 const activityToLabel = {
-  "Taxi": `Taxi to`,
-  "Bus": `Bus to`,
-  "Train": `Train to`,
-  "Ship": `Ship to`,
-  "Transport": `Transport to`,
-  "Drive": `Drive to`,
-  "Flight": `Flight to`,
-  "Check-in": `Check-in in`,
-  "Sightseeing": `Sightseeing in`,
-  "Restaurant": `Restaurant in`,
+  "taxi": `Taxi to`,
+  "bus": `Bus to`,
+  "train": `Train to`,
+  "ship": `Ship to`,
+  "transport": `Transport to`,
+  "drive": `Drive to`,
+  "flight": `Flight to`,
+  "check-in": `Check-in in`,
+  "sightseeing": `Sightseeing in`,
+  "restaurant": `Restaurant in`,
 };
 
 const MONTH_SHORT_NAMES = [
@@ -30,7 +30,7 @@ const MONTH_SHORT_NAMES = [
   `Dec`,
 ];
 
-const getActivityLabel = (activity) => activityToLabel[activity];
+const getActivityLabel = (activity) => activityToLabel[activity.toLowerCase()];
 
 const RENDER_POSITIONS = {
   AFTER_BEGIN: `afterbegin`,

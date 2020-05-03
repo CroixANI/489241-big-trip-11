@@ -44,9 +44,9 @@ export default class TripPointController {
     // Fix issue with old components after data changed
     if (oldEditComponent && oldViewComponent) {
       if (this._isEditMode) {
-        replace(this._containerElement, this._editComponent, oldEditComponent);
+        replace(this._editComponent, oldEditComponent);
       } else {
-        replace(this._containerElement, this._viewComponent, oldViewComponent);
+        replace(this._viewComponent, oldViewComponent);
       }
     } else {
       render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
@@ -60,14 +60,14 @@ export default class TripPointController {
   }
 
   _hideEditForm() {
-    replace(this._containerElement, this._viewComponent, this._editComponent);
+    replace(this._viewComponent, this._editComponent);
     document.removeEventListener(`keydown`, this._onEscapeKeydown);
     this._isEditMode = false;
   }
 
   _showEditForm() {
     this._onViewChange();
-    replace(this._containerElement, this._editComponent, this._viewComponent);
+    replace(this._editComponent, this._viewComponent);
     document.addEventListener(`keydown`, this._onEscapeKeydown);
     this._isEditMode = true;
   }

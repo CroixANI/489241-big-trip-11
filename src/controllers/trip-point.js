@@ -5,7 +5,7 @@ import {render, replace} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
 
-export default class PointController {
+export default class TripPointController {
   constructor(containerElement, onDataChange, onViewChange) {
     this._containerElement = containerElement;
     this._onDataChange = onDataChange;
@@ -27,10 +27,12 @@ export default class PointController {
       this._showEditForm();
     });
     this._editComponent.addOnCancelButtonClickEvent(() => {
+      this._editComponent.cancelChanges();
       this._hideEditForm();
     });
     this._editComponent.addOnFormSubmitEvent((evt) => {
       evt.preventDefault();
+      this._editComponent.applyChanges();
       this._hideEditForm();
     });
     this._editComponent.addOnFavoriteButtonClickEvent(() => {
@@ -42,9 +44,9 @@ export default class PointController {
     // Fix issue with old components after data changed
     if (oldEditComponent && oldViewComponent) {
       if (this._isEditMode) {
-        replace(this._containerElement, this._editComponent, oldEditComponent);
+        replace(this._editComponent, oldEditComponent);
       } else {
-        replace(this._containerElement, this._viewComponent, oldViewComponent);
+        replace(this._viewComponent, oldViewComponent);
       }
     } else {
       render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
@@ -58,20 +60,21 @@ export default class PointController {
   }
 
   _hideEditForm() {
-    replace(this._containerElement, this._viewComponent, this._editComponent);
+    replace(this._viewComponent, this._editComponent);
     document.removeEventListener(`keydown`, this._onEscapeKeydown);
     this._isEditMode = false;
   }
 
   _showEditForm() {
     this._onViewChange();
-    replace(this._containerElement, this._editComponent, this._viewComponent);
+    replace(this._editComponent, this._viewComponent);
     document.addEventListener(`keydown`, this._onEscapeKeydown);
     this._isEditMode = true;
   }
 
   _onEscapeKeydown(evt) {
     if (evt.key === ESC_KEY) {
+      this._editComponent.cancelChanges();
       this._hideEditForm();
     }
   }

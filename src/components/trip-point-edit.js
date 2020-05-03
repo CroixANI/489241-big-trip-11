@@ -204,6 +204,16 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     return createTripEditFormTemplate(this._tempPoint);
   }
 
+  cancelChanges() {
+    this._tempPoint = Object.assign({}, this._point);
+    this.reRender();
+  }
+
+  applyChanges() {
+    this._point = Object.assign({}, this._tempPoint);
+    this.reRender();
+  }
+
   recoveryListeners() {
     this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
     this.addOnFormSubmitEvent(this._onEditFormSubmit);

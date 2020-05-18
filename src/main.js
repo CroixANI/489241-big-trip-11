@@ -6,7 +6,6 @@ import TripFilterComponent from "./components/trip-filter.js";
 import TripDetails from "./data/trip-details.js";
 import TripController from "./controllers/trip.js";
 import constants from "./data/constants.js";
-import dateFormat from "./utils/date-format.js";
 import {render} from "./utils/render.js";
 
 const PAGE_HEADER_SELECTOR = `.page-header`;
@@ -21,15 +20,9 @@ const tripViewHeaderElement = tripMainElement.querySelector(MENU_HEADER_SELECTOR
 const tripFilterHeaderElement = tripMainElement.querySelector(FILTER_HEADER_SELECTOR);
 const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
-const compareStartDate = (firstPoint, secondPoint) => {
-  return dateFormat.getDateNumberForGrouping(firstPoint.start) - dateFormat.getDateNumberForGrouping(secondPoint.start);
-};
-
 const renderAll = () => {
   const points = backend.getPoints();
-  const orderedPoints = points.sort(compareStartDate);
-  const tripModel = new TripModel();
-  tripModel.setPoints(orderedPoints);
+  const tripModel = new TripModel(points);
   const tripDetails = new TripDetails(tripModel);
 
   render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);

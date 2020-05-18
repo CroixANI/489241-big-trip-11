@@ -1,6 +1,16 @@
+import dateFormat from "../utils/date-format.js";
+
+const compareStartDate = (firstPoint, secondPoint) => {
+  return dateFormat.getDateNumberForGrouping(firstPoint.start) - dateFormat.getDateNumberForGrouping(secondPoint.start);
+};
+
 export default class TripModel {
-  constructor() {
-    this._points = [];
+  constructor(points) {
+    this._points = points;
+  }
+
+  getOrderedPoints() {
+    return this._points.sort(compareStartDate);
   }
 
   getPoints() {

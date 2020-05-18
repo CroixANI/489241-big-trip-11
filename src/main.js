@@ -2,8 +2,8 @@ import backend from "./data/backend.js";
 import TripModel from "./models/trip.js";
 import MenuComponent from "./components/menu.js";
 import TripDetailsComponent from "./components/trip-details.js";
-import TripFilterComponent from "./components/trip-filter.js";
 import TripDetails from "./data/trip-details.js";
+import TripFilterController from "./controllers/trip-filter.js";
 import TripController from "./controllers/trip.js";
 import constants from "./data/constants.js";
 import {render} from "./utils/render.js";
@@ -27,7 +27,7 @@ const renderAll = () => {
 
   render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
   render(tripViewHeaderElement, new MenuComponent(), constants.RENDER_POSITIONS.AFTER_END);
-  render(tripFilterHeaderElement, new TripFilterComponent(), constants.RENDER_POSITIONS.AFTER_END);
+  new TripFilterController(tripFilterHeaderElement, tripModel).render();
   new TripController(tripEventsElement, tripModel).render();
 };
 

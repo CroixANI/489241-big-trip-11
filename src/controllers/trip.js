@@ -94,7 +94,6 @@ export default class TripController {
     this._containerElement = containerElement;
     this._tripModel = tripModel;
     this._sortComponent = new TripSortComponent();
-    this._orderedPoints = [];
     this._tripPointControllers = [];
 
     this._onDataChange = this._onDataChange.bind(this);

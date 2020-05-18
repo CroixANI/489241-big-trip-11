@@ -1,10 +1,5 @@
 import AbstractComponent from "./abstract-component.js";
-
-const AVAILABLE_FILTERS = {
-  EVERYTHING: `Everything`,
-  FUTURE: `Future`,
-  PAST: `Past`
-};
+import constants from "../data/constants.js";
 
 const createTripFilterTemplate = (type, name, isChecked = false) => {
   return (
@@ -16,7 +11,7 @@ const createTripFilterTemplate = (type, name, isChecked = false) => {
 };
 
 const createTripFiltersTemplate = (currentFilterType = ``) => {
-  const allFiltersTemplates = Object.keys(AVAILABLE_FILTERS).map((filter) => {
+  const allFiltersTemplates = Object.keys(constants.FilterType).map((filter) => {
     return createTripFilterTemplate(filter.toLocaleLowerCase(), filter, filter === currentFilterType);
   }).join(`\n`);
 
@@ -33,7 +28,7 @@ export default class TripFilterComponent extends AbstractComponent {
   constructor() {
     super();
 
-    this._currentFilter = AVAILABLE_FILTERS.EVERYTHING;
+    this._currentFilter = constants.FilterType.EVERYTHING;
   }
 
   getTemplate() {

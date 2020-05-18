@@ -6,6 +6,8 @@ export default class TripFilterController {
   constructor(containerElement, tripModel) {
     this._containerElement = containerElement;
     this._tripModel = tripModel;
+
+    this._currentFilter = constants.FilterType.EVERYTHING;
   }
 
   render() {

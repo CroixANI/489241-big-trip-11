@@ -7,14 +7,11 @@ const compareStartDate = (firstPoint, secondPoint) => {
 export default class TripModel {
   constructor(points) {
     this._points = points;
-  }
-
-  getOrderedPoints() {
-    return this._points.sort(compareStartDate);
+    this._currentFilter = ``;
   }
 
   getPoints() {
-    return this._points;
+    return this._points.sort(compareStartDate);
   }
 
   setPoints(points) {
@@ -31,5 +28,9 @@ export default class TripModel {
     this._points = [].concat(this._points.slice(0, index), point, this._points.slice(index + 1));
 
     return true;
+  }
+
+  setFilter(filter) {
+    this._currentFilter = filter;
   }
 }

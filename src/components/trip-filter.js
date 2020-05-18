@@ -1,18 +1,21 @@
 import AbstractComponent from "./abstract-component.js";
 import constants from "../data/constants.js";
 
-const createTripFilterTemplate = (type, name, isChecked = false) => {
+const TRIP_FILTER_SELECTOR = `.trip-filters__filter-input`;
+
+const createTripFilterTemplate = (key, isChecked = false) => {
+  const type = key.toLocaleLowerCase();
   return (
     `<div class="trip-filters__filter">
-      <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${isChecked ? `checked` : ``}>
-      <label class="trip-filters__filter-label" for="filter-${type}">${name}</label>
+      <input id="filter-${type}" class="trip-filters__filter-input  visually-hidden" type="radio" name="trip-filter" value="${type}" ${isChecked ? `checked` : ``} data-filter-type="${constants.FilterType[key]}">
+      <label class="trip-filters__filter-label" for="filter-${type}">${key}</label>
     </div>`
   );
 };
 
 const createTripFiltersTemplate = (currentFilterType = ``) => {
-  const allFiltersTemplates = Object.keys(constants.FilterType).map((filter) => {
-    return createTripFilterTemplate(filter.toLocaleLowerCase(), filter, filter === currentFilterType);
+  const allFiltersTemplates = Object.keys(constants.FilterType).map((key) => {
+    return createTripFilterTemplate(key, constants.FilterType[key] === currentFilterType);
   }).join(`\n`);
 
   return (
@@ -33,6 +36,24 @@ export default class TripFilterComponent extends AbstractComponent {
 
   getTemplate() {
     return createTripFiltersTemplate(this._currentFilter);
+  }
+
+  addOnFilterEvent(onFilterChanged) {
+    this.getElement()
+      .querySelectorAll(TRIP_FILTER_SELECTOR)
+      .forEach((input) => {
+        input.addEventListener(`change`, (evt) => {
+          const filterType = evt.target.dataset.filterType;
+
+          if (this._currentFilter === filterType) {
+            return;
+          }
+
+          this._currentFilter = filterType;
+
+          onFilterChanged(this._currentFilter);
+        });
+      });
   }
 }
 

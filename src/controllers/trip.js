@@ -102,7 +102,7 @@ export default class TripController {
   }
 
   render() {
-    const orderedPoints = this._tripModel.getOrderedPoints();
+    const orderedPoints = this._tripModel.getPoints();
     if (orderedPoints.length === 0) {
       render(this._containerElement, new NoPointsComponent(), constants.RENDER_POSITIONS.BEFORE_END);
     } else {

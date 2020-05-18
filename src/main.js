@@ -1,4 +1,5 @@
 import backend from "./data/backend.js";
+import TripModel from "./models/trip.js";
 import MenuComponent from "./components/menu.js";
 import TripDetailsComponent from "./components/trip-details.js";
 import TripFilterComponent from "./components/trip-filter.js";
@@ -27,12 +28,14 @@ const compareStartDate = (firstPoint, secondPoint) => {
 const renderAll = () => {
   const points = backend.getPoints();
   const orderedPoints = points.sort(compareStartDate);
-  const tripDetails = new TripDetails(orderedPoints);
+  const tripModel = new TripModel();
+  tripModel.setPoints(orderedPoints);
+  const tripDetails = new TripDetails(tripModel);
 
   render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
   render(tripViewHeaderElement, new MenuComponent(), constants.RENDER_POSITIONS.AFTER_END);
   render(tripFilterHeaderElement, new TripFilterComponent(), constants.RENDER_POSITIONS.AFTER_END);
-  new TripController(tripEventsElement).render(orderedPoints);
+  new TripController(tripEventsElement, tripModel).render();
 };
 
 renderAll();

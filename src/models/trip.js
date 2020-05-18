@@ -1,4 +1,4 @@
-export default class Trip {
+export default class TripModel {
   constructor() {
     this._points = [];
   }

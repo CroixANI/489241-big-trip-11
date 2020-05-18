@@ -1,7 +1,7 @@
 import TripPointComponent from "../components/trip-point.js";
 import TripPointEditComponent from "../components/trip-point-edit.js";
 import constants from "../data/constants.js";
-import {render, replace} from "../utils/render.js";
+import {render, replace, remove} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
 
@@ -51,6 +51,12 @@ export default class TripPointController {
     } else {
       render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
     }
+  }
+
+  destroy() {
+    remove(this._editComponent);
+    remove(this._viewComponent);
+    document.removeEventListener(`keydown`, this._onEscapeKeydown);
   }
 
   setDefaultView() {

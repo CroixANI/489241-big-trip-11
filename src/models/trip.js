@@ -5,6 +5,7 @@ export default class TripModel {
     this._points = points;
     this._currentFilter = ``;
     this._onFilterChangeHandler = null;
+    this._dataChangeHandlers = [];
   }
 
   getPoints() {
@@ -23,6 +24,20 @@ export default class TripModel {
     }
 
     this._points = [].concat(this._points.slice(0, index), point, this._points.slice(index + 1));
+    this._callHandlers(this._dataChangeHandlers);
+
+    return true;
+  }
+
+  removePoint(id) {
+    const index = this._points.indexOf((item) => item.id === id);
+
+    if (index === -1) {
+      return false;
+    }
+
+    this._points = [].concat(this._points.slice(0, index), this._points.slice(index + 1));
+    this._callHandlers(this._dataChangeHandlers);
 
     return true;
   }
@@ -36,5 +51,13 @@ export default class TripModel {
 
   setOnFilterChangeHandler(handler) {
     this._onFilterChangeHandler = handler;
+  }
+
+  setOnDataChangeHandler(handler) {
+    this._dataChangeHandlers.push(handler);
+  }
+
+  _callHandlers(handlers) {
+    handlers.forEach((handler) => handler());
   }
 }

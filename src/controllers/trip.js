@@ -98,6 +98,9 @@ export default class TripController {
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
+    this._onFilterChange = this._onFilterChange.bind(this);
+
+    this._tripModel.setOnFilterChangeHandler(this._onFilterChange);
   }
 
   render() {
@@ -120,6 +123,12 @@ export default class TripController {
     }
   }
 
+  _reRender() {
+    this._containerElement.innerHTML = ``;
+    this._tripPointControllers = null;
+    this.render();
+  }
+
   _onDataChange(tripPointController, oldPoint, newPoint) {
     const isSuccess = this._tripModel.updatePoint(oldPoint.id, newPoint);
 
@@ -130,5 +139,9 @@ export default class TripController {
 
   _onViewChange() {
     this._tripPointControllers.forEach((pointController) => pointController.setDefaultView());
+  }
+
+  _onFilterChange() {
+    this._reRender();
   }
 }

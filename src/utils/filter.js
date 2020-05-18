@@ -6,11 +6,13 @@ const compareStartDate = (firstPoint, secondPoint) => {
 };
 
 const filterPastTripPoints = (tripPoints) => {
-  return tripPoints;
+  const now = new Date();
+  return tripPoints.filter((point) => point.start < now);
 };
 
 const filterFutureTripPoints = (tripPoints) => {
-  return tripPoints;
+  const now = new Date();
+  return tripPoints.filter((point) => point.start > now);
 };
 
 export const filterPoints = (tripPoints, filterType) => {

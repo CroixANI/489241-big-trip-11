@@ -4,6 +4,7 @@ export default class TripModel {
   constructor(points) {
     this._points = points;
     this._currentFilter = ``;
+    this._onFilterChangeHandler = null;
   }
 
   getPoints() {
@@ -28,5 +29,12 @@ export default class TripModel {
 
   setFilter(filter) {
     this._currentFilter = filter;
+    if (this._onFilterChangeHandler) {
+      this._onFilterChangeHandler();
+    }
+  }
+
+  setOnFilterChangeHandler(handler) {
+    this._onFilterChangeHandler = handler;
   }
 }

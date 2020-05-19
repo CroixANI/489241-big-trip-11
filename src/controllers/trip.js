@@ -66,7 +66,7 @@ const renderTripWithDays = (container, orderedPoints, onDataChange, onViewChange
 
   let dayIndex = 1;
   for (let pointsArray of groupedByDay.values()) {
-    let tripDayComponent = new TripDayComponent(dayIndex, orderedPoints[0].start);
+    let tripDayComponent = new TripDayComponent(dayIndex, pointsArray[0].start);
     const controllers = renderTripDay(daysContainer, tripDayComponent, pointsArray, onDataChange, onViewChange);
     tripPointControllers = tripPointControllers.concat(controllers);
     dayIndex++;

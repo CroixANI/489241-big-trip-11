@@ -10,6 +10,11 @@ import {render} from "../utils/render.js";
 
 const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
 
+const TripControllerMode = {
+  DEFAULT: `default`,
+  SORTING: `sorting`
+};
+
 const comparePointsBySortType = (sortType) => {
   return function comparePoints(firstPoint, secondPoint) {
     switch (sortType) {
@@ -94,39 +99,46 @@ export default class TripController {
     this._containerElement = containerElement;
     this._tripModel = tripModel;
     this._sortComponent = new TripSortComponent();
+    this._noPointsComponent = new NoPointsComponent();
+    this._tripComponent = new TripComponent();
     this._tripPointControllers = [];
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onNewButtonClicked = this._onNewButtonClicked.bind(this);
+    this._onSortTypeChanged = this._onSortTypeChanged.bind(this);
 
     this._tripModel.setOnFilterChangeHandler(this._onFilterChange);
+    this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
   }
 
   render() {
-    const orderedPoints = this._tripModel.getPoints();
-    if (orderedPoints.length === 0) {
-      render(this._containerElement, new NoPointsComponent(), constants.RENDER_POSITIONS.BEFORE_END);
+    const points = this._tripModel.getPoints();
+    this._renderPoints(points, TripControllerMode.DEFAULT);
+  }
+
+  _renderPoints(points, mode) {
+    if (points.length === 0) {
+      render(this._containerElement, this._noPointsComponent, constants.RENDER_POSITIONS.BEFORE_END);
     } else {
-      this._sortComponent.setOnSortTypeChangedHandler((sortType) => {
-        this._containerElement.innerHTML = ``;
-        render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
-        if (sortType === SortType.EVENT) {
-          this._tripPointControllers = renderTripWithDays(this._containerElement, orderedPoints, this._onDataChange, this._onViewChange);
-        } else {
-          const sortedPoints = orderedPoints.slice().sort(comparePointsBySortType(sortType));
-          this._tripPointControllers = renderTripWithSorting(this._containerElement, sortedPoints, this._onDataChange, this._onViewChange);
-        }
-      });
       render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
-      this._tripPointControllers = renderTripWithDays(this._containerElement, orderedPoints, this._onDataChange, this._onViewChange);
+      if (mode === TripControllerMode.DEFAULT) {
+        this._tripPointControllers = renderTripWithDays(this._containerElement, points, this._onDataChange, this._onViewChange);
+      } else {
+        this._tripPointControllers = renderTripWithSorting(this._containerElement, points);
+      }
     }
   }
 
-  _reRender() {
+  _clear() {
     this._containerElement.innerHTML = ``;
     this._tripPointControllers.forEach((controller) => controller.destroy());
     this._tripPointControllers = [];
+  }
+
+  _reRender() {
+    this._clear();
     this.render();
   }
 
@@ -152,5 +164,22 @@ export default class TripController {
 
   _onFilterChange() {
     this._reRender();
+  }
+
+  _onNewButtonClicked() {
+    console.log(`new button clicked`);
+  }
+
+  _onSortTypeChanged(sortType) {
+    this._clear();
+    const points = this._tripModel.getPoints();
+
+    render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.BEFORE_END);
+    if (sortType === SortType.EVENT) {
+      this._renderPoints(points, TripControllerMode.DEFAULT);
+    } else {
+      const sortedPoints = points.slice().sort(comparePointsBySortType(sortType));
+      this._renderPoints(sortedPoints, TripControllerMode.SORTING);
+    }
   }
 }

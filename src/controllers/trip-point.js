@@ -5,6 +5,12 @@ import {render, replace, remove} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
 
+export const TripPointControllerMode = {
+  VIEW: `view`,
+  EDIT: `edit`,
+  NEW: `new`
+};
+
 export default class TripPointController {
   constructor(containerElement, onDataChange, onViewChange) {
     this._containerElement = containerElement;
@@ -12,7 +18,7 @@ export default class TripPointController {
     this._onViewChange = onViewChange;
     this._viewComponent = null;
     this._editComponent = null;
-    this._isEditMode = false;
+    this._currentMode = TripPointControllerMode.VIEW;
     this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
   }
 
@@ -46,7 +52,7 @@ export default class TripPointController {
 
     // Fix issue with old components after data changed
     if (oldEditComponent && oldViewComponent) {
-      if (this._isEditMode) {
+      if (this._currentMode === TripPointControllerMode.EDIT) {
         replace(this._editComponent, oldEditComponent);
       } else {
         replace(this._viewComponent, oldViewComponent);
@@ -63,22 +69,31 @@ export default class TripPointController {
   }
 
   setDefaultView() {
-    if (this._isEditMode) {
+    if (this._currentMode === TripPointControllerMode.EDIT) {
       this._hideEditForm();
+    } else if (this._currentMode === TripPointControllerMode.NEW) {
+      this.destroy();
     }
   }
 
   _hideEditForm() {
     replace(this._viewComponent, this._editComponent);
     document.removeEventListener(`keydown`, this._onEscapeKeydown);
-    this._isEditMode = false;
+    this._currentMode = TripPointControllerMode.VIEW;
   }
 
   _showEditForm() {
     this._onViewChange();
     replace(this._editComponent, this._viewComponent);
     document.addEventListener(`keydown`, this._onEscapeKeydown);
-    this._isEditMode = true;
+    this._currentMode = TripPointControllerMode.EDIT;
+  }
+
+  _showAddNewForm() {
+    this._onViewChange();
+    replace(this._editComponent, this._viewComponent);
+    document.addEventListener(`keydown`, this._onEscapeKeydown);
+    this._currentMode = TripPointControllerMode.NEW;
   }
 
   _onEscapeKeydown(evt) {

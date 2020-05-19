@@ -17,7 +17,7 @@ export default class TripModel {
   }
 
   updatePoint(id, point) {
-    const index = this._points.indexOf((item) => item.id === id);
+    const index = this._points.findIndex((item) => item.id === id);
 
     if (index === -1) {
       return false;
@@ -30,7 +30,7 @@ export default class TripModel {
   }
 
   removePoint(id) {
-    const index = this._points.indexOf((item) => item.id === id);
+    const index = this._points.findIndex((item) => item.id === id);
 
     if (index === -1) {
       return false;

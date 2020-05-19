@@ -132,7 +132,7 @@ export default class TripController {
 
   _onDataChange(tripPointController, oldPoint, newPoint) {
     if (newPoint === null) {
-      this.tripModel.removePoint(oldPoint.id);
+      this._tripModel.removePoint(oldPoint.id);
       tripPointController.destroy();
       this._reRender();
     } else {

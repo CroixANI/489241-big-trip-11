@@ -30,6 +30,9 @@ export default class TripPointController {
       this._editComponent.cancelChanges();
       this._hideEditForm();
     });
+    this._editComponent.addOnDeleteButtonClickEvent(() => {
+      this._onDataChange(this, tripPoint, null);
+    });
     this._editComponent.addOnFormSubmitEvent((evt) => {
       evt.preventDefault();
       this._editComponent.applyChanges();

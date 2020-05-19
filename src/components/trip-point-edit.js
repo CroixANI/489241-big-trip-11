@@ -9,6 +9,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
+const DELETE_BUTTON_SELECTOR = `.event__reset-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 const POINT_TYPE_SELECTOR = `.event__type-list`;
 const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
@@ -216,6 +217,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   recoveryListeners() {
     this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
+    this.addOnDeleteButtonClickEvent(this._onDeleteButtonClick);
     this.addOnFormSubmitEvent(this._onEditFormSubmit);
     this.addOnFavoriteButtonClickEvent(this._onFavoriteButtonClick);
     this._subscribeEvents();
@@ -226,6 +228,13 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onCancelButtonClick);
+  }
+
+  addOnDeleteButtonClickEvent(onDeleteButtonClick) {
+    this._onDeleteButtonClick = onDeleteButtonClick;
+    this.getElement()
+      .querySelector(DELETE_BUTTON_SELECTOR)
+      .addEventListener(`click`, this._onDeleteButtonClick);
   }
 
   addOnFormSubmitEvent(onEditFormSubmit) {

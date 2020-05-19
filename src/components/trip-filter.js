@@ -38,7 +38,7 @@ export default class TripFilterComponent extends AbstractComponent {
     return createTripFiltersTemplate(this._currentFilter);
   }
 
-  addOnFilterEvent(onFilterChanged) {
+  setOnFilterChangedHandler(onFilterChanged) {
     this.getElement()
       .querySelectorAll(TRIP_FILTER_SELECTOR)
       .forEach((input) => {

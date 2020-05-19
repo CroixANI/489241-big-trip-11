@@ -54,7 +54,7 @@ export default class TripModel {
     }
   }
 
-  setOnFilterChangeHandler(handler) {
+  setOnFilterChangedHandler(handler) {
     this._onFilterChangeHandler = handler;
   }
 

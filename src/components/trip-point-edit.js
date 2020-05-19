@@ -216,35 +216,35 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   recoveryListeners() {
-    this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
-    this.addOnDeleteButtonClickEvent(this._onDeleteButtonClick);
-    this.addOnFormSubmitEvent(this._onEditFormSubmit);
-    this.addOnFavoriteButtonClickEvent(this._onFavoriteButtonClick);
+    this.setOnCancelButtonClickedHandler(this._onCancelButtonClick);
+    this.setOnDeleteButtonClickedHandler(this._onDeleteButtonClick);
+    this.setOnFormSubmittedHandler(this._onEditFormSubmit);
+    this.setOnFavoriteButtonClickedHandler(this._onFavoriteButtonClick);
     this._subscribeEvents();
   }
 
-  addOnCancelButtonClickEvent(onCancelButtonClick) {
+  setOnCancelButtonClickedHandler(onCancelButtonClick) {
     this._onCancelButtonClick = onCancelButtonClick;
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onCancelButtonClick);
   }
 
-  addOnDeleteButtonClickEvent(onDeleteButtonClick) {
+  setOnDeleteButtonClickedHandler(onDeleteButtonClick) {
     this._onDeleteButtonClick = onDeleteButtonClick;
     this.getElement()
       .querySelector(DELETE_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onDeleteButtonClick);
   }
 
-  addOnFormSubmitEvent(onEditFormSubmit) {
+  setOnFormSubmittedHandler(onEditFormSubmit) {
     this._onEditFormSubmit = onEditFormSubmit;
     this.getElement()
       .querySelector(FORM_SELECTOR)
       .addEventListener(`submit`, this._onEditFormSubmit);
   }
 
-  addOnFavoriteButtonClickEvent(onFavoriteButtonClick) {
+  setOnFavoriteButtonClickedHandler(onFavoriteButtonClick) {
     this._onFavoriteButtonClick = onFavoriteButtonClick;
     this.getElement()
       .querySelector(FAVORITE_BUTTON_SELECTOR)

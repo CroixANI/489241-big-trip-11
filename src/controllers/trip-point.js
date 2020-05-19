@@ -29,22 +29,22 @@ export default class TripPointController {
     this._editComponent = new TripPointEditComponent(tripPoint);
     this._viewComponent = new TripPointComponent(tripPoint);
 
-    this._viewComponent.addOnEditButtonClickEvent(() => {
+    this._viewComponent.setOnEditButtonClickedHandler(() => {
       this._showEditForm();
     });
-    this._editComponent.addOnCancelButtonClickEvent(() => {
+    this._editComponent.setOnCancelButtonClickedHandler(() => {
       this._editComponent.cancelChanges();
       this._hideEditForm();
     });
-    this._editComponent.addOnDeleteButtonClickEvent(() => {
+    this._editComponent.setOnDeleteButtonClickedHandler(() => {
       this._onDataChange(this, tripPoint, null);
     });
-    this._editComponent.addOnFormSubmitEvent((evt) => {
+    this._editComponent.setOnFormSubmittedHandler((evt) => {
       evt.preventDefault();
       this._editComponent.applyChanges();
       this._hideEditForm();
     });
-    this._editComponent.addOnFavoriteButtonClickEvent(() => {
+    this._editComponent.setOnFavoriteButtonClickedHandler(() => {
       this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
         isFavorite: !tripPoint.isFavorite,
       }));

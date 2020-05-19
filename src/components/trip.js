@@ -18,7 +18,7 @@ export default class TripComponent extends AbstractComponent {
     return createTripContainerTemplate();
   }
 
-  addOnNewButtonClickEvent(handler) {
+  setOnNewButtonClickedHandler(handler) {
     document.querySelector(ADD_NEW_BUTTON_SELECTOR)
       .addEventListener(`click`, handler);
   }

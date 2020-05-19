@@ -84,7 +84,7 @@ export default class TripPointComponent extends AbstractComponent {
     return createTripRoutePointTemplate(this._point);
   }
 
-  addOnEditButtonClickEvent(onEditButtonClick) {
+  setOnEditButtonClickedHandler(onEditButtonClick) {
     this.getElement()
       .querySelector(EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, onEditButtonClick);

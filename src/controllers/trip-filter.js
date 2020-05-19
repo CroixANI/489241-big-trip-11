@@ -13,7 +13,7 @@ export default class TripFilterController {
 
   render() {
     this._component = new TripFilterComponent();
-    this._component.addOnFilterEvent((filterType) => {
+    this._component.setOnFilterChangedHandler((filterType) => {
       this._tripModel.setFilter(filterType);
     });
     render(this._containerElement, this._component, constants.RENDER_POSITIONS.AFTER_END);

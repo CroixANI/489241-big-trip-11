@@ -109,8 +109,9 @@ export default class TripController {
     this._onNewButtonClicked = this._onNewButtonClicked.bind(this);
     this._onSortTypeChanged = this._onSortTypeChanged.bind(this);
 
-    this._tripModel.setOnFilterChangeHandler(this._onFilterChange);
+    this._tripModel.setOnFilterChangedHandler(this._onFilterChange);
     this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
+    this._tripComponent.setOnNewButtonClickedHandler(this._onNewButtonClicked);
   }
 
   render() {

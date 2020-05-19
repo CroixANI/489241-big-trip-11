@@ -1,7 +1,8 @@
+import TripPoint from "../data/trip-point.js";
 import TripComponent from "../components/trip.js";
 import TripDayComponent from "../components/trip-day.js";
 import TripEmptyDayComponent from "../components/trip-day-empty.js";
-import TripPointController from "./trip-point.js";
+import TripPointController, {TripPointControllerMode} from "./trip-point.js";
 import NoPointsComponent from "../components/no-points.js";
 import TripSortComponent, {SortType} from "../components/trip-sort.js";
 import dateFormat from "../utils/date-format.js";
@@ -102,6 +103,7 @@ export default class TripController {
     this._noPointsComponent = new NoPointsComponent();
     this._tripComponent = new TripComponent();
     this._tripPointControllers = [];
+    this._newTripPointController = null;
 
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
@@ -161,6 +163,9 @@ export default class TripController {
 
   _onViewChange() {
     this._tripPointControllers.forEach((pointController) => pointController.setDefaultView());
+    if (this._newTripPointController) {
+      this._newTripPointController.destroy();
+    }
   }
 
   _onFilterChange() {
@@ -168,7 +173,13 @@ export default class TripController {
   }
 
   _onNewButtonClicked() {
-    console.log(`new button clicked`);
+    if (this._newTripPointController) {
+      return;
+    }
+
+    this._onViewChange();
+    this._newTripPointController = new TripPointController(this._containerElement, this._onDataChange, this._onViewChange);
+    this._newTripPointController.render(new TripPoint(), TripPointControllerMode.NEW);
   }
 
   _onSortTypeChanged(sortType) {

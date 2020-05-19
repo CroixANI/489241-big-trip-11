@@ -15,6 +15,7 @@ const POINT_TYPE_SELECTOR = `.event__type-list`;
 const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
 const START_DATE_SELECTOR = `#event-start-time-1`;
 const END_DATE_SELECTOR = `#event-end-time-1`;
+const CANCEL_BUTTON_SELECTOR = `.event__reset-btn`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -73,7 +74,7 @@ const createDestinationDetailsTemplate = (destination) => {
 };
 
 const createTripEditFormTemplate = (point) => {
-  const isEditMode = true;
+  const isEditMode = !point.isEmpty;
   const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = isEditMode ? point.destination.city : ``;
@@ -226,11 +227,15 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   setOnCancelButtonClickedHandler(onCancelButtonClick) {
     this._onCancelButtonClick = onCancelButtonClick;
     this.getElement()
-      .querySelector(EDIT_BUTTON_SELECTOR)
+      .querySelector(this._point.isEmpty ? CANCEL_BUTTON_SELECTOR : EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onCancelButtonClick);
   }
 
   setOnDeleteButtonClickedHandler(onDeleteButtonClick) {
+    if (this._point.isEmpty) {
+      return;
+    }
+
     this._onDeleteButtonClick = onDeleteButtonClick;
     this.getElement()
       .querySelector(DELETE_BUTTON_SELECTOR)
@@ -239,12 +244,21 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   setOnFormSubmittedHandler(onEditFormSubmit) {
     this._onEditFormSubmit = onEditFormSubmit;
-    this.getElement()
-      .querySelector(FORM_SELECTOR)
-      .addEventListener(`submit`, this._onEditFormSubmit);
+    if (this._point.isEmpty) {
+      this.getElement()
+        .addEventListener(`submit`, this._onEditFormSubmit);
+    } else {
+      this.getElement()
+        .querySelector(FORM_SELECTOR)
+        .addEventListener(`submit`, this._onEditFormSubmit);
+    }
   }
 
   setOnFavoriteButtonClickedHandler(onFavoriteButtonClick) {
+    if (this._point.isEmpty) {
+      return;
+    }
+
     this._onFavoriteButtonClick = onFavoriteButtonClick;
     this.getElement()
       .querySelector(FAVORITE_BUTTON_SELECTOR)

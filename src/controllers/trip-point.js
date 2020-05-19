@@ -22,7 +22,7 @@ export default class TripPointController {
     this._onEscapeKeydown = this._onEscapeKeydown.bind(this);
   }
 
-  render(tripPoint) {
+  render(tripPoint, mode = TripPointControllerMode.VIEW) {
     const oldEditComponent = this._editComponent;
     const oldViewComponent = this._viewComponent;
 
@@ -50,15 +50,19 @@ export default class TripPointController {
       }));
     });
 
-    // Fix issue with old components after data changed
-    if (oldEditComponent && oldViewComponent) {
-      if (this._currentMode === TripPointControllerMode.EDIT) {
-        replace(this._editComponent, oldEditComponent);
+    if (mode === TripPointControllerMode.VIEW) {
+      // Fix issue with old components after data changed
+      if (oldEditComponent && oldViewComponent) {
+        if (this._currentMode === TripPointControllerMode.EDIT) {
+          replace(this._editComponent, oldEditComponent);
+        } else {
+          replace(this._viewComponent, oldViewComponent);
+        }
       } else {
-        replace(this._viewComponent, oldViewComponent);
+        render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
       }
     } else {
-      render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
+      render(this._containerElement, this._editComponent, constants.RENDER_POSITIONS.AFTER_BEGIN);
     }
   }
 

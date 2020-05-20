@@ -4,7 +4,7 @@ export default class TripModel {
   constructor(points) {
     this._points = points;
     this._currentFilter = ``;
-    this._onFilterChangeHandler = null;
+    this._onFilterChangeHandler = [];
     this._dataChangeHandlers = [];
   }
 
@@ -42,6 +42,10 @@ export default class TripModel {
     return true;
   }
 
+  getFilter() {
+    return this._currentFilter;
+  }
+
   addPoint(point) {
     this._points = [].concat(this._points, point);
     this._callHandlers(this._dataChangeHandlers);
@@ -49,17 +53,20 @@ export default class TripModel {
 
   setFilter(filter) {
     this._currentFilter = filter;
-    if (this._onFilterChangeHandler) {
-      this._onFilterChangeHandler();
-    }
+    this._callHandlers(this._onFilterChangeHandler);
   }
 
   setOnFilterChangedHandler(handler) {
-    this._onFilterChangeHandler = handler;
+    this._onFilterChangeHandler.push(handler);
   }
 
   setOnDataChangeHandler(handler) {
     this._dataChangeHandlers.push(handler);
+  }
+
+  resetState() {
+    this._currentFilter = ``;
+    this._callHandlers(this._onFilterChangeHandler);
   }
 
   _callHandlers(handlers) {

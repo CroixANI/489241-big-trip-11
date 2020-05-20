@@ -7,7 +7,7 @@ import NoPointsComponent from "../components/no-points.js";
 import TripSortComponent, {SortType} from "../components/trip-sort.js";
 import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
-import {render} from "../utils/render.js";
+import {render, replace} from "../utils/render.js";
 
 const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
 
@@ -181,12 +181,15 @@ export default class TripController {
       return;
     }
 
-    this._onViewChange();
+    this._resetState();
+    this._reRender();
     this._newTripPointController = new TripPointController(this._containerElement, this._onDataChange, this._onViewChange);
     this._newTripPointController.render(new TripPoint(), TripPointControllerMode.NEW);
   }
 
   _onSortTypeChanged(sortType) {
+    this._newTripPointController.destroy();
+    this._newTripPointController = null;
     this._clear();
     const points = this._tripModel.getPoints();
 
@@ -197,5 +200,14 @@ export default class TripController {
       const sortedPoints = points.slice().sort(comparePointsBySortType(sortType));
       this._renderPoints(sortedPoints, TripControllerMode.SORTING);
     }
+  }
+
+  _resetState() {
+    this._tripModel.resetState();
+    const oldSortComponent = this._sortComponent;
+
+    this._sortComponent = new TripSortComponent();
+    this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
+    replace(this._sortComponent, oldSortComponent);
   }
 }

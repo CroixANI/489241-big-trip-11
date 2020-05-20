@@ -23,6 +23,7 @@ export default class TripPointController {
   }
 
   render(tripPoint, mode = TripPointControllerMode.VIEW) {
+    this._currentMode = mode;
     const oldEditComponent = this._editComponent;
     const oldViewComponent = this._viewComponent;
 
@@ -66,7 +67,9 @@ export default class TripPointController {
         render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
       }
     } else {
+      // TODO: Is this case only for NEW or for EDIT as well?
       render(this._containerElement, this._editComponent, constants.RENDER_POSITIONS.AFTER_BEGIN);
+      document.addEventListener(`keydown`, this._onEscapeKeydown);
     }
   }
 
@@ -106,6 +109,10 @@ export default class TripPointController {
 
   _onEscapeKeydown(evt) {
     if (evt.key === ESC_KEY) {
+      if (this._currentMode === TripPointControllerMode.NEW) {
+        this._onDataChange(this, null, null);
+      }
+
       this._editComponent.cancelChanges();
       this._hideEditForm();
     }

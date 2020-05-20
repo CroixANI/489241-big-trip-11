@@ -146,18 +146,21 @@ export default class TripController {
   }
 
   _onDataChange(tripPointController, oldPoint, newPoint) {
-    if (newPoint === null) {
+    if (newPoint === null && oldPoint !== null) {
       this._tripModel.removePoint(oldPoint.id);
       tripPointController.destroy();
       this._reRender();
-    } if (oldPoint === null) {
+    } if (oldPoint === null && newPoint !== null) {
       this._tripModel.addPoint(newPoint);
-    } else {
+    } else if (oldPoint !== null && newPoint !== null) {
       const isSuccess = this._tripModel.updatePoint(oldPoint.id, newPoint);
 
       if (isSuccess) {
         tripPointController.render(newPoint);
       }
+    } else {
+      this._newTripPointController.destroy();
+      this._newTripPointController = null;
     }
   }
 
@@ -165,6 +168,7 @@ export default class TripController {
     this._tripPointControllers.forEach((pointController) => pointController.setDefaultView());
     if (this._newTripPointController) {
       this._newTripPointController.destroy();
+      this._newTripPointController = null;
     }
   }
 

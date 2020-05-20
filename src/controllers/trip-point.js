@@ -37,7 +37,7 @@ export default class TripPointController {
       if (mode === TripPointControllerMode.NEW) {
         this._onDataChange(this, null, null);
       } else {
-        this._editComponent.cancelChanges();
+        this._editComponent.resetPoint();
         this._hideEditForm();
       }
     });
@@ -46,8 +46,12 @@ export default class TripPointController {
     });
     this._editComponent.setOnFormSubmittedHandler((evt) => {
       evt.preventDefault();
-      this._editComponent.applyChanges();
       this._hideEditForm();
+      if (mode === TripPointControllerMode.NEW) {
+        this._onDataChange(this, null, this._editComponent.getPoint());
+      } else {
+        this._onDataChange(this, tripPoint, this._editComponent.getPoint());
+      }
     });
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {
       this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
@@ -113,7 +117,7 @@ export default class TripPointController {
         this._onDataChange(this, null, null);
       }
 
-      this._editComponent.cancelChanges();
+      this._editComponent.resetPoint();
       this._hideEditForm();
     }
   }

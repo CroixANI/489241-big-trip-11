@@ -182,8 +182,8 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
 
-    this._point = point;
-    this._tempPoint = Object.assign({}, point);
+    this._originalPoint = point;
+    this._point = Object.assign({}, point);
 
     this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
     this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
@@ -196,6 +196,10 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this._setupFlatpickr();
   }
 
+  getPoint() {
+    return this._point;
+  }
+
   reRender() {
     super.reRender();
 
@@ -203,17 +207,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._tempPoint);
-  }
-
-  cancelChanges() {
-    this._tempPoint = Object.assign({}, this._point);
-    this.reRender();
-  }
-
-  applyChanges() {
-    this._point = Object.assign({}, this._tempPoint);
-    this.reRender();
+    return createTripEditFormTemplate(this._point);
   }
 
   recoveryListeners() {
@@ -265,6 +259,11 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
       .addEventListener(`click`, this._onFavoriteButtonClick);
   }
 
+  resetPoint() {
+    this._point = Object.assign({}, this._originalPoint);
+    this.reRender();
+  }
+
   _subscribeEvents() {
     const element = this.getElement();
 
@@ -276,14 +275,14 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   _onPointTypeChanged(evt) {
-    this._tempPoint.type = evt.target.value;
-    this._tempPoint.offers = backend.getOffersByType(this._tempPoint.type);
+    this._point.type = evt.target.value;
+    this._point.offers = backend.getOffersByType(this._point.type);
 
     this.reRender();
   }
 
   _onPointDestinationChanged(evt) {
-    this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
+    this._point.destination = backend.getDestinationDetails(evt.target.value);
 
     this.reRender();
   }

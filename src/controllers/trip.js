@@ -121,6 +121,14 @@ export default class TripController {
     this._renderPoints(points, TripControllerMode.DEFAULT);
   }
 
+  show() {
+    this._tripComponent.show();
+  }
+
+  hide() {
+    this._tripComponent.hide();
+  }
+
   _renderPoints(points, mode) {
     if (points.length === 0) {
       render(this._containerElement, this._noPointsComponent, constants.RENDER_POSITIONS.BEFORE_END);

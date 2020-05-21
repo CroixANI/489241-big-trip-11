@@ -1,19 +1,27 @@
+import TripPoint from "../data/trip-point.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
-
 import flatpickr from "flatpickr";
 
 import 'flatpickr/dist/flatpickr.min.css';
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
+const DELETE_BUTTON_SELECTOR = `.event__reset-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 const POINT_TYPE_SELECTOR = `.event__type-list`;
 const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
 const START_DATE_SELECTOR = `#event-start-time-1`;
 const END_DATE_SELECTOR = `#event-end-time-1`;
+const CANCEL_BUTTON_SELECTOR = `.event__reset-btn`;
+
+const EVENT_TYPE_DATA_NAME = `event-type`;
+const EVENT_DESTINATION_DATA_NAME = `event-destination`;
+const EVENT_START_TIME_DATA_NAME = `event-start-time`;
+const EVENT_END_TIME_DATA_NAME = `event-end-time`;
+const EVENT_PRICE_DATA_NAME = `event-price`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -72,20 +80,20 @@ const createDestinationDetailsTemplate = (destination) => {
 };
 
 const createTripEditFormTemplate = (point) => {
-  const isEditMode = true;
-  const currentPointType = isEditMode ? point.type : constants.TRANSFER_POINT_TYPES[0];
+  const isEditMode = !point.isNew;
+  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0].toLowerCase() : point.type;
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
-  const currentCity = isEditMode ? point.destination.city : ``;
-  const currentPrice = isEditMode ? point.price : 0;
+  const currentCity = !isEditMode && !point.destination.city ? `` : point.destination.city;
+  const currentPrice = !isEditMode && !point.price ? 0 : point.price;
   const destinationDetailsTemplate = isEditMode ? `` : createDestinationDetailsTemplate(point.destination);
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
   const allActivityPointTypesTemplate = constants.ACTIVITY_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
   const allCitiesOptionsTemplate = backend.getDestinations().map((city) => {
@@ -152,7 +160,7 @@ const createTripEditFormTemplate = (point) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${currentPrice === 0 ? `` : currentPrice}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" name="event-price" value="${currentPrice === 0 ? `` : currentPrice}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -176,12 +184,28 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
+const parseFormData = (formData, id) => {
+  const type = formData.get(EVENT_TYPE_DATA_NAME);
+  const destinationName = formData.get(EVENT_DESTINATION_DATA_NAME);
+  const start = dateFormat.parseDate(formData.get(EVENT_START_TIME_DATA_NAME));
+  const end = dateFormat.parseDate(formData.get(EVENT_END_TIME_DATA_NAME));
+  const price = Number(formData.get(EVENT_PRICE_DATA_NAME));
+  const allOffers = backend.getOffersByType(type);
+  const offers = allOffers.filter((offer) => formData.get(`event-offer-${offer.type}`) === `on`);
+  const destination = backend.getDestinationDetails(destinationName);
+
+  const result = new TripPoint(type, destination, offers, start, end, price, false);
+  result.id = id || String(new Date() + Math.random());
+
+  return result;
+};
+
 export default class TripPointEditComponent extends AbstractSmartComponent {
   constructor(point) {
     super();
 
-    this._point = point;
-    this._tempPoint = Object.assign({}, point);
+    this._originalPoint = point;
+    this._point = Object.assign({}, point);
 
     this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
     this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
@@ -194,6 +218,13 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this._setupFlatpickr();
   }
 
+  getPoint() {
+    const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
+    const formData = new FormData(form);
+    const newId = String(new Date() + Math.random());
+    return parseFormData(formData, newId);
+  }
+
   reRender() {
     super.reRender();
 
@@ -201,45 +232,61 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   getTemplate() {
-    return createTripEditFormTemplate(this._tempPoint);
-  }
-
-  cancelChanges() {
-    this._tempPoint = Object.assign({}, this._point);
-    this.reRender();
-  }
-
-  applyChanges() {
-    this._point = Object.assign({}, this._tempPoint);
-    this.reRender();
+    return createTripEditFormTemplate(this._point);
   }
 
   recoveryListeners() {
-    this.addOnCancelButtonClickEvent(this._onCancelButtonClick);
-    this.addOnFormSubmitEvent(this._onEditFormSubmit);
-    this.addOnFavoriteButtonClickEvent(this._onFavoriteButtonClick);
+    this.setOnCancelButtonClickedHandler(this._onCancelButtonClick);
+    this.setOnDeleteButtonClickedHandler(this._onDeleteButtonClick);
+    this.setOnFormSubmittedHandler(this._onEditFormSubmit);
+    this.setOnFavoriteButtonClickedHandler(this._onFavoriteButtonClick);
     this._subscribeEvents();
   }
 
-  addOnCancelButtonClickEvent(onCancelButtonClick) {
+  setOnCancelButtonClickedHandler(onCancelButtonClick) {
     this._onCancelButtonClick = onCancelButtonClick;
     this.getElement()
-      .querySelector(EDIT_BUTTON_SELECTOR)
+      .querySelector(this._point.isNew ? CANCEL_BUTTON_SELECTOR : EDIT_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onCancelButtonClick);
   }
 
-  addOnFormSubmitEvent(onEditFormSubmit) {
-    this._onEditFormSubmit = onEditFormSubmit;
+  setOnDeleteButtonClickedHandler(onDeleteButtonClick) {
+    if (this._point.isNew) {
+      return;
+    }
+
+    this._onDeleteButtonClick = onDeleteButtonClick;
     this.getElement()
-      .querySelector(FORM_SELECTOR)
-      .addEventListener(`submit`, this._onEditFormSubmit);
+      .querySelector(DELETE_BUTTON_SELECTOR)
+      .addEventListener(`click`, this._onDeleteButtonClick);
   }
 
-  addOnFavoriteButtonClickEvent(onFavoriteButtonClick) {
+  setOnFormSubmittedHandler(onEditFormSubmit) {
+    this._onEditFormSubmit = onEditFormSubmit;
+    if (this._point.isNew) {
+      this.getElement()
+        .addEventListener(`submit`, this._onEditFormSubmit);
+    } else {
+      this.getElement()
+        .querySelector(FORM_SELECTOR)
+        .addEventListener(`submit`, this._onEditFormSubmit);
+    }
+  }
+
+  setOnFavoriteButtonClickedHandler(onFavoriteButtonClick) {
+    if (this._point.isNew) {
+      return;
+    }
+
     this._onFavoriteButtonClick = onFavoriteButtonClick;
     this.getElement()
       .querySelector(FAVORITE_BUTTON_SELECTOR)
       .addEventListener(`click`, this._onFavoriteButtonClick);
+  }
+
+  resetPoint() {
+    this._point = Object.assign({}, this._originalPoint);
+    this.reRender();
   }
 
   _subscribeEvents() {
@@ -253,14 +300,14 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   _onPointTypeChanged(evt) {
-    this._tempPoint.type = evt.target.value;
-    this._tempPoint.offers = backend.getOffersByType(this._tempPoint.type);
+    this._point.type = evt.target.value;
+    this._point.offers = backend.getOffersByType(this._point.type);
 
     this.reRender();
   }
 
   _onPointDestinationChanged(evt) {
-    this._tempPoint.destination = backend.getDestinationDetails(evt.target.value);
+    this._point.destination = backend.getDestinationDetails(evt.target.value);
 
     this.reRender();
   }

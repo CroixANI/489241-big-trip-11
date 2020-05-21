@@ -9,7 +9,8 @@ const buildTripTitle = (orderedPoints) => {
 };
 
 export default class TripDetails {
-  constructor(orderedPoints) {
+  constructor(tripModel) {
+    const orderedPoints = tripModel.getPoints();
     if (orderedPoints.length === 0) {
       this.title = ``;
       this.totalCost = 0;

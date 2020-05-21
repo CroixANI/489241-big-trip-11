@@ -38,11 +38,21 @@ const RENDER_POSITIONS = {
   AFTER_END: `afterend`
 };
 
+const FilterType = {
+  EVERYTHING: `Everything`,
+  FUTURE: `Future`,
+  PAST: `Past`
+};
+
+const CONTROLS_DATE_FORMAT = `DD/MM/YYYY HH:mm`;
+
 export default {
   ALL_POINT_TYPES,
   TRANSFER_POINT_TYPES,
   ACTIVITY_POINT_TYPES,
   MONTH_SHORT_NAMES,
   RENDER_POSITIONS,
-  getActivityLabel
+  getActivityLabel,
+  FilterType,
+  CONTROLS_DATE_FORMAT
 };

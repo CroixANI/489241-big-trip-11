@@ -44,6 +44,8 @@ const FilterType = {
   PAST: `Past`
 };
 
+const CONTROLS_DATE_FORMAT = `DD/MM/YYYY HH:mm`;
+
 export default {
   ALL_POINT_TYPES,
   TRANSFER_POINT_TYPES,
@@ -51,5 +53,6 @@ export default {
   MONTH_SHORT_NAMES,
   RENDER_POSITIONS,
   getActivityLabel,
-  FilterType
+  FilterType,
+  CONTROLS_DATE_FORMAT
 };

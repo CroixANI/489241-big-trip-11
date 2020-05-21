@@ -59,6 +59,8 @@ const getFormattedDuration = (start, end) => {
 
 const getDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
+const parseDate = (dateString) => new Date(moment(dateString, constants.CONTROLS_DATE_FORMAT).valueOf());
+
 export default {
   formatTime,
   formatDate,
@@ -66,5 +68,6 @@ export default {
   getFormattedDuration,
   getDateNumberForGrouping,
   formatDateToInputValue,
-  getDateOnly
+  getDateOnly,
+  parseDate
 };

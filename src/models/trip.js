@@ -12,6 +12,10 @@ export default class TripModel {
     return filterPoints(this._points, this._currentFilter);
   }
 
+  getAllPoints() {
+    return this._points;
+  }
+
   setPoints(points) {
     this._points = Array.from(points);
   }
@@ -49,6 +53,8 @@ export default class TripModel {
   addPoint(point) {
     this._points = [].concat(this._points, point);
     this._callHandlers(this._dataChangeHandlers);
+
+    return true;
   }
 
   setFilter(filter) {

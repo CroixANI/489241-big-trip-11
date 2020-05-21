@@ -1,6 +1,5 @@
 import {createElement} from "../utils/render.js";
-
-const VISUALLY_HIDDEN_CLASS = `visually-hidden`;
+import constants from "../data/constants.js";
 
 export default class AbstractComponent {
   constructor() {
@@ -28,10 +27,10 @@ export default class AbstractComponent {
   }
 
   show() {
-    this.getElement().classList.remove(VISUALLY_HIDDEN_CLASS);
+    this.getElement().classList.remove(constants.VISUALLY_HIDDEN_CLASS);
   }
 
   hide() {
-    this.getElement().classList.remove(VISUALLY_HIDDEN_CLASS);
+    this.getElement().classList.add(constants.VISUALLY_HIDDEN_CLASS);
   }
 }

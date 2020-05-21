@@ -7,7 +7,7 @@ import NoPointsComponent from "../components/no-points.js";
 import TripSortComponent, {SortType} from "../components/trip-sort.js";
 import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
-import {render, replace} from "../utils/render.js";
+import {render, remove, replace} from "../utils/render.js";
 
 const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
 
@@ -64,8 +64,7 @@ const renderTripDay = (container, tripDayComponent, orderedPoints, onDataChange,
   return tripPointControllers;
 };
 
-const renderTripWithDays = (container, orderedPoints, onDataChange, onViewChange) => {
-  const tripComponent = new TripComponent();
+const renderTripWithDays = (container, tripComponent, orderedPoints, onDataChange, onViewChange) => {
   const daysContainer = tripComponent.getElement();
   const groupedByDay = groupPointsByStartDate(orderedPoints);
   let tripPointControllers = [];
@@ -83,8 +82,7 @@ const renderTripWithDays = (container, orderedPoints, onDataChange, onViewChange
   return tripPointControllers;
 };
 
-const renderTripWithSorting = (container, sortedPoints, onDataChange, onViewChange) => {
-  const tripComponent = new TripComponent();
+const renderTripWithSorting = (container, tripComponent, sortedPoints, onDataChange, onViewChange) => {
   const tripDayComponent = new TripEmptyDayComponent();
   const daysContainer = tripComponent.getElement();
 
@@ -122,11 +120,12 @@ export default class TripController {
   }
 
   show() {
-    this._tripComponent.show();
+    this._containerElement.classList.remove(constants.VISUALLY_HIDDEN_CLASS);
   }
 
   hide() {
-    this._tripComponent.hide();
+    this._resetState();
+    this._containerElement.classList.add(constants.VISUALLY_HIDDEN_CLASS);
   }
 
   _renderPoints(points, mode) {
@@ -135,9 +134,9 @@ export default class TripController {
     } else {
       render(this._containerElement, this._sortComponent, constants.RENDER_POSITIONS.AFTER_BEGIN);
       if (mode === TripControllerMode.DEFAULT) {
-        this._tripPointControllers = renderTripWithDays(this._containerElement, points, this._onDataChange, this._onViewChange);
+        this._tripPointControllers = renderTripWithDays(this._containerElement, this._tripComponent, points, this._onDataChange, this._onViewChange);
       } else {
-        this._tripPointControllers = renderTripWithSorting(this._containerElement, points, this._onDataChange, this._onViewChange);
+        this._tripPointControllers = renderTripWithSorting(this._containerElement, this._tripComponent, points, this._onDataChange, this._onViewChange);
       }
     }
   }
@@ -146,6 +145,7 @@ export default class TripController {
     this._containerElement.innerHTML = ``;
     this._tripPointControllers.forEach((controller) => controller.destroy());
     this._tripPointControllers = [];
+    remove(this._tripComponent);
   }
 
   _reRender() {

@@ -57,9 +57,11 @@ export default class TripModel {
     return true;
   }
 
-  setFilter(filter) {
-    this._currentFilter = filter;
-    this._callHandlers(this._onFilterChangeHandler);
+  setFilter(filter, isSilent = false) {
+    if (filter !== this._currentFilter && !isSilent) {
+      this._currentFilter = filter;
+      this._callHandlers(this._onFilterChangeHandler);
+    }
   }
 
   setOnFilterChangedHandler(handler) {

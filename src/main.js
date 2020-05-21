@@ -1,6 +1,6 @@
 import backend from "./data/backend.js";
 import TripModel from "./models/trip.js";
-import MenuComponent from "./components/menu.js";
+import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsComponent from "./components/trip-details.js";
 import TripStatisticsComponent from "./components/trip-statistics.js";
 import TripDetails from "./data/trip-details.js";
@@ -25,12 +25,26 @@ const renderAll = () => {
   const points = backend.getPoints();
   const tripModel = new TripModel(points);
   const tripDetails = new TripDetails(tripModel);
+  const menuComponent = new MenuComponent();
+  const tripStatisticsComponent = new TripStatisticsComponent();
+  const tripController = new TripController(tripEventsElement, tripModel);
+
+  menuComponent.setOnMenuChangedHandler((menuItem) => {
+    if (menuItem === MENU_ITEMS.TABLE) {
+      tripController.show();
+      tripStatisticsComponent.hide();
+    } else {
+      tripController.hide();
+      tripStatisticsComponent.show();
+    }
+  });
 
   render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
-  render(tripViewHeaderElement, new MenuComponent(), constants.RENDER_POSITIONS.AFTER_END);
+  render(tripViewHeaderElement, menuComponent, constants.RENDER_POSITIONS.AFTER_END);
   new TripFilterController(tripFilterHeaderElement, tripModel).render();
-  new TripController(tripEventsElement, tripModel).render();
-  render(tripEventsElement, new TripStatisticsComponent(), constants.RENDER_POSITIONS.AFTER_END);
+  tripController.render();
+  render(tripEventsElement, tripStatisticsComponent, constants.RENDER_POSITIONS.AFTER_END);
+  tripStatisticsComponent.hide();
 };
 
 renderAll();

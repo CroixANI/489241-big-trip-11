@@ -1,6 +1,7 @@
 const TRANSFER_POINT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
 const ACTIVITY_POINT_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
 const ALL_POINT_TYPES = TRANSFER_POINT_TYPES.concat(ACTIVITY_POINT_TYPES);
+const VISUALLY_HIDDEN_CLASS = `visually-hidden`;
 
 const activityToLabel = {
   "taxi": `Taxi to`,
@@ -54,5 +55,6 @@ export default {
   RENDER_POSITIONS,
   getActivityLabel,
   FilterType,
-  CONTROLS_DATE_FORMAT
+  CONTROLS_DATE_FORMAT,
+  VISUALLY_HIDDEN_CLASS
 };

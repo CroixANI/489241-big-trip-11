@@ -8,7 +8,7 @@ export default class TripFilterController {
     this._containerElement = containerElement;
     this._component = null;
     this._tripModel = tripModel;
-    this._tripModel.setFilter(this._currentFilter);
+    this._tripModel.setFilter(this._currentFilter, true);
 
     this._onFilterChange = this._onFilterChange.bind(this);
 

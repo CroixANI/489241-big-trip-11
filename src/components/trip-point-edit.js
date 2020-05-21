@@ -4,6 +4,7 @@ import constants from "../data/constants.js";
 import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 import flatpickr from "flatpickr";
+import random from "../utils/random.js";
 
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -195,7 +196,7 @@ const parseFormData = (formData, id) => {
   const destination = backend.getDestinationDetails(destinationName);
 
   const result = new TripPoint(type, destination, offers, start, end, price, false);
-  result.id = id || String(new Date() + Math.random());
+  result.id = id || random.getNewId();
 
   return result;
 };
@@ -221,8 +222,8 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   getPoint() {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     const formData = new FormData(form);
-    const newId = String(new Date() + Math.random());
-    return parseFormData(formData, newId);
+
+    return parseFormData(formData);
   }
 
   reRender() {

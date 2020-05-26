@@ -9,11 +9,12 @@ const TRANSPORT_CHART_CANVAS_SELECTOR = `.statistics__chart--transport`;
 const TIME_CHART_CANVAS_SELECTOR = `.statistics__chart--time`;
 
 const createChart = (element, title, data, labels, formatter) => {
+  const formattedLabels = labels.map((label) => label.toUpperCase());
   return new Chart(element, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
     data: {
-      labels,
+      labels: formattedLabels,
       datasets: [{
         data,
         backgroundColor: `#ffffff`,

@@ -1,22 +1,38 @@
-const countMoneyStatistics = (points) => {
+import dateFormat from "../utils/date-format.js";
+import constants from "../data/constants.js";
+
+const countPoints = (points, pointCounter) => {
+  let labels = [];
+  let data = [];
+
+  for (const point of points) {
+    let index = labels.indexOf(point.type);
+    if (index === -1) {
+      labels.push(point.type);
+      data.push(0);
+      index = labels.length - 1;
+    }
+
+    data[index] += pointCounter(point);
+  }
+
   return {
-    labels: [`FLY`, `STAY`, `DRIVE`, `LOOK`, `RIDE`],
-    data: [400, 300, 200, 160, 100]
+    labels,
+    data
   };
+};
+
+const countMoneyStatistics = (points) => {
+  return countPoints(points, (point) => point.price);
 };
 
 const countTransportStatistics = (points) => {
-  return {
-    labels: [`FLY`, `DRIVE`, `RIDE`],
-    data: [4, 2, 1]
-  };
+  const transportPoints = points.filter((point) => constants.TRANSFER_POINT_TYPES.indexOf(point.type) >= 0);
+  return countPoints(transportPoints, (_) => 1);
 };
 
 const countTimeStatistics = (points) => {
-  return {
-    labels: [`HOTEL`, `TO AIRPORT`, `TO GENEVA`, `TO CHAMONIX`],
-    data: [72, 1, 3, 2]
-  };
+  return countPoints(points, (point) => dateFormat.getDurationInHours(point.start, point.end));
 };
 
 export default {

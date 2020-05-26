@@ -26,7 +26,7 @@ const renderAll = () => {
   const tripModel = new TripModel(points);
   const tripDetails = new TripDetails(tripModel);
   const menuComponent = new MenuComponent();
-  const tripStatisticsComponent = new TripStatisticsComponent();
+  const tripStatisticsComponent = new TripStatisticsComponent(tripModel.getAllPoints());
   const tripController = new TripController(tripEventsElement, tripModel);
 
   menuComponent.setOnMenuChangedHandler((menuItem) => {

@@ -8,7 +8,7 @@ const MONEY_CHART_CANVAS_SELECTOR = `.statistics__chart--money`;
 const TRANSPORT_CHART_CANVAS_SELECTOR = `.statistics__chart--transport`;
 const TIME_CHART_CANVAS_SELECTOR = `.statistics__chart--time`;
 
-const createChart = (element, title, data, labels) => {
+const createChart = (element, title, data, labels, formatter) => {
   return new Chart(element, {
     plugins: [ChartDataLabels],
     type: `horizontalBar`,
@@ -30,7 +30,7 @@ const createChart = (element, title, data, labels) => {
           color: `#000000`,
           anchor: `end`,
           align: `start`,
-          formatter: (val) => `€ ${val}`
+          formatter
         }
       },
       title: {
@@ -76,15 +76,15 @@ const createChart = (element, title, data, labels) => {
 };
 
 const createMoneyChart = (element, moneyStatistic) => {
-  return createChart(element, `MONEY`, moneyStatistic.data, moneyStatistic.labels);
+  return createChart(element, `MONEY`, moneyStatistic.data, moneyStatistic.labels, (val) => `€ ${val}`);
 };
 
 const createTransportChart = (element, transportStatistic) => {
-  return createChart(element, `TRANSPORT`, transportStatistic.data, transportStatistic.labels);
+  return createChart(element, `TRANSPORT`, transportStatistic.data, transportStatistic.labels, (val) => `${val}x`);
 };
 
 const createTimeChart = (element, timeStatistic) => {
-  return createChart(element, `TIME`, timeStatistic.data, timeStatistic.labels);
+  return createChart(element, `TIME`, timeStatistic.data, timeStatistic.labels, (val) => `${val}H`);
 };
 
 const createTripStatisticsTemplate = () => {

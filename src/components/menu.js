@@ -8,6 +8,8 @@ export const MENU_ITEMS = {
 const MENU_ITEM_SELECTOR = `.trip-tabs__btn`;
 const TABLE_MENU_ITEM_SELECTOR = `.trip-tabs__btn:first-child`;
 const ACTIVE_MENU_ITEM_CLASS_NAME = `trip-tabs__btn--active`;
+const PAGE_BODY_CONTAINER_SELECTOR = `.page-body__page-main .page-body__container`;
+const LINE_CLASS_NAME = `page-body__container-line`;
 
 const createTripTabsTemplate = (currentTab) => {
   const allTabsTemplate = Object.keys(MENU_ITEMS).map((key) => {
@@ -47,6 +49,10 @@ export default class MenuComponent extends AbstractComponent {
               menuElement.classList.remove(ACTIVE_MENU_ITEM_CLASS_NAME);
             });
           evt.target.classList.add(ACTIVE_MENU_ITEM_CLASS_NAME);
+
+          document
+            .querySelector(PAGE_BODY_CONTAINER_SELECTOR)
+            .classList.toggle(LINE_CLASS_NAME);
 
           this._currentTab = menuItem;
 

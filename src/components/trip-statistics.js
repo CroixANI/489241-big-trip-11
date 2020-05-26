@@ -1,4 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
+import Chart from "chart.js";
+import ChartLabels from "chartjs-plugin-datalabels";
 
 const createTripStatisticsTemplate = () => {
   return (

@@ -1,7 +1,7 @@
 import TripPoint from "../data/trip-point.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
 import constants from "../data/constants.js";
-import backend from "../data/backend.js";
+import Backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 import flatpickr from "flatpickr";
 import random from "../utils/random.js";
@@ -97,11 +97,11 @@ const createTripEditFormTemplate = (point) => {
     return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
-  const allCitiesOptionsTemplate = backend.getDestinations().map((city) => {
+  const allCitiesOptionsTemplate = Backend.getDestinations().map((city) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const offers = backend.getOffersByType(point.type);
+  const offers = Backend.getOffersByType(point.type);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -191,9 +191,9 @@ const parseFormData = (formData, id) => {
   const start = dateFormat.parseDate(formData.get(EVENT_START_TIME_DATA_NAME));
   const end = dateFormat.parseDate(formData.get(EVENT_END_TIME_DATA_NAME));
   const price = Number(formData.get(EVENT_PRICE_DATA_NAME));
-  const allOffers = backend.getOffersByType(type);
+  const allOffers = Backend.getOffersByType(type);
   const offers = allOffers.filter((offer) => formData.get(`event-offer-${offer.type}`) === `on`);
-  const destination = backend.getDestinationDetails(destinationName);
+  const destination = Backend.getDestinationDetails(destinationName);
 
   const result = new TripPoint(type, destination, offers, start, end, price, false);
   result.id = id || random.getNewId();
@@ -302,13 +302,13 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   _onPointTypeChanged(evt) {
     this._point.type = evt.target.value;
-    this._point.offers = backend.getOffersByType(this._point.type);
+    this._point.offers = Backend.getOffersByType(this._point.type);
 
     this.reRender();
   }
 
   _onPointDestinationChanged(evt) {
-    this._point.destination = backend.getDestinationDetails(evt.target.value);
+    this._point.destination = Backend.getDestinationDetails(evt.target.value);
 
     this.reRender();
   }

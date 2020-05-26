@@ -16,26 +16,32 @@ const OFFERS = [
   new Offer(`uber`, `Order Uber`, 20)
 ];
 
-const getPoints = () => {
-  const count = random.random(MIN_POINTS_MOCKS, MAX_POINTS_MOCKS);
-  let result = [];
-
-  for (let index = 0; index < count; index++) {
-    result.push(pointMock());
+export default class Backend {
+  constructor(endPoint, authorization) {
+    this._endPoint = endPoint;
+    this._authorization = authorization;
   }
 
-  return result;
-};
+  getPoints() {
+    const count = random.random(MIN_POINTS_MOCKS, MAX_POINTS_MOCKS);
+    let result = [];
 
-const getOffersByType = () => OFFERS;
+    for (let index = 0; index < count; index++) {
+      result.push(pointMock(this));
+    }
 
-const getDestinations = () => CITIES;
+    return result;
+  }
 
-const getDestinationDetails = (city) => destinationMock(city);
+  getOffersByType() {
+    return OFFERS;
+  }
 
-export default {
-  getPoints,
-  getOffersByType,
-  getDestinations,
-  getDestinationDetails
-};
+  getDestinations() {
+    return CITIES;
+  }
+
+  getDestinationDetails(city) {
+    return destinationMock(city);
+  }
+}

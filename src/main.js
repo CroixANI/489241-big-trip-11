@@ -1,4 +1,4 @@
-import backend from "./data/backend.js";
+import Backend from "./data/backend.js";
 import TripModel from "./models/trip.js";
 import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsComponent from "./components/trip-details.js";
@@ -16,6 +16,9 @@ const FILTER_HEADER_SELECTOR = `.trip-controls .trip-filter-header`;
 const TRIP_CONTAINER_SELECTOR = `main .trip-events`;
 const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 
+const BACKEND_ENDPOINT = `https://11.ecmascript.pages.academy/big-trip`;
+const BACKEND_AUTHORIZATION = `Basic eo0w590ik29889a`;
+
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
 const tripViewHeaderElement = tripMainElement.querySelector(MENU_HEADER_SELECTOR);
@@ -23,8 +26,8 @@ const tripFilterHeaderElement = tripMainElement.querySelector(FILTER_HEADER_SELE
 const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
 const renderAll = () => {
-  const points = backend.getPoints();
-  const tripModel = new TripModel(points);
+  const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
+  const tripModel = new TripModel(backend.getPoints());
   const tripDetails = new TripDetails(tripModel);
   const menuComponent = new MenuComponent();
   const tripController = new TripController(tripEventsElement, tripModel);

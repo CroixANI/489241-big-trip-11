@@ -1,11 +1,10 @@
-import backend from "../data/backend.js";
 import random from "../utils/random.js";
 import Destination from "../data/destination.js";
 
 const MIN_PHOTOS = 0;
 const MAX_PHOTOS = 5;
 
-const createDestinationMock = (cityName) => {
+const createDestinationMock = (backend, cityName) => {
   let photos = [];
   if (!cityName) {
     cityName = random.getRandomArrayItem(backend.getDestinations());

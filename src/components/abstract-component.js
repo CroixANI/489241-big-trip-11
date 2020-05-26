@@ -1,4 +1,5 @@
 import {createElement} from "../utils/render.js";
+import constants from "../data/constants.js";
 
 export default class AbstractComponent {
   constructor() {
@@ -23,5 +24,13 @@ export default class AbstractComponent {
 
   removeElement() {
     this._element = null;
+  }
+
+  show() {
+    this.getElement().classList.remove(constants.VISUALLY_HIDDEN_CLASS);
+  }
+
+  hide() {
+    this.getElement().classList.add(constants.VISUALLY_HIDDEN_CLASS);
   }
 }

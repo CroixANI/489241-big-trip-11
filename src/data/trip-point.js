@@ -1,8 +1,9 @@
 import Destination from "./destination.js";
+import random from "../utils/random.js";
 
 export default class TripPoint {
   constructor(type, destination, offers, start, end, price, isFavorite) {
-    this.id = String(new Date() + Math.random());
+    this.id = random.getNewId();
     this.type = type || ``;
     this.destination = destination || new Destination();
     this.offers = offers || [];

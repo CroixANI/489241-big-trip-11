@@ -1,7 +1,8 @@
 import backend from "./data/backend.js";
 import TripModel from "./models/trip.js";
-import MenuComponent from "./components/menu.js";
+import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsComponent from "./components/trip-details.js";
+import TripStatisticsController from "./controllers/trip-statistics.js";
 import TripDetails from "./data/trip-details.js";
 import TripFilterController from "./controllers/trip-filter.js";
 import TripController from "./controllers/trip.js";
@@ -13,6 +14,7 @@ const MAIN_CONTAINER_SELECTOR = `.trip-main`;
 const MENU_HEADER_SELECTOR = `.trip-controls .trip-view-header`;
 const FILTER_HEADER_SELECTOR = `.trip-controls .trip-filter-header`;
 const TRIP_CONTAINER_SELECTOR = `main .trip-events`;
+const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
@@ -24,11 +26,32 @@ const renderAll = () => {
   const points = backend.getPoints();
   const tripModel = new TripModel(points);
   const tripDetails = new TripDetails(tripModel);
+  const menuComponent = new MenuComponent();
+  const tripController = new TripController(tripEventsElement, tripModel);
+  const tripStatisticsController = new TripStatisticsController(tripEventsElement, tripModel);
+
+  menuComponent.setOnMenuChangedHandler((menuItem) => {
+    if (menuItem === MENU_ITEMS.TABLE) {
+      tripController.show();
+      tripStatisticsController.hide();
+    } else {
+      tripController.hide();
+      tripStatisticsController.show();
+    }
+  });
+
+  document.querySelector(ADD_NEW_BUTTON_SELECTOR)
+      .addEventListener(`click`, () => {
+        menuComponent.navigateToTable();
+        tripController.onNewButtonClicked();
+      });
 
   render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
-  render(tripViewHeaderElement, new MenuComponent(), constants.RENDER_POSITIONS.AFTER_END);
+  render(tripViewHeaderElement, menuComponent, constants.RENDER_POSITIONS.AFTER_END);
   new TripFilterController(tripFilterHeaderElement, tripModel).render();
-  new TripController(tripEventsElement, tripModel).render();
+  tripController.render();
+  tripStatisticsController.render();
+  tripStatisticsController.hide();
 };
 
 renderAll();

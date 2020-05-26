@@ -28,6 +28,20 @@ const getDateNumberForGrouping = (date) => {
   return date.getMonth() * 100 + date.getDate();
 };
 
+// more details here https://stackoverflow.com/questions/25150570/get-hours-difference-between-two-dates-in-moment-js
+const getDurationInHours = (start, end) => {
+  // small fix for dummy data
+  let realStart = start;
+  let realEnd = end;
+  if (realStart > realEnd) {
+    realStart = end;
+    realEnd = start;
+  }
+
+  const duration = moment.duration(moment(realEnd).diff(moment(realStart)));
+  return Math.round(duration.asHours());
+};
+
 // more details here https://medium.com/javascript-in-plain-english/find-difference-between-dates-in-javascript-80d9280d8598
 const getDuration = (start, end) => {
   let totalMilliseconds = end - start;
@@ -65,6 +79,7 @@ export default {
   formatTime,
   formatDate,
   formatDateToIso,
+  getDurationInHours,
   getFormattedDuration,
   getDateNumberForGrouping,
   formatDateToInputValue,

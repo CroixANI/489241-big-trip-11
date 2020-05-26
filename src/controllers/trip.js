@@ -106,12 +106,10 @@ export default class TripController {
     this._onDataChange = this._onDataChange.bind(this);
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
-    this._onNewButtonClicked = this._onNewButtonClicked.bind(this);
     this._onSortTypeChanged = this._onSortTypeChanged.bind(this);
 
     this._tripModel.setOnFilterChangedHandler(this._onFilterChange);
     this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
-    this._tripComponent.setOnNewButtonClickedHandler(this._onNewButtonClicked);
   }
 
   render() {
@@ -185,7 +183,7 @@ export default class TripController {
     this._reRender();
   }
 
-  _onNewButtonClicked() {
+  onNewButtonClicked() {
     if (this._newTripPointController) {
       return;
     }

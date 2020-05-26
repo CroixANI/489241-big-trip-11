@@ -28,7 +28,7 @@ const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
   return (
     `<div class="event__type-item">
-      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseItemType}" ${isChecked ? `checked` : ``}>
+      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${itemType}" ${isChecked ? `checked` : ``}>
       <label class="event__type-label  event__type-label--${lowerCaseItemType}" for="event-type-${lowerCaseItemType}-1">${itemType}</label>
     </div>`
   );
@@ -82,7 +82,7 @@ const createDestinationDetailsTemplate = (destination) => {
 
 const createTripEditFormTemplate = (point) => {
   const isEditMode = !point.isNew;
-  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0].toLowerCase() : point.type;
+  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0] : point.type;
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = !isEditMode && !point.destination.city ? `` : point.destination.city;
   const currentPrice = !isEditMode && !point.price ? 0 : point.price;
@@ -90,11 +90,11 @@ const createTripEditFormTemplate = (point) => {
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
   const allActivityPointTypesTemplate = constants.ACTIVITY_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
   }).join(`\n`);
 
   const allCitiesOptionsTemplate = backend.getDestinations().map((city) => {

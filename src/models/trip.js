@@ -1,4 +1,4 @@
-import {filterPoints} from "../utils/filter.js";
+import {filterPoints, sortPoints} from "../utils/filter.js";
 
 export default class TripModel {
   constructor(points) {
@@ -14,6 +14,10 @@ export default class TripModel {
 
   getAllPoints() {
     return this._points;
+  }
+
+  getAllPointsSorted() {
+    return sortPoints(this._points);
   }
 
   setPoints(points) {

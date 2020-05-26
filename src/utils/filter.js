@@ -25,3 +25,5 @@ export const filterPoints = (tripPoints, filterType) => {
 
   return tripPoints.sort(compareStartDate);
 };
+
+export const sortPoints = (tripPoints) => tripPoints.sort(compareStartDate);

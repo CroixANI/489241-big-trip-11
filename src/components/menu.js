@@ -6,6 +6,7 @@ export const MENU_ITEMS = {
 };
 
 const MENU_ITEM_SELECTOR = `.trip-tabs__btn`;
+const TABLE_MENU_ITEM_SELECTOR = `.trip-tabs__btn:first-child`;
 const ACTIVE_MENU_ITEM_CLASS_NAME = `trip-tabs__btn--active`;
 
 const createTripTabsTemplate = (currentTab) => {
@@ -52,5 +53,11 @@ export default class MenuComponent extends AbstractComponent {
           onMenuChanged(this._currentTab);
         });
       });
+  }
+
+  navigateToTable() {
+    this.getElement()
+      .querySelector(TABLE_MENU_ITEM_SELECTOR)
+      .click();
   }
 }

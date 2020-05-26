@@ -1,6 +1,91 @@
 import AbstractComponent from "./abstract-component.js";
+import CountStatistics from "../utils/statistics.js";
 import Chart from "chart.js";
-import ChartLabels from "chartjs-plugin-datalabels";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+
+const BAR_HEIGHT = 55;
+const MONEY_CHART_CANVAS_SELECTOR = `.statistics__chart--money`;
+const TRANSPORT_CHART_CANVAS_SELECTOR = `.statistics__chart--transport`;
+const TIME_CHART_CANVAS_SELECTOR = `.statistics__chart--time`;
+
+const createChart = (element, title, data, labels) => {
+  return new Chart(element, {
+    plugins: [ChartDataLabels],
+    type: `horizontalBar`,
+    data: {
+      labels,
+      datasets: [{
+        data,
+        backgroundColor: `#ffffff`,
+        hoverBackgroundColor: `#ffffff`,
+        anchor: `start`
+      }]
+    },
+    options: {
+      plugins: {
+        datalabels: {
+          font: {
+            size: 13
+          },
+          color: `#000000`,
+          anchor: `end`,
+          align: `start`,
+          formatter: (val) => `€ ${val}`
+        }
+      },
+      title: {
+        display: true,
+        text: title,
+        fontColor: `#000000`,
+        fontSize: 23,
+        position: `left`
+      },
+      scales: {
+        yAxes: [{
+          ticks: {
+            fontColor: `#000000`,
+            padding: 5,
+            fontSize: 13,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          barThickness: 44,
+        }],
+        xAxes: [{
+          ticks: {
+            display: false,
+            beginAtZero: true,
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          minBarLength: 50
+        }],
+      },
+      legend: {
+        display: false
+      },
+      tooltips: {
+        enabled: false,
+      }
+    }
+  });
+};
+
+const createMoneyChart = (element, moneyStatistic) => {
+  return createChart(element, `MONEY`, moneyStatistic.data, moneyStatistic.labels);
+};
+
+const createTransportChart = (element, transportStatistic) => {
+  return createChart(element, `TRANSPORT`, transportStatistic.data, transportStatistic.labels);
+};
+
+const createTimeChart = (element, timeStatistic) => {
+  return createChart(element, `TIME`, timeStatistic.data, timeStatistic.labels);
+};
 
 const createTripStatisticsTemplate = () => {
   return (
@@ -23,11 +108,40 @@ const createTripStatisticsTemplate = () => {
 };
 
 export default class TripStatisticsComponent extends AbstractComponent {
-  constructor() {
+  constructor(points) {
     super();
+
+    this._moneyChart = null;
+    this._transportChart = null;
+    this._timeChart = null;
+    this._points = points;
+    this._renderStatistics();
   }
 
   getTemplate() {
     return createTripStatisticsTemplate();
+  }
+
+  _renderStatistics() {
+    // get canvas elements
+    const element = this.getElement();
+    const moneyCanvasElement = element.querySelector(MONEY_CHART_CANVAS_SELECTOR);
+    const transportCanvasElement = element.querySelector(TRANSPORT_CHART_CANVAS_SELECTOR);
+    const timeCanvasElement = element.querySelector(TIME_CHART_CANVAS_SELECTOR);
+
+    // count statistics
+    const moneyStatistic = CountStatistics.countMoneyStatistics(this._points);
+    const transportStatistic = CountStatistics.countTransportStatistics(this._points);
+    const timeStatistic = CountStatistics.countTimeStatistics(this._points);
+
+    // update height for all canvas elements
+    moneyCanvasElement.height = BAR_HEIGHT * moneyStatistic.labels.length;
+    transportCanvasElement.height = BAR_HEIGHT * transportStatistic.labels.length;
+    timeCanvasElement.height = BAR_HEIGHT * timeStatistic.labels.length;
+
+    // render statistics
+    this._moneyChart = createMoneyChart(moneyCanvasElement, moneyStatistic);
+    this._transportChart = createTransportChart(transportCanvasElement, transportStatistic);
+    this._timeChart = createTimeChart(timeCanvasElement, timeStatistic);
   }
 }

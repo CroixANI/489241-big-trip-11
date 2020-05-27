@@ -1,11 +1,12 @@
 import {filterPoints, sortPoints} from "../utils/filter.js";
 
 export default class TripModel {
-  constructor(points) {
-    this._points = points;
+  constructor() {
+    this._points = [];
     this._currentFilter = ``;
     this._onFilterChangeHandler = [];
     this._dataChangeHandlers = [];
+    this._isInitialized = false;
   }
 
   getPoints() {
@@ -20,8 +21,14 @@ export default class TripModel {
     return sortPoints(this._points);
   }
 
+  isInitialized() {
+    return this._isInitialized;
+  }
+
   setPoints(points) {
+    this._isInitialized = true;
     this._points = Array.from(points);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updatePoint(id, point) {

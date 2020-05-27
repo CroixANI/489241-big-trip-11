@@ -75,6 +75,8 @@ const getDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date
 
 const parseDate = (dateString) => new Date(moment(dateString, constants.CONTROLS_DATE_FORMAT).valueOf());
 
+const parseDateISO8601 = (dateString) => new Date(moment(dateString).valueOf());
+
 export default {
   formatTime,
   formatDate,
@@ -84,5 +86,6 @@ export default {
   getDateNumberForGrouping,
   formatDateToInputValue,
   getDateOnly,
-  parseDate
+  parseDate,
+  parseDateISO8601
 };

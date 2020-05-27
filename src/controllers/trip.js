@@ -4,6 +4,7 @@ import TripDayComponent from "../components/trip-day.js";
 import TripEmptyDayComponent from "../components/trip-day-empty.js";
 import TripPointController, {TripPointControllerMode} from "./trip-point.js";
 import NoPointsComponent from "../components/no-points.js";
+import LoadingComponent from "../components/loading.js";
 import TripSortComponent, {SortType} from "../components/trip-sort.js";
 import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
@@ -94,11 +95,13 @@ const renderTripWithSorting = (container, tripComponent, sortedPoints, onDataCha
 };
 
 export default class TripController {
-  constructor(containerElement, tripModel) {
+  constructor(containerElement, tripModel, backend) {
     this._containerElement = containerElement;
     this._tripModel = tripModel;
+    this._backend = backend;
     this._sortComponent = new TripSortComponent();
     this._noPointsComponent = new NoPointsComponent();
+    this._loadingComponent = new LoadingComponent();
     this._tripComponent = new TripComponent();
     this._tripPointControllers = [];
     this._newTripPointController = null;
@@ -107,14 +110,20 @@ export default class TripController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onSortTypeChanged = this._onSortTypeChanged.bind(this);
+    this._reRender = this._reRender.bind(this);
 
     this._tripModel.setOnFilterChangedHandler(this._onFilterChange);
+    this._tripModel.setOnDataChangeHandler(this._reRender);
     this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
   }
 
   render() {
     const points = this._tripModel.getPoints();
-    this._renderPoints(points, TripControllerMode.DEFAULT);
+    if (!this._tripModel.isInitialized()) {
+      render(this._containerElement, this._loadingComponent, constants.RENDER_POSITIONS.BEFORE_END);
+    } else {
+      this._renderPoints(points, TripControllerMode.DEFAULT);
+    }
   }
 
   show() {
@@ -164,11 +173,14 @@ export default class TripController {
         this._reRender();
       }
     } else if (oldPoint !== null && newPoint !== null) {
-      const isSuccess = this._tripModel.updatePoint(oldPoint.id, newPoint);
+      this._backend.updatePoint(oldPoint.id, newPoint)
+        .then((updatedModel) => {
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedModel);
 
-      if (isSuccess) {
-        tripPointController.render(newPoint);
-      }
+          if (isSuccess) {
+            tripPointController.render(newPoint);
+          }
+        });
     } else {
       this._closeNewEventForm();
     }

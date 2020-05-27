@@ -1,10 +1,9 @@
 import TripPoint from "../data/trip-point.js";
 import AbstractSmartComponent from "./abstract-smart-component.js";
+import BackendCache from "../data/backend-cache.js";
 import constants from "../data/constants.js";
-import backend from "../data/backend.js";
 import dateFormat from "../utils/date-format.js";
 import flatpickr from "flatpickr";
-import random from "../utils/random.js";
 
 import 'flatpickr/dist/flatpickr.min.css';
 
@@ -26,10 +25,11 @@ const EVENT_PRICE_DATA_NAME = `event-price`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
+  const nameCapitalized = lowerCaseItemType.charAt(0).toUpperCase() + lowerCaseItemType.slice(1);
   return (
     `<div class="event__type-item">
-      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${itemType}" ${isChecked ? `checked` : ``}>
-      <label class="event__type-label  event__type-label--${lowerCaseItemType}" for="event-type-${lowerCaseItemType}-1">${itemType}</label>
+      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseItemType}" ${isChecked ? `checked` : ``}>
+      <label class="event__type-label  event__type-label--${lowerCaseItemType}" for="event-type-${lowerCaseItemType}-1">${nameCapitalized}</label>
     </div>`
   );
 };
@@ -62,8 +62,8 @@ const createEditButtonsTemplate = (isFavorite) => {
 };
 
 const createDestinationDetailsTemplate = (destination) => {
-  const allPhotosTemplate = destination.photos.map((photoUrl) => {
-    return (`<img class="event__photo" src="${photoUrl}" alt="Event photo">`);
+  const allPhotosTemplate = destination.photos.map((photo) => {
+    return (`<img class="event__photo" src="${photo.url}" alt="${photo.title}">`);
   }).join(`\n`);
 
   return (
@@ -82,7 +82,7 @@ const createDestinationDetailsTemplate = (destination) => {
 
 const createTripEditFormTemplate = (point) => {
   const isEditMode = !point.isNew;
-  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0] : point.type;
+  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0] : point.type.toLowerCase();
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = !isEditMode && !point.destination.city ? `` : point.destination.city;
   const currentPrice = !isEditMode && !point.price ? 0 : point.price;
@@ -90,18 +90,18 @@ const createTripEditFormTemplate = (point) => {
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
   const allActivityPointTypesTemplate = constants.ACTIVITY_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
-  const allCitiesOptionsTemplate = backend.getDestinations().map((city) => {
-    return (`<option value="${city}"></option>`);
+  const allCitiesOptionsTemplate = BackendCache.getDestinations().map((destination) => {
+    return (`<option value="${destination.city}"></option>`);
   }).join(`\n`);
 
-  const offers = backend.getOffersByType(point.type);
+  const offers = BackendCache.getOffersByPointType(point.type);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -185,18 +185,17 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
-const parseFormData = (formData, id) => {
+const parseFormData = (formData, id, isFavorite) => {
   const type = formData.get(EVENT_TYPE_DATA_NAME);
   const destinationName = formData.get(EVENT_DESTINATION_DATA_NAME);
   const start = dateFormat.parseDate(formData.get(EVENT_START_TIME_DATA_NAME));
   const end = dateFormat.parseDate(formData.get(EVENT_END_TIME_DATA_NAME));
   const price = Number(formData.get(EVENT_PRICE_DATA_NAME));
-  const allOffers = backend.getOffersByType(type);
+  const allOffers = BackendCache.getOffersByPointType(type);
   const offers = allOffers.filter((offer) => formData.get(`event-offer-${offer.type}`) === `on`);
-  const destination = backend.getDestinationDetails(destinationName);
+  const destination = BackendCache.getDestinationDetails(destinationName);
 
-  const result = new TripPoint(type, destination, offers, start, end, price, false);
-  result.id = id || random.getNewId();
+  const result = new TripPoint(id, type, destination, offers, start, end, price, isFavorite);
 
   return result;
 };
@@ -223,7 +222,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     const formData = new FormData(form);
 
-    return parseFormData(formData);
+    return parseFormData(formData, this._point.id, this._point.isFavorite);
   }
 
   reRender() {
@@ -302,13 +301,13 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   _onPointTypeChanged(evt) {
     this._point.type = evt.target.value;
-    this._point.offers = backend.getOffersByType(this._point.type);
+    this._point.offers = BackendCache.getOffersByPointType(this._point.type);
 
     this.reRender();
   }
 
   _onPointDestinationChanged(evt) {
-    this._point.destination = backend.getDestinationDetails(evt.target.value);
+    this._point.destination = BackendCache.getDestinationDetails(evt.target.value);
 
     this.reRender();
   }

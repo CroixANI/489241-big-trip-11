@@ -162,24 +162,41 @@ export default class TripController {
 
   _onDataChange(tripPointController, oldPoint, newPoint) {
     if (newPoint === null && oldPoint !== null) {
-      this._tripModel.removePoint(oldPoint.id);
-      tripPointController.destroy();
-      this._reRender();
+      this._backend.deletePoint(oldPoint.id)
+        .then(() => {
+          const isSuccess = this._tripModel.removePoint(oldPoint.id);
+          if (isSuccess) {
+            tripPointController.destroy();
+            this._reRender();
+          }
+        })
+        .catch(() => {
+          tripPointController.shake();
+        });
     } if (oldPoint === null && newPoint !== null) {
-      const isSuccess = this._tripModel.addPoint(newPoint);
+      this._backend.createPoint(newPoint)
+        .then((createdPoint) => {
+          const isSuccess = this._tripModel.addPoint(createdPoint);
 
-      if (isSuccess) {
-        this._closeNewEventForm();
-        this._reRender();
-      }
+          if (isSuccess) {
+            this._closeNewEventForm();
+            this._reRender();
+          }
+        })
+        .catch(() => {
+          tripPointController.shake();
+        });
     } else if (oldPoint !== null && newPoint !== null) {
       this._backend.updatePoint(oldPoint.id, newPoint)
-        .then((updatedModel) => {
-          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedModel);
+        .then((updatedPoint) => {
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint);
 
           if (isSuccess) {
             tripPointController.render(newPoint);
           }
+        })
+        .catch(() => {
+          tripPointController.shake();
         });
     } else {
       this._closeNewEventForm();

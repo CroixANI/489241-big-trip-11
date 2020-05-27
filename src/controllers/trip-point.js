@@ -4,6 +4,7 @@ import constants from "../data/constants.js";
 import {render, replace, remove} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const TripPointControllerMode = {
   VIEW: `view`,
@@ -42,15 +43,19 @@ export default class TripPointController {
       }
     });
     this._editComponent.setOnDeleteButtonClickedHandler(() => {
+      this._editComponent.disable();
       this._onDataChange(this, tripPoint, null);
+      this._editComponent.enable();
     });
     this._editComponent.setOnFormSubmittedHandler((evt) => {
       evt.preventDefault();
+      this._editComponent.disable();
       if (mode === TripPointControllerMode.NEW) {
         this._onDataChange(this, null, this._editComponent.getPoint());
       } else {
         this._onDataChange(this, tripPoint, this._editComponent.getPoint());
       }
+      this._editComponent.enable();
     });
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {
       this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
@@ -88,6 +93,17 @@ export default class TripPointController {
     } else if (this._currentMode === TripPointControllerMode.NEW) {
       this.destroy();
     }
+  }
+
+  shake() {
+    this._editComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._editComponent.getElement().style.animation = ``;
+
+      this._editComponent.enable();
+      this._editComponent.setErrorStyle();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _hideEditForm() {

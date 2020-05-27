@@ -4,12 +4,14 @@ import BackendCache from "../data/backend-cache.js";
 import constants from "../data/constants.js";
 import dateFormat from "../utils/date-format.js";
 import flatpickr from "flatpickr";
+import {toggleFormElements} from "../utils/render.js";
 
 import 'flatpickr/dist/flatpickr.min.css';
 
 const FORM_SELECTOR = `form`;
 const EDIT_BUTTON_SELECTOR = `.event__rollup-btn`;
 const DELETE_BUTTON_SELECTOR = `.event__reset-btn`;
+const SAVE_BUTTON_SELECTOR = `.event__save-btn`;
 const FAVORITE_BUTTON_SELECTOR = `.event__favorite-icon`;
 const POINT_TYPE_SELECTOR = `.event__type-list`;
 const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
@@ -22,6 +24,13 @@ const EVENT_DESTINATION_DATA_NAME = `event-destination`;
 const EVENT_START_TIME_DATA_NAME = `event-start-time`;
 const EVENT_END_TIME_DATA_NAME = `event-end-time`;
 const EVENT_PRICE_DATA_NAME = `event-price`;
+
+const SAVE_BUTTON_DISABLED_TEXT = `Saving...`;
+const SAVE_BUTTON_ENABLED_TEXT = `Save`;
+const DELETE_BUTTON_DISABLED_TEXT = `Deleting...`;
+const DELETE_BUTTON_ENABLED_TEXT = `Delete`;
+
+const ERROR_BORDER_CLASS_NAME = `red-border`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -107,7 +116,7 @@ const createTripEditFormTemplate = (point) => {
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
   }).join(`\n`);
 
-  const resetButtonTemplate = isEditMode ? `Delete` : `Cancel`;
+  const resetButtonTemplate = isEditMode ? DELETE_BUTTON_ENABLED_TEXT : `Cancel`;
 
   const formTemplate =
   `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
@@ -164,7 +173,7 @@ const createTripEditFormTemplate = (point) => {
         <input class="event__input  event__input--price" id="event-price-1" type="number" min="0" name="event-price" value="${currentPrice === 0 ? `` : currentPrice}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit">${SAVE_BUTTON_ENABLED_TEXT}</button>
       <button class="event__reset-btn" type="reset">${resetButtonTemplate}</button>
 
       ${editButtonsTemplate}
@@ -287,6 +296,41 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   resetPoint() {
     this._point = Object.assign({}, this._originalPoint);
     this.reRender();
+  }
+
+  disable() {
+    const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
+    toggleFormElements(form, true);
+    form.classList.remove(ERROR_BORDER_CLASS_NAME);
+    if (this._point.isNew) {
+      this.getElement()
+        .querySelector(SAVE_BUTTON_SELECTOR)
+        .innerText = SAVE_BUTTON_DISABLED_TEXT;
+    } else {
+      this.getElement()
+        .querySelector(DELETE_BUTTON_SELECTOR)
+        .innerText = DELETE_BUTTON_DISABLED_TEXT;
+    }
+  }
+
+  enable() {
+    const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
+    toggleFormElements(form, false);
+
+    if (this._point.isNew) {
+      this.getElement()
+        .querySelector(SAVE_BUTTON_SELECTOR)
+        .innerText = SAVE_BUTTON_ENABLED_TEXT;
+    } else {
+      this.getElement()
+        .querySelector(DELETE_BUTTON_SELECTOR)
+        .innerText = DELETE_BUTTON_ENABLED_TEXT;
+    }
+  }
+
+  setErrorStyle() {
+    const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
+    form.classList.add(ERROR_BORDER_CLASS_NAME);
   }
 
   _subscribeEvents() {

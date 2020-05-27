@@ -38,9 +38,30 @@ export const remove = (component) => {
   component.removeElement();
 };
 
+// for more details see here https://www.qodo.co.uk/blog/javascript-enabling-and-disabling-form-field-elements/
+export const toggleFormElements = (form, disabled) => {
+  const inputs = form.getElementsByTagName(`input`);
+  for (let i = 0; i < inputs.length; i++) {
+    inputs[i].readOnly = disabled;
+  }
+  const selects = document.getElementsByTagName(`select`);
+  for (let i = 0; i < selects.length; i++) {
+    selects[i].readOnly = disabled;
+  }
+  const textareas = document.getElementsByTagName(`textarea`);
+  for (let i = 0; i < textareas.length; i++) {
+    textareas[i].readOnly = disabled;
+  }
+  const buttons = document.getElementsByTagName(`button`);
+  for (let i = 0; i < buttons.length; i++) {
+    buttons[i].disabled = disabled;
+  }
+};
+
 export default {
   createElement,
   replace,
   render,
   remove,
+  toggleFormElements
 };

@@ -38,23 +38,21 @@ export const remove = (component) => {
   component.removeElement();
 };
 
+const iterateAndSetReadOnly = (elements, disabled) => {
+  for (const element of elements) {
+    element.readOnly = disabled;
+  }
+};
+
 // for more details see here https://www.qodo.co.uk/blog/javascript-enabling-and-disabling-form-field-elements/
 export const toggleFormElements = (form, disabled) => {
-  const inputs = form.getElementsByTagName(`input`);
-  for (let i = 0; i < inputs.length; i++) {
-    inputs[i].readOnly = disabled;
-  }
-  const selects = document.getElementsByTagName(`select`);
-  for (let i = 0; i < selects.length; i++) {
-    selects[i].readOnly = disabled;
-  }
-  const textareas = document.getElementsByTagName(`textarea`);
-  for (let i = 0; i < textareas.length; i++) {
-    textareas[i].readOnly = disabled;
-  }
+  iterateAndSetReadOnly(form.getElementsByTagName(`input`), disabled);
+  iterateAndSetReadOnly(form.getElementsByTagName(`select`), disabled);
+  iterateAndSetReadOnly(form.getElementsByTagName(`textarea`), disabled);
+
   const buttons = document.getElementsByTagName(`button`);
-  for (let i = 0; i < buttons.length; i++) {
-    buttons[i].disabled = disabled;
+  for (const button of buttons) {
+    button.disabled = disabled;
   }
 };
 

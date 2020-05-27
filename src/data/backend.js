@@ -15,6 +15,14 @@ const ENDPOINTS = {
   OFFERS: `offers`
 };
 
+const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
 export default class Backend {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -42,8 +50,43 @@ export default class Backend {
       },
       body: JSON.stringify(data.toBackendModel())
     })
+    .then(checkStatus)
     .then((response) => response.json())
-    .then((responseData) => TripPoint.parseTripPoint(responseData));
+    .then((responseData) => TripPoint.parseTripPoint(responseData))
+    .catch((err) => {
+      throw err;
+    });
+  }
+
+  createPoint(data) {
+    return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}`, {
+      method: HTTP_METHODS.POST,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      },
+      body: JSON.stringify(data.toBackendModel())
+    })
+    .then(checkStatus)
+    .then((response) => response.json())
+    .then((responseData) => TripPoint.parseTripPoint(responseData))
+    .catch((err) => {
+      throw err;
+    });
+  }
+
+  deletePoint(id) {
+    return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}/${id}`, {
+      method: HTTP_METHODS.DELETE,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      }
+    })
+    .then(checkStatus)
+    .catch((err) => {
+      throw err;
+    });
   }
 
   _get(appendUrl, convertData) {
@@ -54,7 +97,11 @@ export default class Backend {
         'Authorization': this._authorization,
       },
     })
+    .then(checkStatus)
     .then((response) => response.json())
-    .then((data) => convertData(data));
+    .then((data) => convertData(data))
+    .catch((err) => {
+      throw err;
+    });
   }
 }

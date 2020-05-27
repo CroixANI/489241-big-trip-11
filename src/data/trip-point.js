@@ -10,9 +10,9 @@ export default class TripPoint {
     this.offers = offers || [];
     this.start = start || new Date();
     this.end = end || new Date();
-    this.price = price === undefined ? 0 : price;
-    this.isFavorite = isFavorite === undefined ? false : isFavorite;
-    this.isNew = type === undefined ? true : false;
+    this.price = !price ? 0 : price;
+    this.isFavorite = !!isFavorite;
+    this.isNew = !type;
   }
 
   toBackendModel() {

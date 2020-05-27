@@ -185,7 +185,7 @@ const createTripEditFormTemplate = (point) => {
   return isEditMode ? `<li class="trip-events__item">${formTemplate}</li>` : formTemplate;
 };
 
-const parseFormData = (formData, id) => {
+const parseFormData = (formData, id, isFavorite) => {
   const type = formData.get(EVENT_TYPE_DATA_NAME);
   const destinationName = formData.get(EVENT_DESTINATION_DATA_NAME);
   const start = dateFormat.parseDate(formData.get(EVENT_START_TIME_DATA_NAME));
@@ -195,8 +195,7 @@ const parseFormData = (formData, id) => {
   const offers = allOffers.filter((offer) => formData.get(`event-offer-${offer.type}`) === `on`);
   const destination = BackendCache.getDestinationDetails(destinationName);
 
-  const result = new TripPoint(type, destination, offers, start, end, price, false);
-  result.id = id || random.getNewId();
+  const result = new TripPoint(id, type, destination, offers, start, end, price, isFavorite);
 
   return result;
 };
@@ -223,7 +222,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     const formData = new FormData(form);
 
-    return parseFormData(formData);
+    return parseFormData(formData, this._point.id, this._point.isFavorite);
   }
 
   reRender() {

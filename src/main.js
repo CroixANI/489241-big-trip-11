@@ -1,7 +1,7 @@
 import Backend from "./data/backend.js";
 import TripModel from "./models/trip.js";
 import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
-import TripDetailsComponent from "./components/trip-details.js";
+import TripDetailsController from "./controllers/trip-details.js";
 import TripStatisticsController from "./controllers/trip-statistics.js";
 import TripDetails from "./data/trip-details.js";
 import TripFilterController from "./controllers/trip-filter.js";
@@ -28,9 +28,10 @@ const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
 const renderAll = () => {
   const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
-  const tripModel = new TripModel([]);
-  const tripDetails = new TripDetails(tripModel);
+  const tripModel = new TripModel();
+  const tripDetailsController = new TripDetailsController(tripMainElement, tripModel);
   const menuComponent = new MenuComponent();
+  const tripFilterController = new TripFilterController(tripFilterHeaderElement, tripModel);
   const tripController = new TripController(tripEventsElement, tripModel);
   const tripStatisticsController = new TripStatisticsController(tripEventsElement, tripModel);
 
@@ -50,9 +51,9 @@ const renderAll = () => {
         tripController.onNewButtonClicked();
       });
 
-  render(tripMainElement, new TripDetailsComponent(tripDetails), constants.RENDER_POSITIONS.AFTER_BEGIN);
+  tripDetailsController.render();
   render(tripViewHeaderElement, menuComponent, constants.RENDER_POSITIONS.AFTER_END);
-  new TripFilterController(tripFilterHeaderElement, tripModel).render();
+  tripFilterController.render();
   tripController.render();
   tripStatisticsController.render();
   tripStatisticsController.hide();

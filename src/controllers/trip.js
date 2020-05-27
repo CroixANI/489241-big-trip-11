@@ -4,6 +4,7 @@ import TripDayComponent from "../components/trip-day.js";
 import TripEmptyDayComponent from "../components/trip-day-empty.js";
 import TripPointController, {TripPointControllerMode} from "./trip-point.js";
 import NoPointsComponent from "../components/no-points.js";
+import LoadingComponent from "../components/loading.js";
 import TripSortComponent, {SortType} from "../components/trip-sort.js";
 import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
@@ -99,6 +100,7 @@ export default class TripController {
     this._tripModel = tripModel;
     this._sortComponent = new TripSortComponent();
     this._noPointsComponent = new NoPointsComponent();
+    this._loadingComponent = new LoadingComponent();
     this._tripComponent = new TripComponent();
     this._tripPointControllers = [];
     this._newTripPointController = null;
@@ -116,7 +118,11 @@ export default class TripController {
 
   render() {
     const points = this._tripModel.getPoints();
-    this._renderPoints(points, TripControllerMode.DEFAULT);
+    if (!this._tripModel.isInitialized()) {
+      render(this._containerElement, this._loadingComponent, constants.RENDER_POSITIONS.BEFORE_END);
+    } else {
+      this._renderPoints(points, TripControllerMode.DEFAULT);
+    }
   }
 
   show() {

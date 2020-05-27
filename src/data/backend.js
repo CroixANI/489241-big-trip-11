@@ -1,7 +1,6 @@
 import Offer from "./offer.js";
 import TripPoint from "./trip-point.js";
 import Destination from "./destination.js";
-import dateFormat from "../utils/date-format.js";
 
 const HTTP_METHODS = {
   GET: `GET`,
@@ -16,36 +15,6 @@ const ENDPOINTS = {
   OFFERS: `offers`
 };
 
-const convertOffer = (json) =>
-  new Offer(``, json.title, json.price);
-
-const convertOffers = (json) => {
-  return json.offers.map((offer) => {
-    return new Offer(json.type, offer.title, offer.price);
-  });
-};
-
-const convertDestination = (json) => {
-  return new Destination(json.name, json.description, json.pictures.map((picture) => {
-    return {
-      url: picture.src,
-      title: picture.description
-    };
-  }));
-};
-
-const convertTripPoint = (json) => {
-  return new TripPoint(
-      json.id,
-      json.type,
-      convertDestination(json.destination),
-      json.offers.map((offer) => convertOffer(offer)),
-      dateFormat.parseDateISO8601(json.date_from),
-      dateFormat.parseDateISO8601(json.date_to),
-      json.base_price,
-      Boolean(json.is_favorite));
-};
-
 export default class Backend {
   constructor(endPoint, authorization) {
     this._endPoint = endPoint;
@@ -53,15 +22,15 @@ export default class Backend {
   }
 
   getPoints() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.POINTS, convertTripPoint);
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.POINTS, TripPoint.parseTripPoints);
   }
 
   getOffers() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.OFFERS, convertOffers);
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.OFFERS, Offer.parseOffers);
   }
 
   getDestinations() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.DESTINATIONS, convertDestination);
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.DESTINATIONS, Destination.parseDestinations);
   }
 
   _fetch(method, appendUrl, convertData) {
@@ -73,8 +42,6 @@ export default class Backend {
       },
     })
     .then((response) => response.json())
-    .then((data) => data.map((dataItem) => {
-      return convertData(dataItem);
-    }));
+    .then((data) => convertData(data));
   }
 }

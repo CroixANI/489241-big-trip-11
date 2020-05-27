@@ -101,7 +101,7 @@ const createTripEditFormTemplate = (point) => {
     return (`<option value="${city}"></option>`);
   }).join(`\n`);
 
-  const offers = BackendCache.getOffersByType(point.type);
+  const offers = BackendCache.getOffersByPointType(point.type);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -191,7 +191,7 @@ const parseFormData = (formData, id) => {
   const start = dateFormat.parseDate(formData.get(EVENT_START_TIME_DATA_NAME));
   const end = dateFormat.parseDate(formData.get(EVENT_END_TIME_DATA_NAME));
   const price = Number(formData.get(EVENT_PRICE_DATA_NAME));
-  const allOffers = BackendCache.getOffersByType(type);
+  const allOffers = BackendCache.getOffersByPointType(type);
   const offers = allOffers.filter((offer) => formData.get(`event-offer-${offer.type}`) === `on`);
   const destination = BackendCache.getDestinationDetails(destinationName);
 
@@ -302,7 +302,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   _onPointTypeChanged(evt) {
     this._point.type = evt.target.value;
-    this._point.offers = BackendCache.getOffersByType(this._point.type);
+    this._point.offers = BackendCache.getOffersByPointType(this._point.type);
 
     this.reRender();
   }

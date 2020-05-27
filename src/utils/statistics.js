@@ -2,8 +2,8 @@ import dateFormat from "../utils/date-format.js";
 import constants from "../data/constants.js";
 
 const countPoints = (points, pointCounter) => {
-  let labels = [];
-  let data = [];
+  const labels = [];
+  const data = [];
 
   for (const point of points) {
     let index = labels.indexOf(point.type);

@@ -45,4 +45,8 @@ export default class TripPoint {
       return TripPoint.parseTripPoint(item);
     });
   }
+
+  static clone(data) {
+    return TripPoint.parseTripPoint(data.toBackendModel());
+  }
 }

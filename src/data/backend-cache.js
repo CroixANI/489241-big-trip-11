@@ -21,10 +21,6 @@ export default class BackendCache {
   }
 
   static getOffersByPointType(type) {
-    if (!BackendCache._offers.has(type)) {
-      return [];
-    }
-
-    return BackendCache._offers.get(type);
+    return BackendCache._offers.has(type) ? BackendCache._offers.get(type) : [];
   }
 }

@@ -51,11 +51,7 @@ export default class TripPointController {
     this._editComponent.setOnFormSubmittedHandler((evt) => {
       evt.preventDefault();
       this._editComponent.disable();
-      if (mode === TripPointControllerMode.NEW) {
-        this._onDataChange(this, null, this._editComponent.getPoint());
-      } else {
-        this._onDataChange(this, tripPoint, this._editComponent.getPoint());
-      }
+      this._onDataChange(this, mode === TripPointControllerMode.NEW ? null : tripPoint, this._editComponent.getPoint());
       this._editComponent.enable();
     });
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {

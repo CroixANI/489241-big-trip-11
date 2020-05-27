@@ -162,9 +162,14 @@ export default class TripController {
 
   _onDataChange(tripPointController, oldPoint, newPoint) {
     if (newPoint === null && oldPoint !== null) {
-      this._tripModel.removePoint(oldPoint.id);
-      tripPointController.destroy();
-      this._reRender();
+      this._backend.deletePoint(oldPoint.id)
+        .then(() => {
+          const isSuccess = this._tripModel.removePoint(oldPoint.id);
+          if (isSuccess) {
+            tripPointController.destroy();
+            this._reRender();
+          }
+        });
     } if (oldPoint === null && newPoint !== null) {
       this._backend.createPoint(newPoint)
         .then((createdPoint) => {

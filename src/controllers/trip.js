@@ -194,6 +194,7 @@ export default class TripController {
 
           if (isSuccess) {
             tripPointController.render(newPoint);
+            this._resetState();
           }
         })
         .catch(() => {

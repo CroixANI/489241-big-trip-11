@@ -6,6 +6,13 @@ export default class Offer {
     this.pointType = pointType;
   }
 
+  toBackendModel() {
+    return {
+      title: this.name,
+      price: this.price
+    };
+  }
+
   static parseOffer(data, pointType) {
     return new Offer(data.title.toLowerCase().replace(/\s/g, `-`), data.title, data.price, pointType);
   }

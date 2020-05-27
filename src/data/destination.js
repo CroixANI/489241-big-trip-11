@@ -5,6 +5,19 @@ export default class Destination {
     this.photos = photos || [];
   }
 
+  toBackendModel() {
+    return {
+      name: this.city,
+      description: this.description,
+      pictures: this.photos.map((photo) => {
+        return {
+          src: photo.url,
+          description: photo.title
+        };
+      })
+    };
+  }
+
   static parseDestination(data) {
     return new Destination(data.name, data.description, data.pictures.map((picture) => {
       return {

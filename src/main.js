@@ -32,7 +32,7 @@ const renderAll = () => {
   const tripDetailsController = new TripDetailsController(tripMainElement, tripModel);
   const menuComponent = new MenuComponent();
   const tripFilterController = new TripFilterController(tripFilterHeaderElement, tripModel);
-  const tripController = new TripController(tripEventsElement, tripModel);
+  const tripController = new TripController(tripEventsElement, tripModel, backend);
   const tripStatisticsController = new TripStatisticsController(tripEventsElement, tripModel);
 
   menuComponent.setOnMenuChangedHandler((menuItem) => {

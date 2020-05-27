@@ -95,9 +95,10 @@ const renderTripWithSorting = (container, tripComponent, sortedPoints, onDataCha
 };
 
 export default class TripController {
-  constructor(containerElement, tripModel) {
+  constructor(containerElement, tripModel, backend) {
     this._containerElement = containerElement;
     this._tripModel = tripModel;
+    this._backend = backend;
     this._sortComponent = new TripSortComponent();
     this._noPointsComponent = new NoPointsComponent();
     this._loadingComponent = new LoadingComponent();
@@ -172,11 +173,14 @@ export default class TripController {
         this._reRender();
       }
     } else if (oldPoint !== null && newPoint !== null) {
-      const isSuccess = this._tripModel.updatePoint(oldPoint.id, newPoint);
+      this._backend.updatePoint(oldPoint.id, newPoint)
+        .then((updatedModel) => {
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedModel);
 
-      if (isSuccess) {
-        tripPointController.render(newPoint);
-      }
+          if (isSuccess) {
+            tripPointController.render(newPoint);
+          }
+        });
     } else {
       this._closeNewEventForm();
     }

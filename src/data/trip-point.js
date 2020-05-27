@@ -15,6 +15,19 @@ export default class TripPoint {
     this.isNew = type === undefined ? true : false;
   }
 
+  toBackendModel() {
+    return {
+      "id": this.id,
+      "base_price": this.price,
+      "date_from": this.start.toISOString(),
+      "date_to": this.end.toISOString(),
+      "is_favorite": this.isFavorite,
+      "type": this.type,
+      "destination": this.destination.toBackendModel(),
+      "offers": this.offers.map((item) => item.toBackendModel())
+    };
+  }
+
   static parseTripPoint(data) {
     return new TripPoint(
         data.id,

@@ -1,5 +1,5 @@
-const TRANSFER_POINT_TYPES = [`Taxi`, `Bus`, `Train`, `Ship`, `Transport`, `Drive`, `Flight`];
-const ACTIVITY_POINT_TYPES = [`Check-in`, `Sightseeing`, `Restaurant`];
+const TRANSFER_POINT_TYPES = [`taxi`, `bus`, `train`, `ship`, `transport`, `drive`, `flight`];
+const ACTIVITY_POINT_TYPES = [`check-in`, `sightseeing`, `restaurant`];
 const ALL_POINT_TYPES = TRANSFER_POINT_TYPES.concat(ACTIVITY_POINT_TYPES);
 const VISUALLY_HIDDEN_CLASS = `visually-hidden`;
 

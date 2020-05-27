@@ -25,10 +25,11 @@ const EVENT_PRICE_DATA_NAME = `event-price`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
+  const nameCapitalized = lowerCaseItemType.charAt(0).toUpperCase() + lowerCaseItemType.slice(1);
   return (
     `<div class="event__type-item">
-      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${itemType}" ${isChecked ? `checked` : ``}>
-      <label class="event__type-label  event__type-label--${lowerCaseItemType}" for="event-type-${lowerCaseItemType}-1">${itemType}</label>
+      <input id="event-type-${lowerCaseItemType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${lowerCaseItemType}" ${isChecked ? `checked` : ``}>
+      <label class="event__type-label  event__type-label--${lowerCaseItemType}" for="event-type-${lowerCaseItemType}-1">${nameCapitalized}</label>
     </div>`
   );
 };
@@ -81,7 +82,7 @@ const createDestinationDetailsTemplate = (destination) => {
 
 const createTripEditFormTemplate = (point) => {
   const isEditMode = !point.isNew;
-  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0] : point.type;
+  const currentPointType = !isEditMode && !point.type ? constants.TRANSFER_POINT_TYPES[0] : point.type.toLowerCase();
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = !isEditMode && !point.destination.city ? `` : point.destination.city;
   const currentPrice = !isEditMode && !point.price ? 0 : point.price;
@@ -89,15 +90,15 @@ const createTripEditFormTemplate = (point) => {
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
   const allActivityPointTypesTemplate = constants.ACTIVITY_POINT_TYPES.map((pointType) => {
-    return createEventTypeItemTemplate(pointType, currentPointType === pointType);
+    return createEventTypeItemTemplate(pointType, currentPointType === pointType.toLowerCase());
   }).join(`\n`);
 
-  const allCitiesOptionsTemplate = BackendCache.getDestinations().map((city) => {
-    return (`<option value="${city}"></option>`);
+  const allCitiesOptionsTemplate = BackendCache.getDestinations().map((destination) => {
+    return (`<option value="${destination.city}"></option>`);
   }).join(`\n`);
 
   const offers = BackendCache.getOffersByPointType(point.type);

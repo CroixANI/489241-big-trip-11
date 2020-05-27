@@ -35,12 +35,12 @@ export default class Backend {
 
   updatePoint(id, data) {
     return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}/${id}`, {
-      method: HTTP_METHODS.GET,
+      method: HTTP_METHODS.PUT,
       headers: {
         'Content-Type': `application/json`,
         'Authorization': this._authorization,
       },
-      body: JSON.stringify(data.toRAW())
+      body: JSON.stringify(data.toBackendModel())
     })
     .then((response) => response.json())
     .then((responseData) => TripPoint.parseTripPoint(responseData));

@@ -11,6 +11,7 @@ import constants from "../data/constants.js";
 import {render, remove, replace} from "../utils/render.js";
 
 const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
+const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 
 const TripControllerMode = {
   DEFAULT: `default`,
@@ -213,6 +214,7 @@ export default class TripController {
   }
 
   onNewButtonClicked() {
+    document.querySelector(ADD_NEW_BUTTON_SELECTOR).disabled = true;
     if (this._newTripPointController) {
       return;
     }
@@ -249,6 +251,7 @@ export default class TripController {
   }
 
   _closeNewEventForm() {
+    document.querySelector(ADD_NEW_BUTTON_SELECTOR).disabled = false;
     if (this._newTripPointController) {
       this._newTripPointController.destroy();
       this._newTripPointController = null;

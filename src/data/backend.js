@@ -1,20 +1,50 @@
 import Offer from "./offer.js";
-import pointMock from "../mocks/point.js";
-import destinationMock from "../mocks/destination.js";
-import random from "../utils/random.js";
+import TripPoint from "./trip-point.js";
+import Destination from "./destination.js";
+import dateFormat from "../utils/date-format.js";
 
-const MIN_POINTS_MOCKS = 0;
-const MAX_POINTS_MOCKS = 20;
+const HTTP_METHODS = {
+  GET: `GET`,
+  POST: `POST`,
+  PUT: `PUT`,
+  DELETE: `DELETE`
+};
 
-const CITIES = [`Amsterdam`, `Geneva`, `Chamonix`, `Saint Petersburg`, `Minsk`];
-const OFFERS = [
-  new Offer(`luggage`, `Add luggage`, 30),
-  new Offer(`comfort`, `Switch to comfort class`, 100),
-  new Offer(`meal`, `Add meal`, 15),
-  new Offer(`seats`, `Choose seats`, 5),
-  new Offer(`train`, `Travel by train`, 40),
-  new Offer(`uber`, `Order Uber`, 20)
-];
+const ENDPOINTS = {
+  POINTS: `points`,
+  DESTINATIONS: `destinations`,
+  OFFERS: `offers`
+};
+
+const convertOffer = (json) =>
+  new Offer(``, json.title, json.price);
+
+const convertOffers = (json) => {
+  return json.offers.map((offer) => {
+    return new Offer(json.type, offer.title, offer.price);
+  });
+};
+
+const convertDestination = (json) => {
+  return new Destination(json.name, json.description, json.pictures.map((picture) => {
+    return {
+      url: picture.src,
+      title: picture.description
+    };
+  }));
+};
+
+const convertTripPoint = (json) => {
+  return new TripPoint(
+      json.id,
+      json.type,
+      convertDestination(json.destination),
+      json.offers.map((offer) => convertOffer(offer)),
+      dateFormat.parseDateISO8601(json.date_from),
+      dateFormat.parseDateISO8601(json.date_to),
+      json.base_price,
+      Boolean(json.is_favorite));
+};
 
 export default class Backend {
   constructor(endPoint, authorization) {
@@ -23,25 +53,28 @@ export default class Backend {
   }
 
   getPoints() {
-    const count = random.random(MIN_POINTS_MOCKS, MAX_POINTS_MOCKS);
-    let result = [];
-
-    for (let index = 0; index < count; index++) {
-      result.push(pointMock(this));
-    }
-
-    return result;
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.POINTS, convertTripPoint);
   }
 
-  getOffersByType() {
-    return OFFERS;
+  getOffers() {
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.OFFERS, convertOffers);
   }
 
   getDestinations() {
-    return CITIES;
+    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.DESTINATIONS, convertDestination);
   }
 
-  getDestinationDetails(city) {
-    return destinationMock(city);
+  _fetch(method, appendUrl, convertData) {
+    return fetch(`${this._endPoint}/${appendUrl}`, {
+      method,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      },
+    })
+    .then((response) => response.json())
+    .then((data) => data.map((dataItem) => {
+      return convertData(dataItem);
+    }));
   }
 }

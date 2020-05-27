@@ -107,8 +107,10 @@ export default class TripController {
     this._onViewChange = this._onViewChange.bind(this);
     this._onFilterChange = this._onFilterChange.bind(this);
     this._onSortTypeChanged = this._onSortTypeChanged.bind(this);
+    this._reRender = this._reRender.bind(this);
 
     this._tripModel.setOnFilterChangedHandler(this._onFilterChange);
+    this._tripModel.setOnDataChangeHandler(this._reRender);
     this._sortComponent.setOnSortTypeChangedHandler(this._onSortTypeChanged);
   }
 

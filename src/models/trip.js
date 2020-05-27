@@ -22,6 +22,7 @@ export default class TripModel {
 
   setPoints(points) {
     this._points = Array.from(points);
+    this._callHandlers(this._dataChangeHandlers);
   }
 
   updatePoint(id, point) {

@@ -6,6 +6,7 @@ import TripStatisticsController from "./controllers/trip-statistics.js";
 import TripDetails from "./data/trip-details.js";
 import TripFilterController from "./controllers/trip-filter.js";
 import TripController from "./controllers/trip.js";
+import BackendCache from "./data/backend-cache.js";
 import constants from "./data/constants.js";
 import {render} from "./utils/render.js";
 
@@ -17,7 +18,7 @@ const TRIP_CONTAINER_SELECTOR = `main .trip-events`;
 const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 
 const BACKEND_ENDPOINT = `https://11.ecmascript.pages.academy/big-trip`;
-const BACKEND_AUTHORIZATION = `Basic eo0w590ik29889a`;
+const BACKEND_AUTHORIZATION = `Basic dXNlcjpzdXBlcnBhc3N3b3Jk`;
 
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
@@ -27,7 +28,7 @@ const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
 const renderAll = () => {
   const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
-  const tripModel = new TripModel(backend.getPoints());
+  const tripModel = new TripModel([]);
   const tripDetails = new TripDetails(tripModel);
   const menuComponent = new MenuComponent();
   const tripController = new TripController(tripEventsElement, tripModel);
@@ -55,6 +56,14 @@ const renderAll = () => {
   tripController.render();
   tripStatisticsController.render();
   tripStatisticsController.hide();
+
+  backend.getDestinations().then((data) => {
+    BackendCache.setDestinations(data);
+  }).then(() => backend.getOffers().then((data) => {
+    BackendCache.setOffers(data);
+  }).then(() => backend.getPoints().then((data) => {
+    tripModel.setPoints(data);
+  })));
 };
 
 renderAll();

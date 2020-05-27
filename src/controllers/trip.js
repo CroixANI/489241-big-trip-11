@@ -166,16 +166,19 @@ export default class TripController {
       tripPointController.destroy();
       this._reRender();
     } if (oldPoint === null && newPoint !== null) {
-      const isSuccess = this._tripModel.addPoint(newPoint);
+      this._backend.createPoint(newPoint)
+        .then((createdPoint) => {
+          const isSuccess = this._tripModel.addPoint(createdPoint);
 
-      if (isSuccess) {
-        this._closeNewEventForm();
-        this._reRender();
-      }
+          if (isSuccess) {
+            this._closeNewEventForm();
+            this._reRender();
+          }
+        });
     } else if (oldPoint !== null && newPoint !== null) {
       this._backend.updatePoint(oldPoint.id, newPoint)
-        .then((updatedModel) => {
-          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedModel);
+        .then((updatedPoint) => {
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint);
 
           if (isSuccess) {
             tripPointController.render(newPoint);

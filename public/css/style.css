@@ -959,3 +959,9 @@ main {
 .red-border {
   border: 4px solid #ff5635;
 }
+
+.input-error {
+  outline: none;
+  -webkit-box-shadow: 0 0 2px 2px #ff6547;
+          box-shadow: 0 0 2px 2px #ff6547;
+}

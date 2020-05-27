@@ -31,6 +31,7 @@ const DELETE_BUTTON_DISABLED_TEXT = `Deleting...`;
 const DELETE_BUTTON_ENABLED_TEXT = `Delete`;
 
 const ERROR_BORDER_CLASS_NAME = `red-border`;
+const INPUT_ERROR_CLASS_NAME = `input-error`;
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -119,7 +120,7 @@ const createTripEditFormTemplate = (point) => {
   const resetButtonTemplate = isEditMode ? DELETE_BUTTON_ENABLED_TEXT : `Cancel`;
 
   const formTemplate =
-  `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
+    `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -351,8 +352,30 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   }
 
   _onPointDestinationChanged(evt) {
-    this._point.destination = BackendCache.getDestinationDetails(evt.target.value);
+    let optionFound = false;
+    const datalist = evt.target.list;
 
+    for (const optionItem of datalist.options) {
+      if (evt.target.value === optionItem.value) {
+        optionFound = true;
+        break;
+      }
+    }
+
+    if (!evt.target.value) {
+      evt.target.setCustomValidity(``);
+      evt.target.reportValidity();
+      evt.target.classList.remove(INPUT_ERROR_CLASS_NAME);
+      return;
+    } else if (!optionFound) {
+      evt.target.setCustomValidity(`Please select a valid destination from list.`);
+      evt.target.reportValidity();
+      evt.target.classList.add(INPUT_ERROR_CLASS_NAME);
+      return;
+    }
+
+    evt.target.classList.remove(INPUT_ERROR_CLASS_NAME);
+    this._point.destination = BackendCache.getDestinationDetails(evt.target.value);
     this.reRender();
   }
 

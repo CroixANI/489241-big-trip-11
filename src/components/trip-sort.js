@@ -1,7 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
 const SORT_INPUT_SELECTOR = `.trip-sort__input`;
-const SORT_INPUT_CHECKED_SELECTOR = `input:checked`;
 
 export const SortType = {
   EVENT: `Event`,

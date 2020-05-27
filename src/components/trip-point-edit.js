@@ -359,7 +359,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   _onPointTypeChanged(evt) {
     this._point.type = evt.target.value;
-    this._point.offers = BackendCache.getOffersByPointType(this._point.type);
+    this._point.offers = this._originalPoint.type === this._point.type ? this._originalPoint.offers.slice() : [];
 
     this.reRender();
   }

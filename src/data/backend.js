@@ -22,20 +22,33 @@ export default class Backend {
   }
 
   getPoints() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.POINTS, TripPoint.parseTripPoints);
+    return this._get(ENDPOINTS.POINTS, TripPoint.parseTripPoints);
   }
 
   getOffers() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.OFFERS, Offer.parseOffers);
+    return this._get(ENDPOINTS.OFFERS, Offer.parseOffers);
   }
 
   getDestinations() {
-    return this._fetch(HTTP_METHODS.GET, ENDPOINTS.DESTINATIONS, Destination.parseDestinations);
+    return this._get(ENDPOINTS.DESTINATIONS, Destination.parseDestinations);
   }
 
-  _fetch(method, appendUrl, convertData) {
+  updatePoint(id, data) {
+    return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}/${id}`, {
+      method: HTTP_METHODS.GET,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      },
+      body: JSON.stringify(data.toRAW())
+    })
+    .then((response) => response.json())
+    .then((responseData) => TripPoint.parseTripPoint(responseData));
+  }
+
+  _get(appendUrl, convertData) {
     return fetch(`${this._endPoint}/${appendUrl}`, {
-      method,
+      method: HTTP_METHODS.GET,
       headers: {
         'Content-Type': `application/json`,
         'Authorization': this._authorization,

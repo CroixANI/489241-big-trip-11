@@ -4,7 +4,6 @@ import BackendCache from "../data/backend-cache.js";
 import constants from "../data/constants.js";
 import dateFormat from "../utils/date-format.js";
 import flatpickr from "flatpickr";
-import random from "../utils/random.js";
 
 import 'flatpickr/dist/flatpickr.min.css';
 

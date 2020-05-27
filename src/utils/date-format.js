@@ -44,11 +44,11 @@ const getDurationInHours = (start, end) => {
 
 // more details here https://medium.com/javascript-in-plain-english/find-difference-between-dates-in-javascript-80d9280d8598
 const getDuration = (start, end) => {
-  let totalMilliseconds = end - start;
-  let totalSeconds = Math.floor(totalMilliseconds / MILLISECONDS_IN_SECOND);
-  let totalMinutes = Math.floor(totalSeconds / SECONDS_IN_MINUTE);
-  let totalHours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
-  let totalDays = Math.floor(totalHours / HOURS_IN_DAY);
+  const totalMilliseconds = end - start;
+  const totalSeconds = Math.floor(totalMilliseconds / MILLISECONDS_IN_SECOND);
+  const totalMinutes = Math.floor(totalSeconds / SECONDS_IN_MINUTE);
+  const totalHours = Math.floor(totalMinutes / MINUTES_IN_HOUR);
+  const totalDays = Math.floor(totalHours / HOURS_IN_DAY);
 
   let result = {};
   result.days = totalDays;

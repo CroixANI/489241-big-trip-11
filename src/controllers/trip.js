@@ -40,7 +40,7 @@ const groupPointsByStartDate = (orderedPoints) => {
       total.set(groupingNumber, []);
     }
 
-    let pointsInDay = total.get(groupingNumber);
+    const pointsInDay = total.get(groupingNumber);
     pointsInDay.push(point);
 
     return total;
@@ -71,8 +71,8 @@ const renderTripWithDays = (container, tripComponent, orderedPoints, onDataChang
   let tripPointControllers = [];
 
   let dayIndex = 1;
-  for (let pointsArray of groupedByDay.values()) {
-    let tripDayComponent = new TripDayComponent(dayIndex, pointsArray[0].start);
+  for (const pointsArray of groupedByDay.values()) {
+    const tripDayComponent = new TripDayComponent(dayIndex, pointsArray[0].start);
     const controllers = renderTripDay(daysContainer, tripDayComponent, pointsArray, onDataChange, onViewChange);
     tripPointControllers = tripPointControllers.concat(controllers);
     dayIndex++;

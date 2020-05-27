@@ -1,3 +1,4 @@
+import TripPoint from "../data/trip-point.js";
 import TripPointComponent from "../components/trip-point.js";
 import TripPointEditComponent from "../components/trip-point-edit.js";
 import constants from "../data/constants.js";
@@ -58,9 +59,9 @@ export default class TripPointController {
       this._editComponent.enable();
     });
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {
-      this._onDataChange(this, tripPoint, Object.assign({}, tripPoint, {
-        isFavorite: !tripPoint.isFavorite,
-      }));
+      const updatedTripPoint = TripPoint.clone(tripPoint);
+      updatedTripPoint.isFavorite = !tripPoint.isFavorite;
+      this._onDataChange(this, tripPoint, updatedTripPoint);
     });
 
     if (mode === TripPointControllerMode.VIEW) {

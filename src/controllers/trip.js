@@ -169,6 +169,9 @@ export default class TripController {
             tripPointController.destroy();
             this._reRender();
           }
+        })
+        .catch(() => {
+          tripPointController.shake();
         });
     } if (oldPoint === null && newPoint !== null) {
       this._backend.createPoint(newPoint)
@@ -179,6 +182,9 @@ export default class TripController {
             this._closeNewEventForm();
             this._reRender();
           }
+        })
+        .catch(() => {
+          tripPointController.shake();
         });
     } else if (oldPoint !== null && newPoint !== null) {
       this._backend.updatePoint(oldPoint.id, newPoint)
@@ -188,6 +194,9 @@ export default class TripController {
           if (isSuccess) {
             tripPointController.render(newPoint);
           }
+        })
+        .catch(() => {
+          tripPointController.shake();
         });
     } else {
       this._closeNewEventForm();

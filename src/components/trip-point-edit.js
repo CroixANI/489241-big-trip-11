@@ -30,6 +30,8 @@ const SAVE_BUTTON_ENABLED_TEXT = `Save`;
 const DELETE_BUTTON_DISABLED_TEXT = `Deleting...`;
 const DELETE_BUTTON_ENABLED_TEXT = `Delete`;
 
+const ERROR_BORDER_CLASS_NAME = `red-border`;
+
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
   const nameCapitalized = lowerCaseItemType.charAt(0).toUpperCase() + lowerCaseItemType.slice(1);
@@ -299,7 +301,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
   disable() {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     toggleFormElements(form, true);
-
+    form.classList.remove(ERROR_BORDER_CLASS_NAME);
     if (this._point.isNew) {
       this.getElement()
         .querySelector(SAVE_BUTTON_SELECTOR)
@@ -324,6 +326,11 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
         .querySelector(DELETE_BUTTON_SELECTOR)
         .innerText = DELETE_BUTTON_ENABLED_TEXT;
     }
+  }
+
+  setErrorStyle() {
+    const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
+    form.classList.add(ERROR_BORDER_CLASS_NAME);
   }
 
   _subscribeEvents() {

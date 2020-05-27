@@ -4,6 +4,7 @@ import constants from "../data/constants.js";
 import {render, replace, remove} from "../utils/render.js";
 
 const ESC_KEY = `Escape`;
+const SHAKE_ANIMATION_TIMEOUT = 600;
 
 export const TripPointControllerMode = {
   VIEW: `view`,
@@ -92,6 +93,17 @@ export default class TripPointController {
     } else if (this._currentMode === TripPointControllerMode.NEW) {
       this.destroy();
     }
+  }
+
+  shake() {
+    this._editComponent.getElement().style.animation = `shake ${SHAKE_ANIMATION_TIMEOUT / 1000}s`;
+
+    setTimeout(() => {
+      this._editComponent.getElement().style.animation = ``;
+
+      this._editComponent.enable();
+      this._editComponent.setErrorStyle();
+    }, SHAKE_ANIMATION_TIMEOUT);
   }
 
   _hideEditForm() {

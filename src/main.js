@@ -3,7 +3,6 @@ import TripModel from "./models/trip.js";
 import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsController from "./controllers/trip-details.js";
 import TripStatisticsController from "./controllers/trip-statistics.js";
-import TripDetails from "./data/trip-details.js";
 import TripFilterController from "./controllers/trip-filter.js";
 import TripController from "./controllers/trip.js";
 import BackendCache from "./data/backend-cache.js";

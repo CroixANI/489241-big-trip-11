@@ -48,10 +48,6 @@ export default class TripSortComponent extends AbstractComponent {
     return createTripSortTemplate(this._currentSort);
   }
 
-  getSortType() {
-    return this.getElement().querySelector(SORT_INPUT_CHECKED_SELECTOR).dataset.sortType;
-  }
-
   setOnSortTypeChangedHandler(handler) {
     this.getElement()
       .querySelectorAll(SORT_INPUT_SELECTOR)

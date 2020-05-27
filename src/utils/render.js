@@ -44,7 +44,6 @@ const iterateAndSetReadOnly = (elements, disabled) => {
   }
 };
 
-// for more details see here https://www.qodo.co.uk/blog/javascript-enabling-and-disabling-form-field-elements/
 export const toggleFormElements = (form, disabled) => {
   iterateAndSetReadOnly(form.getElementsByTagName(`input`), disabled);
   iterateAndSetReadOnly(form.getElementsByTagName(`select`), disabled);

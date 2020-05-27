@@ -61,7 +61,6 @@ export default class TripPointController {
     });
 
     if (mode === TripPointControllerMode.VIEW) {
-      // Fix issue with old components after data changed
       if (oldEditComponent && oldViewComponent) {
         if (this._currentMode === TripPointControllerMode.EDIT) {
           replace(this._editComponent, oldEditComponent);
@@ -72,7 +71,6 @@ export default class TripPointController {
         render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
       }
     } else {
-      // TODO: Is this case only for NEW or for EDIT as well?
       render(this._containerElement, this._editComponent, constants.RENDER_POSITIONS.AFTER_BEGIN);
       document.addEventListener(`keydown`, this._onEscapeKeydown);
     }

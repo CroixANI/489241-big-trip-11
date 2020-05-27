@@ -33,6 +33,18 @@ const DELETE_BUTTON_ENABLED_TEXT = `Delete`;
 const ERROR_BORDER_CLASS_NAME = `red-border`;
 const INPUT_ERROR_CLASS_NAME = `input-error`;
 
+const addValidationErrorMessage = (element, message) => {
+  element.setCustomValidity(message);
+  element.reportValidity();
+  element.classList.add(INPUT_ERROR_CLASS_NAME);
+};
+
+const removeValidationErrorMessage = (element) => {
+  element.setCustomValidity(``);
+  element.reportValidity();
+  element.classList.remove(INPUT_ERROR_CLASS_NAME);
+};
+
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
   const nameCapitalized = lowerCaseItemType.charAt(0).toUpperCase() + lowerCaseItemType.slice(1);
@@ -219,6 +231,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
     this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
     this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
+    this._validateDates = this._validateDates.bind(this);
 
     this._subscribeEvents();
 
@@ -362,15 +375,8 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
       }
     }
 
-    if (!evt.target.value) {
-      evt.target.setCustomValidity(``);
-      evt.target.reportValidity();
-      evt.target.classList.remove(INPUT_ERROR_CLASS_NAME);
-      return;
-    } else if (!optionFound) {
-      evt.target.setCustomValidity(`Please select a valid destination from list.`);
-      evt.target.reportValidity();
-      evt.target.classList.add(INPUT_ERROR_CLASS_NAME);
+    if (!evt.target.value || !optionFound) {
+      addValidationErrorMessage(evt.target, `Please select a valid destination from list.`);
       return;
     }
 
@@ -388,14 +394,31 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     }
 
     const element = this.getElement();
+    const self = this;
     const options = {
       allowInput: true,
       dateFormat: `d/m/y H:i`,
       minDate: this._point.start,
-      enableTime: true
+      enableTime: true,
+      onChange() {
+        self._validateDates();
+      }
     };
 
     this._flatpickrStartDate = flatpickr(element.querySelector(START_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.start}));
     this._flatpickrEndDate = flatpickr(element.querySelector(END_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.end}));
+  }
+
+  _validateDates() {
+    if (this._flatpickrStartDate && this._flatpickrEndDate) {
+      const start = this._flatpickrStartDate.selectedDates[0];
+      const end = this._flatpickrEndDate.selectedDates[0];
+
+      if (end <= start) {
+        addValidationErrorMessage(this.getElement().querySelector(START_DATE_SELECTOR), `Start date should be lower then End date`);
+      } else {
+        removeValidationErrorMessage(this.getElement().querySelector(START_DATE_SELECTOR));
+      }
+    }
   }
 }

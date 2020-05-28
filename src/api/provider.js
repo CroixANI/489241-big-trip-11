@@ -3,8 +3,9 @@ const isOnline = () => {
 };
 
 export default class Provider {
-  constructor(backend) {
+  constructor(backend, store) {
     this._backend = backend;
+    this._store = store;
   }
 
   getPoints() {

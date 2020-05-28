@@ -244,6 +244,12 @@ main {
 .trip-filters__filter:not(:last-of-type) {
   margin-right: 19px; }
 
+  .trip-filters__filter--disable + .trip-filters__filter-label {
+    cursor: default;
+    opacity: 0.1;
+    pointer-events: none;
+  }
+
 .trip-filters__filter-label {
   font-weight: 800;
   font-size: 14px;

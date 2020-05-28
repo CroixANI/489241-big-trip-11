@@ -11,8 +11,10 @@ export default class TripFilterController {
     this._tripModel.setFilter(this._currentFilter, true);
 
     this._onFilterChange = this._onFilterChange.bind(this);
+    this._onDataChange = this._onDataChange.bind(this);
 
     this._tripModel.setOnFilterChangedHandler(this._onFilterChange);
+    this._tripModel.setOnDataChangeHandler(this._onDataChange);
   }
 
   render() {
@@ -21,6 +23,12 @@ export default class TripFilterController {
     this._component.setOnFilterChangedHandler((filterType) => {
       this._currentFilter = filterType;
       this._tripModel.setFilter(filterType);
+    });
+
+    Object.values(constants.FilterType).map((filter) => {
+      if (!this._tripModel.countPointsByFilter(filter)) {
+        this._component.disableFilter(filter, true);
+      }
     });
 
     if (oldComponent) {
@@ -34,5 +42,9 @@ export default class TripFilterController {
     if (this._tripModel.getFilter() !== this._currentFilter) {
       this.render();
     }
+  }
+
+  _onDataChange() {
+    this.render();
   }
 }

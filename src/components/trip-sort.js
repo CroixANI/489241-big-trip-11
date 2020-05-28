@@ -1,7 +1,6 @@
 import AbstractComponent from "./abstract-component.js";
 
 const SORT_INPUT_SELECTOR = `.trip-sort__input`;
-const SORT_INPUT_CHECKED_SELECTOR = `input:checked`;
 
 export const SortType = {
   EVENT: `Event`,
@@ -46,10 +45,6 @@ export default class TripSortComponent extends AbstractComponent {
 
   getTemplate() {
     return createTripSortTemplate(this._currentSort);
-  }
-
-  getSortType() {
-    return this.getElement().querySelector(SORT_INPUT_CHECKED_SELECTOR).dataset.sortType;
   }
 
   setOnSortTypeChangedHandler(handler) {

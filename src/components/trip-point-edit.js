@@ -18,6 +18,7 @@ const POINT_DESTINATION_SELECTOR = `.event__input--destination`;
 const START_DATE_SELECTOR = `#event-start-time-1`;
 const END_DATE_SELECTOR = `#event-end-time-1`;
 const CANCEL_BUTTON_SELECTOR = `.event__reset-btn`;
+const DESTINATION_DETAILS_SECTION_SELECTOR = `.event__section--destination`;
 
 const EVENT_TYPE_DATA_NAME = `event-type`;
 const EVENT_DESTINATION_DATA_NAME = `event-destination`;
@@ -31,6 +32,19 @@ const DELETE_BUTTON_DISABLED_TEXT = `Deleting...`;
 const DELETE_BUTTON_ENABLED_TEXT = `Delete`;
 
 const ERROR_BORDER_CLASS_NAME = `red-border`;
+const INPUT_ERROR_CLASS_NAME = `input-error`;
+
+const addValidationErrorMessage = (element, message) => {
+  element.setCustomValidity(message);
+  element.reportValidity();
+  element.classList.add(INPUT_ERROR_CLASS_NAME);
+};
+
+const removeValidationErrorMessage = (element) => {
+  element.setCustomValidity(``);
+  element.reportValidity();
+  element.classList.remove(INPUT_ERROR_CLASS_NAME);
+};
 
 const createEventTypeItemTemplate = (itemType, isChecked) => {
   const lowerCaseItemType = itemType.toLowerCase();
@@ -71,6 +85,10 @@ const createEditButtonsTemplate = (isFavorite) => {
 };
 
 const createDestinationDetailsTemplate = (destination) => {
+  if (!destination.description.length && !destination.photos.length) {
+    return ``;
+  }
+
   const allPhotosTemplate = destination.photos.map((photo) => {
     return (`<img class="event__photo" src="${photo.url}" alt="${photo.title}">`);
   }).join(`\n`);
@@ -110,7 +128,7 @@ const createTripEditFormTemplate = (point) => {
     return (`<option value="${destination.city}"></option>`);
   }).join(`\n`);
 
-  const offers = BackendCache.getOffersByPointType(point.type);
+  const offers = BackendCache.getOffersByPointType(currentPointType);
   const allOffersTemplate = offers.map((offer) => {
     const isChecked = isEditMode && point.offers.some((item) => item.type === offer.type);
     return createOfferTemplate(offer.type, offer.name, offer.price, isChecked);
@@ -119,7 +137,7 @@ const createTripEditFormTemplate = (point) => {
   const resetButtonTemplate = isEditMode ? DELETE_BUTTON_ENABLED_TEXT : `Cancel`;
 
   const formTemplate =
-  `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
+    `<form class="${isEditMode ? `` : `trip-events__item`} event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -218,6 +236,7 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
     this._onPointTypeChanged = this._onPointTypeChanged.bind(this);
     this._onPointDestinationChanged = this._onPointDestinationChanged.bind(this);
+    this._validateDates = this._validateDates.bind(this);
 
     this._subscribeEvents();
 
@@ -298,11 +317,11 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this.reRender();
   }
 
-  disable() {
+  disable(isDelete = false) {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     toggleFormElements(form, true);
     form.classList.remove(ERROR_BORDER_CLASS_NAME);
-    if (this._point.isNew) {
+    if (!isDelete) {
       this.getElement()
         .querySelector(SAVE_BUTTON_SELECTOR)
         .innerText = SAVE_BUTTON_DISABLED_TEXT;
@@ -345,14 +364,30 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
 
   _onPointTypeChanged(evt) {
     this._point.type = evt.target.value;
-    this._point.offers = BackendCache.getOffersByPointType(this._point.type);
+    this._point.offers = this._originalPoint.type === this._point.type ? this._originalPoint.offers.slice() : [];
 
     this.reRender();
   }
 
   _onPointDestinationChanged(evt) {
-    this._point.destination = BackendCache.getDestinationDetails(evt.target.value);
+    let optionFound = false;
+    const datalist = evt.target.list;
 
+    for (const optionItem of datalist.options) {
+      if (evt.target.value === optionItem.value) {
+        optionFound = true;
+        break;
+      }
+    }
+
+    if (!evt.target.value || !optionFound) {
+      addValidationErrorMessage(evt.target, `Please select a valid destination from list.`);
+      this._hideDestinationDetails();
+      return;
+    }
+
+    evt.target.classList.remove(INPUT_ERROR_CLASS_NAME);
+    this._point.destination = BackendCache.getDestinationDetails(evt.target.value);
     this.reRender();
   }
 
@@ -365,14 +400,37 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     }
 
     const element = this.getElement();
+    const self = this;
     const options = {
       allowInput: true,
       dateFormat: `d/m/y H:i`,
       minDate: this._point.start,
-      enableTime: true
+      enableTime: true,
+      onChange() {
+        self._validateDates();
+      }
     };
 
     this._flatpickrStartDate = flatpickr(element.querySelector(START_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.start}));
     this._flatpickrEndDate = flatpickr(element.querySelector(END_DATE_SELECTOR), Object.assign({}, options, {defaultDate: this._point.end}));
+  }
+
+  _validateDates() {
+    if (this._flatpickrStartDate && this._flatpickrEndDate) {
+      const start = this._flatpickrStartDate.selectedDates[0];
+      const end = this._flatpickrEndDate.selectedDates[0];
+
+      if (end <= start) {
+        addValidationErrorMessage(this.getElement().querySelector(START_DATE_SELECTOR), `Start date should be lower then End date`);
+      } else {
+        removeValidationErrorMessage(this.getElement().querySelector(START_DATE_SELECTOR));
+      }
+    }
+  }
+
+  _hideDestinationDetails() {
+    this.getElement()
+      .querySelector(DESTINATION_DETAILS_SECTION_SELECTOR)
+      .classList.add(constants.VISUALLY_HIDDEN_CLASS);
   }
 }

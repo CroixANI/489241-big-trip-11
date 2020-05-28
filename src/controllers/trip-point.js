@@ -44,28 +44,23 @@ export default class TripPointController {
       }
     });
     this._editComponent.setOnDeleteButtonClickedHandler(() => {
-      this._editComponent.disable();
+      this._editComponent.disable(true);
       this._onDataChange(this, tripPoint, null);
       this._editComponent.enable();
     });
     this._editComponent.setOnFormSubmittedHandler((evt) => {
       evt.preventDefault();
       this._editComponent.disable();
-      if (mode === TripPointControllerMode.NEW) {
-        this._onDataChange(this, null, this._editComponent.getPoint());
-      } else {
-        this._onDataChange(this, tripPoint, this._editComponent.getPoint());
-      }
+      this._onDataChange(this, mode === TripPointControllerMode.NEW ? null : tripPoint, this._editComponent.getPoint());
       this._editComponent.enable();
     });
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {
       const updatedTripPoint = TripPoint.clone(tripPoint);
       updatedTripPoint.isFavorite = !tripPoint.isFavorite;
-      this._onDataChange(this, tripPoint, updatedTripPoint);
+      this._onDataChange(this, tripPoint, updatedTripPoint, true);
     });
 
-    if (mode === TripPointControllerMode.VIEW) {
-      // Fix issue with old components after data changed
+    if (mode === TripPointControllerMode.VIEW || mode === TripPointControllerMode.EDIT) {
       if (oldEditComponent && oldViewComponent) {
         if (this._currentMode === TripPointControllerMode.EDIT) {
           replace(this._editComponent, oldEditComponent);
@@ -76,7 +71,6 @@ export default class TripPointController {
         render(this._containerElement, this._viewComponent, constants.RENDER_POSITIONS.BEFORE_END);
       }
     } else {
-      // TODO: Is this case only for NEW or for EDIT as well?
       render(this._containerElement, this._editComponent, constants.RENDER_POSITIONS.AFTER_BEGIN);
       document.addEventListener(`keydown`, this._onEscapeKeydown);
     }
@@ -105,6 +99,10 @@ export default class TripPointController {
       this._editComponent.enable();
       this._editComponent.setErrorStyle();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  getCurrentMode() {
+    return this._currentMode;
   }
 
   _hideEditForm() {

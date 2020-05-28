@@ -124,23 +124,19 @@ export default class TripStatisticsComponent extends AbstractComponent {
   }
 
   _renderStatistics() {
-    // get canvas elements
     const element = this.getElement();
     const moneyCanvasElement = element.querySelector(MONEY_CHART_CANVAS_SELECTOR);
     const transportCanvasElement = element.querySelector(TRANSPORT_CHART_CANVAS_SELECTOR);
     const timeCanvasElement = element.querySelector(TIME_CHART_CANVAS_SELECTOR);
 
-    // count statistics
     const moneyStatistic = CountStatistics.countMoneyStatistics(this._points);
     const transportStatistic = CountStatistics.countTransportStatistics(this._points);
     const timeStatistic = CountStatistics.countTimeStatistics(this._points);
 
-    // update height for all canvas elements
     moneyCanvasElement.height = BAR_HEIGHT * moneyStatistic.labels.length;
     transportCanvasElement.height = BAR_HEIGHT * transportStatistic.labels.length;
     timeCanvasElement.height = BAR_HEIGHT * timeStatistic.labels.length;
 
-    // render statistics
     this._moneyChart = createMoneyChart(moneyCanvasElement, moneyStatistic);
     this._transportChart = createTransportChart(transportCanvasElement, transportStatistic);
     this._timeChart = createTimeChart(timeCanvasElement, timeStatistic);

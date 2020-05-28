@@ -31,7 +31,7 @@ export default class TripModel {
     this._callHandlers(this._dataChangeHandlers);
   }
 
-  updatePoint(id, point) {
+  updatePoint(id, point, silent = false) {
     const index = this._points.findIndex((item) => item.id === id);
 
     if (index === -1) {
@@ -39,7 +39,10 @@ export default class TripModel {
     }
 
     this._points = [].concat(this._points.slice(0, index), point, this._points.slice(index + 1));
-    this._callHandlers(this._dataChangeHandlers);
+
+    if (!silent) {
+      this._callHandlers(this._dataChangeHandlers);
+    }
 
     return true;
   }

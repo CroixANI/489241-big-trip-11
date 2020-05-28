@@ -11,6 +11,7 @@ import constants from "../data/constants.js";
 import {render, remove, replace} from "../utils/render.js";
 
 const POINTS_CONTAINER_SELECTOR = `.trip-events__list`;
+const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 
 const TripControllerMode = {
   DEFAULT: `default`,
@@ -23,9 +24,9 @@ const comparePointsBySortType = (sortType) => {
       case SortType.TIME:
         const firstPointTotalMilliseconds = firstPoint.end - firstPoint.start;
         const secondPointTotalMilliseconds = secondPoint.end - secondPoint.start;
-        return firstPointTotalMilliseconds - secondPointTotalMilliseconds;
+        return secondPointTotalMilliseconds - firstPointTotalMilliseconds;
       case SortType.PRICE:
-        return firstPoint.price - secondPoint.price;
+        return secondPoint.price - firstPoint.price;
     }
 
     return dateFormat.getDateNumberForGrouping(firstPoint.start) - dateFormat.getDateNumberForGrouping(secondPoint.start);
@@ -160,7 +161,7 @@ export default class TripController {
     this.render();
   }
 
-  _onDataChange(tripPointController, oldPoint, newPoint) {
+  _onDataChange(tripPointController, oldPoint, newPoint, silent = false) {
     if (newPoint === null && oldPoint !== null) {
       this._backend.deletePoint(oldPoint.id)
         .then(() => {
@@ -189,10 +190,13 @@ export default class TripController {
     } else if (oldPoint !== null && newPoint !== null) {
       this._backend.updatePoint(oldPoint.id, newPoint)
         .then((updatedPoint) => {
-          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint);
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint, silent);
 
           if (isSuccess) {
-            tripPointController.render(newPoint);
+            tripPointController.render(newPoint, tripPointController.getCurrentMode());
+            if (!silent) {
+              this._resetState();
+            }
           }
         })
         .catch(() => {
@@ -213,6 +217,7 @@ export default class TripController {
   }
 
   onNewButtonClicked() {
+    document.querySelector(ADD_NEW_BUTTON_SELECTOR).disabled = true;
     if (this._newTripPointController) {
       return;
     }
@@ -249,6 +254,7 @@ export default class TripController {
   }
 
   _closeNewEventForm() {
+    document.querySelector(ADD_NEW_BUTTON_SELECTOR).disabled = false;
     if (this._newTripPointController) {
       this._newTripPointController.destroy();
       this._newTripPointController = null;

@@ -113,7 +113,7 @@ const createTripEditFormTemplate = (point) => {
   const currentDestinationLabel = constants.getActivityLabel(currentPointType);
   const currentCity = !isEditMode && !point.destination.city ? `` : point.destination.city;
   const currentPrice = !isEditMode && !point.price ? 0 : point.price;
-  const destinationDetailsTemplate = isEditMode ? `` : createDestinationDetailsTemplate(point.destination);
+  const destinationDetailsTemplate = createDestinationDetailsTemplate(point.destination);
   const editButtonsTemplate = isEditMode ? createEditButtonsTemplate(point.isFavorite) : ``;
 
   const allTransferPointTypesTemplate = constants.TRANSFER_POINT_TYPES.map((pointType) => {

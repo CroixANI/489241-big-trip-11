@@ -24,9 +24,9 @@ const comparePointsBySortType = (sortType) => {
       case SortType.TIME:
         const firstPointTotalMilliseconds = firstPoint.end - firstPoint.start;
         const secondPointTotalMilliseconds = secondPoint.end - secondPoint.start;
-        return firstPointTotalMilliseconds - secondPointTotalMilliseconds;
+        return secondPointTotalMilliseconds - firstPointTotalMilliseconds;
       case SortType.PRICE:
-        return firstPoint.price - secondPoint.price;
+        return secondPoint.price - firstPoint.price;
     }
 
     return dateFormat.getDateNumberForGrouping(firstPoint.start) - dateFormat.getDateNumberForGrouping(secondPoint.start);

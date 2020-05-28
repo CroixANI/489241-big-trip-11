@@ -21,6 +21,10 @@ const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 const BACKEND_ENDPOINT = `https://11.ecmascript.pages.academy/big-trip`;
 const BACKEND_AUTHORIZATION = `Basic dXNlcjpzdXBlcnBhc3N3b3Jk`;
 
+const STORE_PREFIX = `trip-points`;
+const STORE_VERSION = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
+
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
 const tripViewHeaderElement = tripMainElement.querySelector(MENU_HEADER_SELECTOR);
@@ -29,7 +33,7 @@ const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
 const renderAll = () => {
   const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
-  const store = new Store();
+  const store = new Store(STORE_NAME, window.localStorage);
   const provider = new Provider(backend, store);
   const tripModel = new TripModel();
   const tripDetailsController = new TripDetailsController(tripMainElement, tripModel);

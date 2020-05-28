@@ -1,3 +1,5 @@
+import TripPoint from "../data/trip-point";
+
 const isOnline = () => {
   return window.navigator.onLine;
 };
@@ -10,10 +12,16 @@ export default class Provider {
 
   getPoints() {
     if (isOnline()) {
-      return this._backend.getPoints();
+      return this._backend.getPoints()
+        .then((points) => {
+          points.forEach((point) => this._store.setItem(point.id, point.toBackendModel()));
+
+          return points;
+        });
     }
 
-    return Promise.reject(`not implemented`);
+    const points = Object.values(this._store.getItems());
+    return Promise.resolve(TripPoint.parsePoints(points));
   }
 
   getOffers() {

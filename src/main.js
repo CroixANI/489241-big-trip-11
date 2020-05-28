@@ -1,4 +1,6 @@
-import Backend from "./data/backend.js";
+import Backend from "./api/backend.js";
+import Store from "./api/store.js";
+import Provider from "./api/provider.js";
 import TripModel from "./models/trip.js";
 import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsController from "./controllers/trip-details.js";
@@ -19,19 +21,26 @@ const ADD_NEW_BUTTON_SELECTOR = `.trip-main__event-add-btn`;
 const BACKEND_ENDPOINT = `https://11.ecmascript.pages.academy/big-trip`;
 const BACKEND_AUTHORIZATION = `Basic dXNlcjpzdXBlcnBhc3N3b3Jk`;
 
+const STORE_PREFIX = `trip-points`;
+const STORE_VERSION = `v1`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VERSION}`;
+
 const sitePageHeaderElement = document.querySelector(PAGE_HEADER_SELECTOR);
 const tripMainElement = sitePageHeaderElement.querySelector(MAIN_CONTAINER_SELECTOR);
 const tripViewHeaderElement = tripMainElement.querySelector(MENU_HEADER_SELECTOR);
 const tripFilterHeaderElement = tripMainElement.querySelector(FILTER_HEADER_SELECTOR);
 const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
+const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const provider = new Provider(backend, store);
+
 const renderAll = () => {
-  const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
   const tripModel = new TripModel();
   const tripDetailsController = new TripDetailsController(tripMainElement, tripModel);
   const menuComponent = new MenuComponent();
   const tripFilterController = new TripFilterController(tripFilterHeaderElement, tripModel);
-  const tripController = new TripController(tripEventsElement, tripModel, backend);
+  const tripController = new TripController(tripEventsElement, tripModel, provider);
   const tripStatisticsController = new TripStatisticsController(tripEventsElement, tripModel);
 
   menuComponent.setOnMenuChangedHandler((menuItem) => {
@@ -57,13 +66,32 @@ const renderAll = () => {
   tripStatisticsController.render();
   tripStatisticsController.hide();
 
-  backend.getDestinations().then((data) => {
+  provider.getDestinations().then((data) => {
     BackendCache.setDestinations(data);
-  }).then(() => backend.getOffers().then((data) => {
+  }).then(() => provider.getOffers().then((data) => {
     BackendCache.setOffers(data);
-  }).then(() => backend.getPoints().then((data) => {
+  }).then(() => provider.getPoints().then((data) => {
     tripModel.setPoints(data);
   })));
 };
 
 renderAll();
+
+window.addEventListener(`load`, () => {
+  if (`serviceWorker` in navigator) {
+    navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+    }).catch(() => {
+    });
+  }
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  provider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

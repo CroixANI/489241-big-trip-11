@@ -1,6 +1,6 @@
-import Offer from "./offer.js";
-import TripPoint from "./trip-point.js";
-import Destination from "./destination.js";
+import Offer from "../data/offer.js";
+import TripPoint from "../data/trip-point.js";
+import Destination from "../data/destination.js";
 
 const HTTP_METHODS = {
   GET: `GET`,
@@ -87,6 +87,18 @@ export default class Backend {
     .catch((err) => {
       throw err;
     });
+  }
+
+  sync(data) {
+    return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}/sync`, {
+      method: HTTP_METHODS.POST,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => response.json());
   }
 
   _get(appendUrl, convertData) {

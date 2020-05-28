@@ -15,7 +15,14 @@ export default class Provider {
     if (isOnline()) {
       return this._backend.getPoints()
         .then((points) => {
-          points.forEach((point) => this._store.setItem(point.id, point.toBackendModel()));
+          const converted = points.map((point) => point.toBackendModel());
+          const items = converted.reduce((acc, current) => {
+            return Object.assign({}, acc, {
+              [current.id]: current,
+            });
+          }, {});
+
+          this._store.setItems(items);
 
           return points;
         });

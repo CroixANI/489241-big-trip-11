@@ -161,7 +161,7 @@ export default class TripController {
     this.render();
   }
 
-  _onDataChange(tripPointController, oldPoint, newPoint) {
+  _onDataChange(tripPointController, oldPoint, newPoint, silent = false) {
     if (newPoint === null && oldPoint !== null) {
       this._backend.deletePoint(oldPoint.id)
         .then(() => {
@@ -190,11 +190,13 @@ export default class TripController {
     } else if (oldPoint !== null && newPoint !== null) {
       this._backend.updatePoint(oldPoint.id, newPoint)
         .then((updatedPoint) => {
-          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint);
+          const isSuccess = this._tripModel.updatePoint(oldPoint.id, updatedPoint, silent);
 
           if (isSuccess) {
-            tripPointController.render(newPoint);
-            this._resetState();
+            tripPointController.render(newPoint, tripPointController.getCurrentMode());
+            if (!silent) {
+              this._resetState();
+            }
           }
         })
         .catch(() => {

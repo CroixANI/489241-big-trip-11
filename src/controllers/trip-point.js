@@ -57,10 +57,10 @@ export default class TripPointController {
     this._editComponent.setOnFavoriteButtonClickedHandler(() => {
       const updatedTripPoint = TripPoint.clone(tripPoint);
       updatedTripPoint.isFavorite = !tripPoint.isFavorite;
-      this._onDataChange(this, tripPoint, updatedTripPoint);
+      this._onDataChange(this, tripPoint, updatedTripPoint, true);
     });
 
-    if (mode === TripPointControllerMode.VIEW) {
+    if (mode === TripPointControllerMode.VIEW || mode === TripPointControllerMode.EDIT) {
       if (oldEditComponent && oldViewComponent) {
         if (this._currentMode === TripPointControllerMode.EDIT) {
           replace(this._editComponent, oldEditComponent);
@@ -99,6 +99,10 @@ export default class TripPointController {
       this._editComponent.enable();
       this._editComponent.setErrorStyle();
     }, SHAKE_ANIMATION_TIMEOUT);
+  }
+
+  getCurrentMode() {
+    return this._currentMode;
   }
 
   _hideEditForm() {

@@ -89,6 +89,18 @@ export default class Backend {
     });
   }
 
+  sync(data) {
+    return fetch(`${this._endPoint}/${ENDPOINTS.POINTS}/sync`, {
+      method: HTTP_METHODS.POST,
+      headers: {
+        'Content-Type': `application/json`,
+        'Authorization': this._authorization,
+      },
+      body: JSON.stringify(data)
+    })
+    .then((response) => response.json());
+  }
+
   _get(appendUrl, convertData) {
     return fetch(`${this._endPoint}/${appendUrl}`, {
       method: HTTP_METHODS.GET,

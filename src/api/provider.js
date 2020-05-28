@@ -5,6 +5,19 @@ const isOnline = () => {
   return window.navigator.onLine;
 };
 
+const getSyncedPoints = (items) => {
+  return items.filter(({success}) => success)
+    .map(({payload}) => payload.point);
+};
+
+const createStoreStructure = (items) => {
+  return items.reduce((acc, current) => {
+    return Object.assign({}, acc, {
+      [current.id]: current,
+    });
+  }, {});
+};
+
 export default class Provider {
   constructor(backend, store) {
     this._backend = backend;
@@ -15,12 +28,7 @@ export default class Provider {
     if (isOnline()) {
       return this._backend.getPoints()
         .then((points) => {
-          const converted = points.map((point) => point.toBackendModel());
-          const items = converted.reduce((acc, current) => {
-            return Object.assign({}, acc, {
-              [current.id]: current,
-            });
-          }, {});
+          const items = createStoreStructure(points.map((point) => point.toBackendModel()));
 
           this._store.setItems(items);
 
@@ -90,5 +98,23 @@ export default class Provider {
 
     this._store.removeItem(id);
     return Promise.resolve();
+  }
+
+  sync() {
+    if (isOnline()) {
+      const storePoints = Object.values(this._store.getItems());
+
+      return this._backend.sync(storePoints)
+        .then((response) => {
+          const createdPoints = getSyncedPoints(response.created);
+          const updatedPoints = getSyncedPoints(response.updated);
+
+          const items = createStoreStructure([...createdPoints, ...updatedPoints]);
+
+          this._store.setItems(items);
+        });
+    }
+
+    return Promise.reject(new Error(`Sync data failed`));
   }
 }

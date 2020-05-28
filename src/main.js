@@ -31,10 +31,11 @@ const tripViewHeaderElement = tripMainElement.querySelector(MENU_HEADER_SELECTOR
 const tripFilterHeaderElement = tripMainElement.querySelector(FILTER_HEADER_SELECTOR);
 const tripEventsElement = document.querySelector(TRIP_CONTAINER_SELECTOR);
 
+const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const provider = new Provider(backend, store);
+
 const renderAll = () => {
-  const backend = new Backend(BACKEND_ENDPOINT, BACKEND_AUTHORIZATION);
-  const store = new Store(STORE_NAME, window.localStorage);
-  const provider = new Provider(backend, store);
   const tripModel = new TripModel();
   const tripDetailsController = new TripDetailsController(tripMainElement, tripModel);
   const menuComponent = new MenuComponent();
@@ -75,3 +76,13 @@ const renderAll = () => {
 };
 
 renderAll();
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+
+  provider.sync();
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
+});

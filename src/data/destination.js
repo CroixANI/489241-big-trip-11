@@ -18,7 +18,7 @@ export default class Destination {
     };
   }
 
-  static parseDestination(data) {
+  static parse(data) {
     return new Destination(data.name, data.description, data.pictures.map((picture) => {
       return {
         url: picture.src,
@@ -29,7 +29,7 @@ export default class Destination {
 
   static parseDestinations(data) {
     return data.map((item) => {
-      return Destination.parseDestination(item);
+      return Destination.parse(item);
     });
   }
 }

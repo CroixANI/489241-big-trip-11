@@ -28,25 +28,25 @@ export default class TripPoint {
     };
   }
 
-  static parseTripPoint(data) {
+  static parse(data) {
     return new TripPoint(
         data.id,
         data.type,
-        Destination.parseDestination(data.destination),
-        data.offers.map((offer) => Offer.parseOffer(offer)),
+        Destination.parse(data.destination),
+        data.offers.map((offer) => Offer.parse(offer)),
         dateFormat.parseDateISO8601(data.date_from),
         dateFormat.parseDateISO8601(data.date_to),
         data.base_price,
         Boolean(data.is_favorite));
   }
 
-  static parseTripPoints(data) {
+  static parsePoints(data) {
     return data.map((item) => {
-      return TripPoint.parseTripPoint(item);
+      return TripPoint.parse(item);
     });
   }
 
   static clone(data) {
-    return TripPoint.parseTripPoint(data.toBackendModel());
+    return TripPoint.parse(data.toBackendModel());
   }
 }

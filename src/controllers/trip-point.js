@@ -118,13 +118,6 @@ export default class TripPointController {
     this._currentMode = TripPointControllerMode.EDIT;
   }
 
-  _showAddNewForm() {
-    this._onViewChange();
-    replace(this._editComponent, this._viewComponent);
-    document.addEventListener(`keydown`, this._onEscapeKeydown);
-    this._currentMode = TripPointControllerMode.NEW;
-  }
-
   _onEscapeKeydown(evt) {
     if (evt.key === ESC_KEY) {
       if (this._currentMode === TripPointControllerMode.NEW) {

@@ -77,6 +77,15 @@ const renderAll = () => {
 
 renderAll();
 
+window.addEventListener(`load`, () => {
+  if (`serviceWorker` in navigator) {
+    navigator.serviceWorker.register(`/sw.js`)
+    .then(() => {
+    }).catch(() => {
+    });
+  }
+});
+
 window.addEventListener(`online`, () => {
   document.title = document.title.replace(` [offline]`, ``);
 

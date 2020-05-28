@@ -14,7 +14,7 @@ export default class Store {
 
   setItems(items) {
     this._storage.setItem(
-        this._storeKey,
+        this._storeName,
         JSON.stringify(items)
     );
   }
@@ -38,7 +38,7 @@ export default class Store {
     delete store[key];
 
     this._storage.setItem(
-        this._storeKey,
+        this._storeName,
         JSON.stringify(store)
     );
   }

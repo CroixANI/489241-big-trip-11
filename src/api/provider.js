@@ -1,5 +1,5 @@
 import TripPoint from "../data/trip-point";
-import nanoid from "nanoid";
+import {nanoid} from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;

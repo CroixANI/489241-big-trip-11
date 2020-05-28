@@ -317,11 +317,11 @@ export default class TripPointEditComponent extends AbstractSmartComponent {
     this.reRender();
   }
 
-  disable() {
+  disable(isDelete = false) {
     const form = this._point.isNew ? this.getElement() : this.getElement().querySelector(FORM_SELECTOR);
     toggleFormElements(form, true);
     form.classList.remove(ERROR_BORDER_CLASS_NAME);
-    if (this._point.isNew) {
+    if (!isDelete) {
       this.getElement()
         .querySelector(SAVE_BUTTON_SELECTOR)
         .innerText = SAVE_BUTTON_DISABLED_TEXT;

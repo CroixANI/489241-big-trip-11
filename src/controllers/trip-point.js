@@ -44,7 +44,7 @@ export default class TripPointController {
       }
     });
     this._editComponent.setOnDeleteButtonClickedHandler(() => {
-      this._editComponent.disable();
+      this._editComponent.disable(true);
       this._onDataChange(this, tripPoint, null);
       this._editComponent.enable();
     });

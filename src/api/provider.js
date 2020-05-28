@@ -42,10 +42,18 @@ export default class Provider {
 
   updatePoint(id, data) {
     if (isOnline()) {
-      return this._backend.updatePoint(id, data);
+      return this._backend.updatePoint(id, data)
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toBackendModel());
+
+          return newPoint;
+        });
     }
 
-    return Promise.reject(`not implemented`);
+    const localPoint = TripPoint.clone(Object.assign(data, {id}));
+    this._store.setItem(id, localPoint.toBackendModel());
+
+    return Promise.resolve(localPoint);
   }
 
   createPoint(data) {

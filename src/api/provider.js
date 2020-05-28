@@ -66,9 +66,11 @@ export default class Provider {
 
   deletePoint(id) {
     if (isOnline()) {
-      return this._backend.deletePoint(id);
+      return this._backend.deletePoint(id)
+        .then(() => this._store.removeItem(id));
     }
 
-    return Promise.reject(`not implemented`);
+    this._store.removeItem(id);
+    return Promise.resolve();
   }
 }

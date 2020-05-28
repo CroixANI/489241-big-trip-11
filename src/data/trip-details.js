@@ -1,11 +1,19 @@
 import dateFormat from "../utils/date-format.js";
 
 const buildTripTitle = (orderedPoints) => {
-  return orderedPoints.reduce((dayTitle, tripPoint) => {
-    dayTitle = `${dayTitle}${dayTitle.length > 0 ? ` — ` : ``}`;
+  if (orderedPoints.length <= 3) {
+    return orderedPoints.reduce((dayTitle, tripPoint) => {
+      dayTitle = `${dayTitle}${dayTitle.length > 0 ? ` — ` : ``}`;
 
-    return dayTitle + tripPoint.destination.city;
-  }, ``);
+      return dayTitle + tripPoint.destination.city;
+    }, ``);
+  } else if (orderedPoints.length > 0) {
+    const first = orderedPoints[0];
+    const last = orderedPoints[orderedPoints.length - 1];
+    return `${first.destination.city} — ... — ${last.destination.city}`;
+  }
+
+  return ``;
 };
 
 export default class TripDetails {
@@ -18,7 +26,9 @@ export default class TripDetails {
     } else {
       this.title = buildTripTitle(orderedPoints);
       this.totalCost = orderedPoints.reduce((totalInDay, tripPoint) => {
-        return totalInDay + tripPoint.price;
+        return totalInDay + tripPoint.price + tripPoint.offers.reduce((totalInPoint, offer) => {
+          return totalInPoint + offer.price;
+        }, 0);
       }, 0);
 
       const startDate = orderedPoints[0].start;

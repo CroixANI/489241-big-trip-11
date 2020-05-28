@@ -13,6 +13,10 @@ export default class TripModel {
     return filterPoints(this._points, this._currentFilter);
   }
 
+  countPointsByFilter(filter) {
+    return filterPoints(this._points, filter).length;
+  }
+
   getAllPoints() {
     return this._points;
   }

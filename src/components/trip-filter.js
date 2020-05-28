@@ -2,6 +2,7 @@ import AbstractComponent from "./abstract-component.js";
 import constants from "../data/constants.js";
 
 const TRIP_FILTER_SELECTOR = `.trip-filters__filter-input`;
+const DISABLED_FILTER_MENU_CLASS_NAME = `trip-filters__filter--disable`;
 
 const createTripFilterTemplate = (key, isChecked = false) => {
   const type = key.toLocaleLowerCase();
@@ -54,6 +55,19 @@ export default class TripFilterComponent extends AbstractComponent {
           onFilterChanged(this._currentFilter);
         });
       });
+  }
+
+  disableFilter(filterType, disable) {
+    const filterMenuElement = this.getElement()
+      .querySelector(`#filter-${filterType.toLowerCase()}`);
+
+    if (filterMenuElement) {
+      if (disable) {
+        filterMenuElement.classList.add(DISABLED_FILTER_MENU_CLASS_NAME);
+      } else {
+        filterMenuElement.classList.remove(DISABLED_FILTER_MENU_CLASS_NAME);
+      }
+    }
   }
 }
 

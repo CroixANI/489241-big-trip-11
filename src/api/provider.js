@@ -1,4 +1,5 @@
 import TripPoint from "../data/trip-point";
+import nanoid from "nanoid";
 
 const isOnline = () => {
   return window.navigator.onLine;
@@ -58,10 +59,20 @@ export default class Provider {
 
   createPoint(data) {
     if (isOnline()) {
-      return this._backend.createPoint(data);
+      return this._backend.createPoint(data)
+        .then((newPoint) => {
+          this._store.setItem(newPoint.id, newPoint.toBackendModel());
+
+          return newPoint;
+        });
     }
 
-    return Promise.reject(`not implemented`);
+    const localNewPointId = nanoid();
+    const localNewPoint = TripPoint.clone(Object.assign(data, {id: localNewPointId}));
+
+    this._store.setItem(localNewPoint.id, localNewPoint.toBackendModel());
+
+    return Promise.resolve(localNewPoint);
   }
 
   deletePoint(id) {

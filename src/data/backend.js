@@ -30,7 +30,7 @@ export default class Backend {
   }
 
   getPoints() {
-    return this._get(ENDPOINTS.POINTS, TripPoint.parseTripPoints);
+    return this._get(ENDPOINTS.POINTS, TripPoint.parsePoints);
   }
 
   getOffers() {
@@ -52,7 +52,7 @@ export default class Backend {
     })
     .then(checkStatus)
     .then((response) => response.json())
-    .then((responseData) => TripPoint.parseTripPoint(responseData))
+    .then((responseData) => TripPoint.parse(responseData))
     .catch((err) => {
       throw err;
     });
@@ -69,7 +69,7 @@ export default class Backend {
     })
     .then(checkStatus)
     .then((response) => response.json())
-    .then((responseData) => TripPoint.parseTripPoint(responseData))
+    .then((responseData) => TripPoint.parse(responseData))
     .catch((err) => {
       throw err;
     });

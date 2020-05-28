@@ -13,14 +13,14 @@ export default class Offer {
     };
   }
 
-  static parseOffer(data, pointType) {
-    return new Offer(data.title.toLowerCase().replace(/\s/g, `-`), data.title, data.price, pointType);
+  static parse(data) {
+    return new Offer(data.title.toLowerCase().replace(/\s/g, `-`), data.title, data.price);
   }
 
   static parseOffers(data) {
     return data.reduce((map, group) => {
       if (!map.has(group.type)) {
-        map.set(group.type, group.offers.map((item) => Offer.parseOffer(item, group.type)));
+        map.set(group.type, group.offers.map((item) => Offer.parse(item)));
       }
 
       return map;

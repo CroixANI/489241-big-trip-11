@@ -1,4 +1,4 @@
-import Backend from "./data/backend.js";
+import Backend from "./api/backend.js";
 import TripModel from "./models/trip.js";
 import MenuComponent, {MENU_ITEMS} from "./components/menu.js";
 import TripDetailsController from "./controllers/trip-details.js";

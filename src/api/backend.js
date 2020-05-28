@@ -1,6 +1,6 @@
-import Offer from "./offer.js";
-import TripPoint from "./trip-point.js";
-import Destination from "./destination.js";
+import Offer from "../data/offer.js";
+import TripPoint from "../data/trip-point.js";
+import Destination from "../data/destination.js";
 
 const HTTP_METHODS = {
   GET: `GET`,
